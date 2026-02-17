@@ -1,7 +1,7 @@
 ﻿
 ===============================================================================
 ASP.NET PROJECT EXPORT
-Generated: 02/17/2026 13:24:26
+Generated: 02/17/2026 13:37:16
 Project Path: D:\DEV\personal\MyWebForms
 ===============================================================================
 
@@ -21,6 +21,7 @@ D:\DEV\PERSONAL\MYWEBFORMS
 +---docs
 |   \---llm
 |           dump.txt
+|           instructions.md
 |           
 +---MyWebForms
 |   |   About.aspx
@@ -2284,7 +2285,7 @@ MODIFIED: 02/17/2026 12:40:45
 
 
 ===============================================================================
-EXPORT COMPLETED: 02/17/2026 13:24:28
+EXPORT COMPLETED: 02/17/2026 13:37:18
 Total Files Exported: 26
 Output File: .\docs\llm\dump.txt
 ===============================================================================
