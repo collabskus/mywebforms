@@ -1,7 +1,7 @@
 ﻿
 ===============================================================================
 ASP.NET PROJECT EXPORT
-Generated: 02/17/2026 13:37:16
+Generated: 02/17/2026 13:40:53
 Project Path: D:\DEV\personal\MyWebForms
 ===============================================================================
 
@@ -40,6 +40,7 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   |   libman.json
 |   |   LibraryStatusWidget.ascx
 |   |   LibraryStatusWidget.ascx.cs
+|   |   LibraryStatusWidget.ascx.designer.cs
 |   |   MyWebForms.csproj
 |   |   MyWebForms.csproj.user
 |   |   packages.config
@@ -59,7 +60,58 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   |       RouteConfig.cs
 |   |       
 |   +---bin
+|   |   |   Antlr3.Runtime.dll
+|   |   |   Antlr3.Runtime.pdb
+|   |   |   Microsoft.AspNet.FriendlyUrls.dll
+|   |   |   Microsoft.AspNet.FriendlyUrls.xml
+|   |   |   Microsoft.AspNet.Web.Optimization.WebForms.dll
+|   |   |   Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+|   |   |   Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+|   |   |   Microsoft.ScriptManager.MSAjax.dll
+|   |   |   Microsoft.ScriptManager.WebForms.dll
+|   |   |   Microsoft.Web.Infrastructure.dll
+|   |   |   MyWebForms.dll
+|   |   |   MyWebForms.dll.config
+|   |   |   MyWebForms.pdb
+|   |   |   Newtonsoft.Json.dll
+|   |   |   Newtonsoft.Json.xml
+|   |   |   System.Web.Optimization.dll
+|   |   |   System.Web.Optimization.xml
+|   |   |   WebGrease.dll
+|   |   |   
 |   |   \---roslyn
+|   |           csc.exe
+|   |           csc.exe.config
+|   |           csc.rsp
+|   |           csi.exe
+|   |           csi.exe.config
+|   |           csi.rsp
+|   |           Microsoft.Build.Tasks.CodeAnalysis.dll
+|   |           Microsoft.CodeAnalysis.CSharp.dll
+|   |           Microsoft.CodeAnalysis.CSharp.Scripting.dll
+|   |           Microsoft.CodeAnalysis.dll
+|   |           Microsoft.CodeAnalysis.Scripting.dll
+|   |           Microsoft.CodeAnalysis.VisualBasic.dll
+|   |           Microsoft.CSharp.Core.targets
+|   |           Microsoft.DiaSymReader.Native.amd64.dll
+|   |           Microsoft.DiaSymReader.Native.x86.dll
+|   |           Microsoft.Managed.Core.CurrentVersions.targets
+|   |           Microsoft.Managed.Core.targets
+|   |           Microsoft.VisualBasic.Core.targets
+|   |           System.Buffers.dll
+|   |           System.Collections.Immutable.dll
+|   |           System.Memory.dll
+|   |           System.Numerics.Vectors.dll
+|   |           System.Reflection.Metadata.dll
+|   |           System.Runtime.CompilerServices.Unsafe.dll
+|   |           System.Text.Encoding.CodePages.dll
+|   |           System.Threading.Tasks.Extensions.dll
+|   |           vbc.exe
+|   |           vbc.exe.config
+|   |           vbc.rsp
+|   |           VBCSCompiler.exe
+|   |           VBCSCompiler.exe.config
+|   |           
 |   +---Content
 |   |   |   bootstrap-grid.css
 |   |   |   bootstrap-grid.css.map
@@ -104,7 +156,11 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   |   |   |   DesignTimeResolveAssemblyReferences.cache
 |   |   |   |   DesignTimeResolveAssemblyReferencesInput.cache
 |   |   |   |   MyWebForms.csproj.AssemblyReference.cache
+|   |   |   |   MyWebForms.csproj.CoreCompileInputs.cache
 |   |   |   |   MyWebForms.csproj.FileListAbsolute.txt
+|   |   |   |   MyWebForms.csproj.Up2Date
+|   |   |   |   MyWebForms.dll
+|   |   |   |   MyWebForms.pdb
 |   |   |   |   
 |   |   |   \---TempPE
 |   |   \---Release
@@ -1100,8 +1156,8 @@ FodyWeavers.xsd
 
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\About.aspx
-SIZE: 2.9 KB
-MODIFIED: 02/17/2026 13:16:32
+SIZE: 3.13 KB
+MODIFIED: 02/17/2026 13:39:19
 ================================================================================
 
 <%@ Page Title="About" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="About.aspx.cs" Inherits="MyWebForms.About" %>
@@ -1122,12 +1178,15 @@ MODIFIED: 02/17/2026 13:16:32
                     </div>
                     <div class="card-body text-center">
                         <canvas id="libmanChart" width="400" height="200"></canvas>
-                        
+
+                        <%-- Hidden field carries server-side data to the client safely --%>
+                        <asp:HiddenField ID="hfChartData" runat="server" />
+
                         <hr />
 
                         <asp:Label ID="lblMessage" runat="server" CssClass="h5 text-success" />
                         <br /><br />
-                        <asp:Button ID="btnRefresh" runat="server" Text="Update Data from Server" 
+                        <asp:Button ID="btnRefresh" runat="server" Text="Update Data from Server"
                             CssClass="btn btn-outline-primary" OnClick="btnRefresh_Click" />
                     </div>
                 </div>
@@ -1137,11 +1196,12 @@ MODIFIED: 02/17/2026 13:16:32
 
     <script>
         $(document).ready(function () {
-            // 1. Get the data injected from Code-Behind
-            const chartData = <%= ChartDataJson %>;
+            // 1. Read the JSON that the code-behind wrote into the hidden field
+            var rawValue = $('#<%= hfChartData.ClientID %>').val();
+            var chartData = JSON.parse(rawValue);
 
             // 2. Initialize Chart.js
-            const ctx = document.getElementById('libmanChart').getContext('2d');
+            var ctx = document.getElementById('libmanChart').getContext('2d');
             new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -1166,10 +1226,10 @@ MODIFIED: 02/17/2026 13:16:32
             });
 
             // 3. Simple jQuery effect to show the library is working
-            $("#title").on("mouseenter", function() {
-                $(this).addClass("animate__animated animate__pulse");
-            }).on("mouseleave", function() {
-                $(this).removeClass("animate__animated animate__pulse");
+            $('#title').on('mouseenter', function () {
+                $(this).addClass('animate__animated animate__pulse');
+            }).on('mouseleave', function () {
+                $(this).removeClass('animate__animated animate__pulse');
             });
         });
     </script>
@@ -1179,8 +1239,8 @@ MODIFIED: 02/17/2026 13:16:32
 
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\About.aspx.cs
-SIZE: 1.25 KB
-MODIFIED: 02/17/2026 13:10:45
+SIZE: 0.91 KB
+MODIFIED: 02/17/2026 13:39:29
 ================================================================================
 
 using System;
@@ -1190,9 +1250,6 @@ namespace MyWebForms
 {
     public partial class About : Page
     {
-        // This property will be accessed in the .aspx via <%= ChartDataJson %>
-        public string ChartDataJson { get; set; }
-
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -1203,24 +1260,17 @@ namespace MyWebForms
 
         private void SetDefaultData()
         {
-            // Simulating server-side logic to determine "Health" of libraries
             int[] values = { 95, 88, 100 };
-            ChartDataJson = $"[{string.Join(",", values)}]";
-
+            hfChartData.Value = "[" + string.Join(",", values) + "]";
             lblMessage.Text = "System initialized with Server-Side Data.";
         }
 
         protected void btnRefresh_Click(object sender, EventArgs e)
         {
-            // Change data on button click to show PostBack capability
             Random rng = new Random();
             int[] newValues = { rng.Next(70, 100), rng.Next(70, 100), rng.Next(70, 100) };
-
-            ChartDataJson = $"[{string.Join(",", newValues)}]";
-
+            hfChartData.Value = "[" + string.Join(",", newValues) + "]";
             lblMessage.Text = "Data refreshed via Code-Behind at " + DateTime.Now.ToLongTimeString();
-
-            // Note: Chart will re-render on page reload with these new values
         }
     }
 }
@@ -1621,8 +1671,8 @@ namespace MyWebForms
 
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\MyWebForms.csproj
-SIZE: 16.09 KB
-MODIFIED: 02/17/2026 13:16:42
+SIZE: 16.23 KB
+MODIFIED: 02/17/2026 13:40:00
 ================================================================================
 
 <?xml version="1.0" encoding="utf-8"?>
@@ -1818,6 +1868,9 @@ MODIFIED: 02/17/2026 13:16:42
     <Compile Include="LibraryStatusWidget.ascx.cs">
       <DependentUpon>LibraryStatusWidget.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="LibraryStatusWidget.ascx.designer.cs">
+      <DependentUpon>LibraryStatusWidget.ascx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Site.Master.cs">
@@ -2285,7 +2338,7 @@ MODIFIED: 02/17/2026 12:40:45
 
 
 ===============================================================================
-EXPORT COMPLETED: 02/17/2026 13:37:18
+EXPORT COMPLETED: 02/17/2026 13:40:55
 Total Files Exported: 26
 Output File: .\docs\llm\dump.txt
 ===============================================================================
