@@ -10,7 +10,6 @@
 namespace MyWebForms
 {
 
-
     public partial class SiteMaster
     {
 

@@ -1,7 +1,7 @@
 ﻿
 ===============================================================================
 ASP.NET PROJECT EXPORT
-Generated: 02/17/2026 15:46:56
+Generated: 02/17/2026 15:49:36
 Project Path: D:\DEV\personal\MyWebForms
 ===============================================================================
 
@@ -5488,8 +5488,8 @@ namespace MyWebForms.Services
 
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\Site.Master
-SIZE: 3.95 KB
-MODIFIED: 02/17/2026 14:07:32
+SIZE: 3.98 KB
+MODIFIED: 02/17/2026 15:48:48
 ================================================================================
 
 <%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="MyWebForms.SiteMaster" %>
@@ -5510,6 +5510,9 @@ MODIFIED: 02/17/2026 14:07:32
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <link href="~/Content/animate.css/animate.min.css" rel="stylesheet" />
 
+    <%-- Content pages may inject page-specific <link> or <meta> tags here --%>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
 </head>
 <body>
     <form runat="server">
@@ -5527,19 +5530,19 @@ MODIFIED: 02/17/2026 14:07:32
                 <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
                 <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
                 <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
-                <asp:ScriptReference Name="WebFormsBundle" />
-                <%--Site Scripts--%>
+                <asp:ScriptReference Name="ScriptManager.js" Assembly="System.Web" />
             </Scripts>
         </asp:ScriptManager>
 
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand" runat="server" href="~/">Application name</a>
-                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+            <div class="container-fluid">
+                <a class="navbar-brand" runat="server" href="~/">MyWebForms</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarCollapse" aria-controls="navbarCollapse"
                     aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
+                <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/">Home</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/About">About</a></li>
@@ -5786,7 +5789,7 @@ MODIFIED: 02/17/2026 12:40:45
 
 
 ===============================================================================
-EXPORT COMPLETED: 02/17/2026 15:47:01
+EXPORT COMPLETED: 02/17/2026 15:49:42
 Total Files Exported: 41
 Output File: .\docs\llm\dump.txt
 ===============================================================================
