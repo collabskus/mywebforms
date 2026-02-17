@@ -16,6 +16,10 @@
       placed inside a NamingContainer (e.g. a GridView row or another control).
     - The <script> block lives here rather than in the page so the control is
       fully self-contained — it brings its own behaviour with it.
+    - Chart initialisation is wrapped in $(document).ready() so that it defers
+      until chart.umd.js (loaded at the bottom of Site.Master's <body>) has
+      been fully parsed and executed. Without this deferral the inline script
+      runs during HTML parsing and Chart is not yet defined.
 --%>
 
 <div class="card shadow mb-4">
@@ -29,9 +33,9 @@
         <canvas id="chartCanvas" runat="server" width="400" height="180"></canvas>
 
         <%-- Carrier for server-side data → client-side script --%>
-        <asp:HiddenField ID="hfLabels"   runat="server" />
-        <asp:HiddenField ID="hfValues"   runat="server" />
-        <asp:HiddenField ID="hfColors"   runat="server" />
+        <asp:HiddenField ID="hfLabels"    runat="server" />
+        <asp:HiddenField ID="hfValues"    runat="server" />
+        <asp:HiddenField ID="hfColors"    runat="server" />
         <asp:HiddenField ID="hfChartType" runat="server" />
 
         <hr />
@@ -51,11 +55,11 @@
 </div>
 
 <script>
-    // Immediately-invoked so it runs as soon as this control's markup is parsed.
-    // jQuery is guaranteed to be present because ScriptManager emits it before
-    // any page content (see Site.Master ScriptManager block).
-    (function () {
-        // Read values the code-behind serialised into the hidden fields.
+    // Wrapped in $(document).ready() so execution is deferred until the full
+    // DOM — including the bottom-of-body <script> tags in Site.Master that
+    // load chart.umd.js — has been parsed and run. Without this, the IIFE
+    // fires during HTML parsing and Chart is undefined at that point.
+    $(document).ready(function () {
         var labels = JSON.parse(document.getElementById('<%= hfLabels.ClientID %>').value);
         var values = JSON.parse(document.getElementById('<%= hfValues.ClientID %>').value);
         var colors = JSON.parse(document.getElementById('<%= hfColors.ClientID %>').value);
@@ -73,7 +77,7 @@
                     backgroundColor: colors,
                     borderColor: colors.map(function (c) {
                         // Darken each colour slightly for the border by replacing
-                        // the alpha component: rgba(r,g,b,0.6) → rgba(r,g,b,1)
+                        // the alpha component: rgba(r,g,b,0.5) → rgba(r,g,b,1)
                         return c.replace('0.5', '1');
                     }),
                     borderWidth: 1
@@ -90,5 +94,5 @@
                 }
             }
         });
-    }());
+    });
 </script>

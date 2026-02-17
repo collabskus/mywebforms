@@ -1,7 +1,7 @@
 ﻿
 ===============================================================================
 ASP.NET PROJECT EXPORT
-Generated: 02/17/2026 13:40:53
+Generated: 02/17/2026 13:51:59
 Project Path: D:\DEV\personal\MyWebForms
 ===============================================================================
 
@@ -28,6 +28,9 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   |   About.aspx.cs
 |   |   About.aspx.designer.cs
 |   |   Bundle.config
+|   |   ChartWidget.ascx
+|   |   ChartWidget.ascx.cs
+|   |   ChartWidget.ascx.designer.cs
 |   |   Contact.aspx
 |   |   Contact.aspx.cs
 |   |   Contact.aspx.designer.cs
@@ -1156,91 +1159,80 @@ FodyWeavers.xsd
 
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\About.aspx
-SIZE: 3.13 KB
-MODIFIED: 02/17/2026 13:39:19
+SIZE: 2.77 KB
+MODIFIED: 02/17/2026 13:43:43
 ================================================================================
 
-<%@ Page Title="About" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="About.aspx.cs" Inherits="MyWebForms.About" %>
+<%@ Page Title="About" Language="C#" MasterPageFile="~/Site.Master"
+    AutoEventWireup="true" CodeBehind="About.aspx.cs"
+    Inherits="MyWebForms.About" %>
 
 <%@ Register Src="~/LibraryStatusWidget.ascx" TagPrefix="uc" TagName="StatusWidget" %>
+<%@ Register Src="~/ChartWidget.ascx"         TagPrefix="uc" TagName="ChartWidget"  %>
+
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <main class="container mt-4">
-        <div class="text-center animate__animated animate__fadeInDown">
-            <h2 id="title" class="display-4"><%: Title %></h2>
-            <p class="lead">System Status & Library Integration Demo</p>
+
+        <%-- Page heading --%>
+        <div class="text-center animate__animated animate__fadeInDown mb-4">
+            <h2 class="display-4"><%: Title %></h2>
+            <p class="lead">System Status &amp; Library Integration Demo</p>
         </div>
 
         <div class="row">
-            <div class="col-md-8 offset-md-2">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
-                        LibMan + Chart.js Live Demo
-                    </div>
-                    <div class="card-body text-center">
-                        <canvas id="libmanChart" width="400" height="200"></canvas>
+            <%-- ── Left column: Chart widget ─────────────────────────────── --%>
+            <div class="col-md-7">
+                <%--
+                    ChartWidget is configured entirely through public properties.
+                    If you omit them, the control falls back to its own defaults —
+                    useful to know when prototyping.
+                --%>
+                <uc:ChartWidget runat="server" ID="libraryChart"
+                    Title="Client Library Load Strength"
+                    Description="Dummy reliability scores (0–100) for the client-side libraries bundled into this project. Hit Refresh to see the server generate a new random dataset via a postback."
+                    ChartType="bar" />
+            </div>
 
-                        <%-- Hidden field carries server-side data to the client safely --%>
-                        <asp:HiddenField ID="hfChartData" runat="server" />
+            <%-- ── Right column: LibraryStatusWidget user controls ────────── --%>
+            <div class="col-md-5">
+                <h5 class="mb-3">Library Status</h5>
 
-                        <hr />
+                <%--
+                    LibraryStatusWidget demonstrates a different pattern: properties
+                    are set declaratively as tag attributes.  The control reads them
+                    in its own Page_Load and updates its child controls.
+                --%>
+                <uc:StatusWidget runat="server"
+                    LibraryName="jQuery"
+                    Version="3.7.1 (NuGet)"
+                    ReliabilityScore="95" />
 
-                        <asp:Label ID="lblMessage" runat="server" CssClass="h5 text-success" />
-                        <br /><br />
-                        <asp:Button ID="btnRefresh" runat="server" Text="Update Data from Server"
-                            CssClass="btn btn-outline-primary" OnClick="btnRefresh_Click" />
-                    </div>
-                </div>
+                <uc:StatusWidget runat="server"
+                    LibraryName="Bootstrap"
+                    Version="5.3.8 (NuGet)"
+                    ReliabilityScore="92" />
+
+                <uc:StatusWidget runat="server"
+                    LibraryName="Chart.js"
+                    Version="4.4.1 (LibMan)"
+                    ReliabilityScore="88" />
+
+                <uc:StatusWidget runat="server"
+                    LibraryName="Animate.css"
+                    Version="4.1.1 (LibMan)"
+                    ReliabilityScore="100" />
             </div>
         </div>
+
     </main>
-
-    <script>
-        $(document).ready(function () {
-            // 1. Read the JSON that the code-behind wrote into the hidden field
-            var rawValue = $('#<%= hfChartData.ClientID %>').val();
-            var chartData = JSON.parse(rawValue);
-
-            // 2. Initialize Chart.js
-            var ctx = document.getElementById('libmanChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['jQuery 3 (NuGet)', 'Chart.js (LibMan)', 'Animate.css (LibMan)'],
-                    datasets: [{
-                        label: 'Library Load Strength',
-                        data: chartData,
-                        backgroundColor: [
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(255, 99, 132, 0.6)',
-                            'rgba(75, 192, 192, 0.6)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: { y: { beginAtZero: true, max: 100 } },
-                    plugins: {
-                        legend: { display: false }
-                    }
-                }
-            });
-
-            // 3. Simple jQuery effect to show the library is working
-            $('#title').on('mouseenter', function () {
-                $(this).addClass('animate__animated animate__pulse');
-            }).on('mouseleave', function () {
-                $(this).removeClass('animate__animated animate__pulse');
-            });
-        });
-    </script>
 </asp:Content>
 
 
 
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\About.aspx.cs
-SIZE: 0.91 KB
-MODIFIED: 02/17/2026 13:39:29
+SIZE: 0.75 KB
+MODIFIED: 02/17/2026 13:43:54
 ================================================================================
 
 using System;
@@ -1248,29 +1240,20 @@ using System.Web.UI;
 
 namespace MyWebForms
 {
+    /// <summary>
+    /// About page — intentionally thin code-behind.
+    /// All chart logic lives in ChartWidget.ascx.cs;
+    /// all status-bar logic lives in LibraryStatusWidget.ascx.cs.
+    /// This page is responsible only for wiring them together.
+    /// </summary>
     public partial class About : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
-            {
-                SetDefaultData();
-            }
-        }
-
-        private void SetDefaultData()
-        {
-            int[] values = { 95, 88, 100 };
-            hfChartData.Value = "[" + string.Join(",", values) + "]";
-            lblMessage.Text = "System initialized with Server-Side Data.";
-        }
-
-        protected void btnRefresh_Click(object sender, EventArgs e)
-        {
-            Random rng = new Random();
-            int[] newValues = { rng.Next(70, 100), rng.Next(70, 100), rng.Next(70, 100) };
-            hfChartData.Value = "[" + string.Join(",", newValues) + "]";
-            lblMessage.Text = "Data refreshed via Code-Behind at " + DateTime.Now.ToLongTimeString();
+            // Nothing to do here: both user controls initialise themselves.
+            // This empty guard is left deliberately so you can see the pattern —
+            // IsPostBack checks belong in Page_Load when the page itself needs
+            // to distinguish first load from postback.
         }
     }
 }
@@ -1279,14 +1262,10 @@ namespace MyWebForms
 
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\App_Start\BundleConfig.cs
-SIZE: 2.37 KB
-MODIFIED: 02/17/2026 12:40:44
+SIZE: 1.79 KB
+MODIFIED: 02/17/2026 13:42:37
 ================================================================================
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Optimization;
 using System.Web.UI;
 
@@ -1294,47 +1273,45 @@ namespace MyWebForms
 {
     public class BundleConfig
     {
-        // For more information on Bundling, visit https://go.microsoft.com/fwlink/?LinkID=303951
         public static void RegisterBundles(BundleCollection bundles)
         {
             RegisterJQueryScriptManager();
 
             bundles.Add(new ScriptBundle("~/bundles/WebFormsJs").Include(
-                            "~/Scripts/WebForms/WebForms.js",
-                            "~/Scripts/WebForms/WebUIValidation.js",
-                            "~/Scripts/WebForms/MenuStandards.js",
-                            "~/Scripts/WebForms/Focus.js",
-                            "~/Scripts/WebForms/GridView.js",
-                            "~/Scripts/WebForms/DetailsView.js",
-                            "~/Scripts/WebForms/TreeView.js",
-                            "~/Scripts/WebForms/WebParts.js"));
+                "~/Scripts/WebForms/WebForms.js",
+                "~/Scripts/WebForms/WebUIValidation.js",
+                "~/Scripts/WebForms/MenuStandards.js",
+                "~/Scripts/WebForms/Focus.js",
+                "~/Scripts/WebForms/GridView.js",
+                "~/Scripts/WebForms/DetailsView.js",
+                "~/Scripts/WebForms/TreeView.js",
+                "~/Scripts/WebForms/WebParts.js"));
 
-            // Order is very important for these files to work, they have explicit dependencies
             bundles.Add(new ScriptBundle("~/bundles/MsAjaxJs").Include(
-                    "~/Scripts/WebForms/MsAjax/MicrosoftAjax.js",
-                    "~/Scripts/WebForms/MsAjax/MicrosoftAjaxApplicationServices.js",
-                    "~/Scripts/WebForms/MsAjax/MicrosoftAjaxTimer.js",
-                    "~/Scripts/WebForms/MsAjax/MicrosoftAjaxWebForms.js"));
+                "~/Scripts/WebForms/MSAjax/MicrosoftAjax.js",
+                "~/Scripts/WebForms/MSAjax/MicrosoftAjaxApplicationServices.js",
+                "~/Scripts/WebForms/MSAjax/MicrosoftAjaxTimer.js",
+                "~/Scripts/WebForms/MSAjax/MicrosoftAjaxWebForms.js"));
 
-            // Use the Development version of Modernizr to develop with and learn from. Then, when you’re
-            // ready for production, use the build tool at https://modernizr.com to pick only the tests you need
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                            "~/Scripts/modernizr-*"));
+                "~/Scripts/modernizr-*"));
         }
 
         public static void RegisterJQueryScriptManager()
         {
+            // NOTE: version must match the actual files present under Scripts/
             ScriptManager.ScriptResourceMapping.AddDefinition("jquery",
                 new ScriptResourceDefinition
                 {
-                    Path = "~/scripts/jquery-3.7.0.min.js",
-                    DebugPath = "~/scripts/jquery-3.7.0.js",
-                    CdnPath = "http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.7.0.min.js",
-                    CdnDebugPath = "http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.7.0.js"
+                    Path = "~/Scripts/jquery-3.7.1.min.js",
+                    DebugPath = "~/Scripts/jquery-3.7.1.js",
+                    CdnPath = "https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.7.1.min.js",
+                    CdnDebugPath = "https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.7.1.js"
                 });
         }
     }
 }
+
 
 
 ================================================================================
@@ -1377,6 +1354,239 @@ MODIFIED: 02/17/2026 12:40:44
     <include path="~/Content/Site.css" />
   </styleBundle>
 </bundles>
+
+
+================================================================================
+FILE: :\DEV\personal\MyWebForms\MyWebForms\ChartWidget.ascx
+SIZE: 3.64 KB
+MODIFIED: 02/17/2026 13:45:18
+================================================================================
+
+<%@ Control Language="C#" AutoEventWireup="True"
+    CodeBehind="ChartWidget.ascx.cs"
+    Inherits="MyWebForms.ChartWidget" %>
+
+<%--
+    ChartWidget.ascx
+    ----------------
+    A self-contained user control that renders a Chart.js bar chart.
+
+    Educational notes
+    -----------------
+    - A HiddenField is the standard Web Forms idiom for passing server-computed
+      values to client-side JavaScript without exposing them via visible markup.
+      ViewState serialises it automatically across postbacks.
+    - ClientID is used (not a hard-coded id) so the control remains safe when
+      placed inside a NamingContainer (e.g. a GridView row or another control).
+    - The <script> block lives here rather than in the page so the control is
+      fully self-contained â€” it brings its own behaviour with it.
+--%>
+
+<div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <span>
+            <asp:Literal ID="litTitle" runat="server" />
+        </span>
+        <small class="text-white-50">Chart.js via LibMan</small>
+    </div>
+    <div class="card-body">
+        <canvas id="chartCanvas" runat="server" width="400" height="180"></canvas>
+
+        <%-- Carrier for server-side data â†’ client-side script --%>
+        <asp:HiddenField ID="hfLabels"   runat="server" />
+        <asp:HiddenField ID="hfValues"   runat="server" />
+        <asp:HiddenField ID="hfColors"   runat="server" />
+        <asp:HiddenField ID="hfChartType" runat="server" />
+
+        <hr />
+
+        <p class="mb-1">
+            <asp:Label ID="lblDescription" runat="server" CssClass="text-muted small" />
+        </p>
+
+        <asp:Label ID="lblLastUpdated" runat="server" CssClass="text-success" />
+        <br /><br />
+
+        <asp:Button ID="btnRefresh" runat="server"
+            Text="Refresh Data"
+            CssClass="btn btn-outline-primary btn-sm"
+            OnClick="btnRefresh_Click" />
+    </div>
+</div>
+
+<script>
+    // Immediately-invoked so it runs as soon as this control's markup is parsed.
+    // jQuery is guaranteed to be present because ScriptManager emits it before
+    // any page content (see Site.Master ScriptManager block).
+    (function () {
+        // Read values the code-behind serialised into the hidden fields.
+        var labels = JSON.parse(document.getElementById('<%= hfLabels.ClientID %>').value);
+        var values = JSON.parse(document.getElementById('<%= hfValues.ClientID %>').value);
+        var colors = JSON.parse(document.getElementById('<%= hfColors.ClientID %>').value);
+        var chartType = document.getElementById('<%= hfChartType.ClientID %>').value;
+
+        var ctx = document.getElementById('<%= chartCanvas.ClientID %>').getContext('2d');
+
+        new Chart(ctx, {
+            type: chartType,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Value',
+                    data: values,
+                    backgroundColor: colors,
+                    borderColor: colors.map(function (c) {
+                        // Darken each colour slightly for the border by replacing
+                        // the alpha component: rgba(r,g,b,0.6) â†’ rgba(r,g,b,1)
+                        return c.replace('0.5', '1');
+                    }),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: true }
+                },
+                scales: {
+                    y: { beginAtZero: true, max: 100 }
+                }
+            }
+        });
+    }());
+</script>
+
+
+================================================================================
+FILE: :\DEV\personal\MyWebForms\MyWebForms\ChartWidget.ascx.cs
+SIZE: 5.08 KB
+MODIFIED: 02/17/2026 13:45:24
+================================================================================
+
+using System;
+using System.Web.Script.Serialization;
+
+namespace MyWebForms
+{
+    /// <summary>
+    /// A reusable Chart.js bar/line/pie chart widget.
+    ///
+    /// Educational notes
+    /// -----------------
+    /// Public properties are the Web Forms equivalent of component inputs.
+    /// The parent page sets them before the control's Page_Load runs, so by
+    /// the time we write to the HiddenFields the values are already available.
+    ///
+    /// JavaScriptSerializer (System.Web.Script.Serialization) is part of the
+    /// BCL for .NET Framework — no external JSON package needed for this simple
+    /// serialisation task.
+    /// </summary>
+    public partial class ChartWidget : System.Web.UI.UserControl
+    {
+        // ── Configurable inputs (set by the host page) ──────────────────────
+
+        /// <summary>Heading shown in the card header.</summary>
+        public string Title { get; set; }
+
+        /// <summary>Short description shown below the chart.</summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Chart.js chart type string: "bar", "line", "pie", "doughnut", etc.
+        /// Defaults to "bar".
+        /// </summary>
+        public string ChartType { get; set; }
+
+        /// <summary>X-axis labels / pie slice labels.</summary>
+        public string[] Labels { get; set; }
+
+        /// <summary>Numeric values, one per label.</summary>
+        public int[] Values { get; set; }
+
+        /// <summary>
+        /// CSS rgba() colour strings, one per data point.
+        /// If null or mismatched in length, a default palette is generated.
+        /// </summary>
+        public string[] Colors { get; set; }
+
+        // ── Default dummy data ───────────────────────────────────────────────
+
+        private static readonly string[] DefaultLabels = {
+            "jQuery (NuGet)", "Bootstrap (NuGet)", "Chart.js (LibMan)",
+            "Animate.css (LibMan)", "Modernizr (NuGet)"
+        };
+
+        private static readonly int[] DefaultValues = { 95, 92, 88, 100, 75 };
+
+        private static readonly string[] DefaultColors = {
+            "rgba(54,  162, 235, 0.5)",
+            "rgba(153, 102, 255, 0.5)",
+            "rgba(255,  99, 132, 0.5)",
+            "rgba( 75, 192, 192, 0.5)",
+            "rgba(255, 159,  64, 0.5)"
+        };
+
+        // ── Lifecycle ────────────────────────────────────────────────────────
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            // Apply defaults for anything the host page did not supply.
+            if (string.IsNullOrEmpty(Title)) Title = "Client Library Load Strength";
+            if (string.IsNullOrEmpty(Description)) Description = "Dummy reliability scores for libraries used in this project.";
+            if (string.IsNullOrEmpty(ChartType)) ChartType = "bar";
+            if (Labels == null || Labels.Length == 0) Labels = DefaultLabels;
+            if (Values == null || Values.Length == 0) Values = DefaultValues;
+            if (Colors == null || Colors.Length == 0) Colors = DefaultColors;
+
+            if (!IsPostBack)
+            {
+                BindChart(Values, "Initialized with default dummy data.");
+            }
+
+            // Always update non-data fields (safe to do on every load).
+            litTitle.Text = Title;
+            lblDescription.Text = Description;
+        }
+
+        protected void btnRefresh_Click(object sender, EventArgs e)
+        {
+            // Demonstrate server-side randomisation surviving a postback.
+            var rng = new Random();
+            var newValues = new int[Labels.Length];
+            for (int i = 0; i < newValues.Length; i++)
+                newValues[i] = rng.Next(60, 100);
+
+            BindChart(newValues, "Data refreshed at " + DateTime.Now.ToLongTimeString());
+        }
+
+        // ── Helpers ──────────────────────────────────────────────────────────
+
+        private void BindChart(int[] values, string statusMessage)
+        {
+            // Ensure the Colors array is the same length as Labels.
+            var safeColors = EnsureColorLength(Colors, Labels.Length);
+
+            var serialiser = new JavaScriptSerializer();
+            hfLabels.Value = serialiser.Serialize(Labels);
+            hfValues.Value = serialiser.Serialize(values);
+            hfColors.Value = serialiser.Serialize(safeColors);
+            hfChartType.Value = ChartType;
+
+            lblLastUpdated.Text = statusMessage;
+        }
+
+        private static string[] EnsureColorLength(string[] colors, int requiredLength)
+        {
+            // Cycle through the supplied palette to match length.
+            var result = new string[requiredLength];
+            for (int i = 0; i < requiredLength; i++)
+                result[i] = colors[i % colors.Length];
+            return result;
+        }
+    }
+}
+
 
 
 ================================================================================
@@ -1671,8 +1881,8 @@ namespace MyWebForms
 
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\MyWebForms.csproj
-SIZE: 16.23 KB
-MODIFIED: 02/17/2026 13:40:00
+SIZE: 16.55 KB
+MODIFIED: 02/17/2026 13:45:24
 ================================================================================
 
 <?xml version="1.0" encoding="utf-8"?>
@@ -1775,6 +1985,7 @@ MODIFIED: 02/17/2026 13:40:00
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
+    <Content Include="ChartWidget.ascx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\animate.css\animate.min.css" />
     <Content Include="Content\bootstrap-grid.css" />
@@ -1848,6 +2059,13 @@ MODIFIED: 02/17/2026 13:40:00
       <DependentUpon>About.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="ChartWidget.ascx.cs">
+      <DependentUpon>ChartWidget.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ChartWidget.ascx.designer.cs">
+      <DependentUpon>ChartWidget.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Contact.aspx.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2338,7 +2556,7 @@ MODIFIED: 02/17/2026 12:40:45
 
 
 ===============================================================================
-EXPORT COMPLETED: 02/17/2026 13:40:55
-Total Files Exported: 26
+EXPORT COMPLETED: 02/17/2026 13:52:01
+Total Files Exported: 28
 Output File: .\docs\llm\dump.txt
 ===============================================================================
