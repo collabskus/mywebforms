@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web.UI.HtmlControls;
 using MyWebForms.Models;
 
 namespace MyWebForms
@@ -9,6 +10,14 @@ namespace MyWebForms
     /// Events bubble up to the host page via standard EventHandler delegates.
     /// The host page wires these up when it dynamically creates or databinds
     /// the controls, then handles them to update the detail/user panels.
+    ///
+    /// Score span and data-hn-score-id
+    /// ---------------------------------
+    /// spanScore is a runat="server" HtmlGenericControl (<span>).  In
+    /// Page_Load we stamp its data-hn-score-id attribute with the item's ID.
+    /// The background JS poller in HackerNews.aspx.cs uses
+    ///   querySelectorAll('[data-hn-score-id="N"]')
+    /// to find this element and update the text content without a postback.
     /// </summary>
     public partial class HnStoryRow : System.Web.UI.UserControl
     {
@@ -19,33 +28,36 @@ namespace MyWebForms
 
         // ── Bubbled events ───────────────────────────────────────────────────
 
-        /// <summary>Fired when the user clicks the comment count link.</summary>
         public event EventHandler<StorySelectedEventArgs> StorySelected;
-
-        /// <summary>Fired when the user clicks the author username link.</summary>
         public event EventHandler<AuthorSelectedEventArgs> AuthorSelected;
 
         // ── Lifecycle ────────────────────────────────────────────────────────
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Item == null) return;
+            if (Item == null)
+            {
+                Visible = false;
+                return;
+            }
 
-            litRank.Text = Rank > 0 ? Rank.ToString() + "." : string.Empty;
-            litScore.Text = Item.Score.ToString();
-            litDomain.Text = string.IsNullOrEmpty(Item.Domain) ? "self" : Item.Domain;
-            litTimeAgo.Text = Item.TimeAgo;
+            litRank.Text = Rank.ToString() + ".";
+            litScore.Text = Item.Score.ToString() + " pts";
+
+            // Stamp the score span with the item ID so the JS poller can
+            // find it by data attribute and update the score without a postback.
+            spanScore.Attributes["data-hn-score-id"] = Item.Id.ToString();
 
             lnkTitle.Text = System.Web.HttpUtility.HtmlEncode(Item.Title ?? "(untitled)");
             lnkTitle.NavigateUrl = Item.DisplayUrl;
+            litDomain.Text = System.Web.HttpUtility.HtmlEncode(Item.Domain);
+            litTimeAgo.Text = Item.TimeAgo;
 
-            lnkAuthor.Text = System.Web.HttpUtility.HtmlEncode(Item.By ?? "unknown");
-
-            var commentCount = Item.Descendants;
-            lnkComments.Text = commentCount == 0
-                ? "discuss"
-                : commentCount + " comment" + (commentCount == 1 ? "" : "s");
+            lnkAuthor.Text = System.Web.HttpUtility.HtmlEncode(Item.By ?? "[deleted]");
+            lnkComments.Text = string.Format("{0} comments", Item.Descendants);
         }
+
+        // ── Events ───────────────────────────────────────────────────────────
 
         protected void lnkComments_Click(object sender, EventArgs e)
         {
@@ -55,22 +67,8 @@ namespace MyWebForms
 
         protected void lnkAuthor_Click(object sender, EventArgs e)
         {
-            if (Item == null) return;
+            if (Item == null || string.IsNullOrEmpty(Item.By)) return;
             AuthorSelected?.Invoke(this, new AuthorSelectedEventArgs(Item.By));
         }
-    }
-
-    // ── Event argument types ─────────────────────────────────────────────────
-
-    public sealed class StorySelectedEventArgs : EventArgs
-    {
-        public int ItemId { get; private set; }
-        public StorySelectedEventArgs(int itemId) { ItemId = itemId; }
-    }
-
-    public sealed class AuthorSelectedEventArgs : EventArgs
-    {
-        public string Username { get; private set; }
-        public AuthorSelectedEventArgs(string username) { Username = username; }
     }
 }

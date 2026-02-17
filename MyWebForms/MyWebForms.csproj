@@ -169,6 +169,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="libman.json" />
+    <Content Include="HackerNewsRefresh.ashx" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />
@@ -242,6 +243,9 @@
     </Compile>
     <Compile Include="HackerNews.aspx.designer.cs">
       <DependentUpon>HackerNews.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="HackerNewsRefresh.ashx.cs">
+      <DependentUpon>HackerNewsRefresh.ashx</DependentUpon>
     </Compile>
     <Compile Include="HnComment.ascx.cs">
       <DependentUpon>HnComment.ascx</DependentUpon>

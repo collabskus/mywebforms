@@ -15,29 +15,37 @@ namespace MyWebForms
     ///
     /// Page lifecycle summary
     /// ----------------------
-    /// 1. Page_Load   — restores tab/page state from ViewState; calls
-    ///                  RegisterAsyncTask to queue the async data load.
-    /// 2. PreRenderComplete (raised after all async tasks finish) — binds
-    ///                  the story rows and detail panel to the loaded data,
-    ///                  and injects the auto-refresh script when on the New tab.
+    /// 1. Page_Load         — restores tab/page state from ViewState; queues
+    ///                        the async data load via RegisterAsyncTask.
+    /// 2. [Event handlers]  — btnTab_Click etc. update ViewState before
+    ///                        PreRenderComplete runs.
+    /// 3. PreRenderComplete — fires after all async tasks complete; calls
+    ///                        HighlightActiveTab (so the active tab is always
+    ///                        correct after event handlers have run), binds
+    ///                        all panels, and injects the background-refresh
+    ///                        script.
     ///
-    /// Why RegisterAsyncTask instead of async void Page_Load?
-    ///   RegisterAsyncTask is the correct Web Forms idiom for async work.
-    ///   It integrates with the page's async pipeline so the response is
-    ///   not flushed until all tasks complete. Requires Async="true" on
-    ///   the <%@ Page %> directive.
+    /// Background refresh (all tabs)
+    /// ------------------------------
+    /// Instead of a blunt "full postback after N seconds", we inject a
+    /// JavaScript poller that calls HackerNewsRefresh.ashx every
+    /// AutoRefreshSeconds seconds.  The handler returns:
+    ///   { listChanged: bool, scores: { id: score, ... } }
     ///
-    /// Why not UpdatePanel?
-    ///   UpdatePanel would add MS Ajax partial rendering — valid, but this
-    ///   demo keeps the dependency surface small and lets LinkButton postbacks
-    ///   do a full-page render, which is simpler to reason about.
+    /// The script:
+    ///   - Updates score spans in the DOM immediately (no postback needed).
+    ///   - Only does a __doPostBack if listChanged == true (new stories in
+    ///     the list that the server knows about but the client does not have).
     ///
-    /// Auto-refresh (New tab only)
-    /// ---------------------------
-    ///   When ActiveTab == "new" a JavaScript countdown is injected via
-    ///   RegisterStartupScript. After AutoRefreshSeconds the script submits
-    ///   btnTabNew to trigger a fresh server-side load — the same postback
-    ///   the user would do manually. The LIVE badge is shown only on this tab.
+    /// This is a demonstration of the HttpHandler + client polling pattern,
+    /// which is the .NET 4.8 / Web Forms idiom for lightweight background
+    /// updates without a full UpdatePanel.
+    ///
+    /// Why not UpdatePanel here?
+    ///   UpdatePanel wraps a ScriptManager partial-render postback — perfectly
+    ///   valid but brings in the MS Ajax infrastructure.  The polling approach
+    ///   is deliberately lighter and exercises the IHttpAsyncHandler pattern
+    ///   from the learning checklist.
     /// </summary>
     public partial class HackerNews : Page
     {
@@ -47,19 +55,15 @@ namespace MyWebForms
         private const int MaxCommentDepth = 4;
 
         /// <summary>
-        /// How many seconds between automatic refreshes on the New tab.
-        /// 60 seconds is respectful of the HN Firebase API rate limits.
+        /// How many seconds between background refresh polls.
+        /// 60 s is respectful of the HN Firebase API rate limits.
         /// </summary>
         private const int AutoRefreshSeconds = 60;
 
-        // ── Service (injectable via property for testability) ────────────────
+        // ── Service ──────────────────────────────────────────────────────────
 
         private HackerNewsService _service;
 
-        /// <summary>
-        /// Allows a test to substitute a fake service. The real service is
-        /// created lazily on first access if none has been assigned.
-        /// </summary>
         public HackerNewsService Service
         {
             get { return _service ?? (_service = new HackerNewsService()); }
@@ -111,26 +115,26 @@ namespace MyWebForms
                 CurrentPage = 1;
             }
 
-            // Expose the active tab to JavaScript via a hidden field so the
-            // client-side countdown script can confirm which tab is active.
+            // Expose the active tab to JavaScript via a hidden field.
             hfActiveTab.Value = ActiveTab;
 
-            HighlightActiveTab();
+            // NOTE: HighlightActiveTab() is intentionally NOT called here.
+            // It is called in OnPreRenderComplete so that tab click event
+            // handlers (which run after Page_Load but before PreRender) have
+            // already updated ActiveTab in ViewState before we read it.
+            // Calling it here would mean the highlight reflects the *previous*
+            // tab on the very first click.
 
-            // Queue async data fetching. PreRenderComplete fires after all
-            // registered tasks have completed.
             RegisterAsyncTask(new PageAsyncTask(LoadDataAsync));
         }
 
         private async Task LoadDataAsync()
         {
-            // ── Fetch the story list ─────────────────────────────────────────
             var ids = await GetIdsForTabAsync(ActiveTab).ConfigureAwait(false);
             _totalIds = ids.Count;
             _storyPage = await Service.GetItemPageAsync(ids, CurrentPage, PageSize)
                 .ConfigureAwait(false);
 
-            // ── Fetch story detail if one is selected ────────────────────────
             if (SelectedItemId > 0)
             {
                 _selectedStory = await Service.GetItemAsync(SelectedItemId)
@@ -154,7 +158,6 @@ namespace MyWebForms
                 }
             }
 
-            // ── Fetch user profile if one is selected ────────────────────────
             if (!string.IsNullOrEmpty(SelectedUsername))
             {
                 _selectedUser = await Service.GetUserAsync(SelectedUsername)
@@ -165,17 +168,22 @@ namespace MyWebForms
         protected override void OnPreRenderComplete(EventArgs e)
         {
             base.OnPreRenderComplete(e);
+
+            // Run here (not in Page_Load) so tab-click event handlers have
+            // already updated ActiveTab before we apply the highlight.
+            HighlightActiveTab();
+
             BindStoryList();
             BindDetailPanel();
             BindUserPanel();
             BindPager();
 
-            // Show the LIVE badge only on the "new" tab.
-            lblLiveBadge.Visible = (ActiveTab == "new");
+            // Show the LIVE badge on all tabs (it indicates live polling).
+            lblLiveBadge.Visible = true;
 
-            // Inject the auto-refresh countdown script when on the New tab
-            // and no detail/user panel is open (to avoid interrupting reading).
-            if (ActiveTab == "new" && SelectedItemId == 0 && string.IsNullOrEmpty(SelectedUsername))
+            // Inject the background-refresh script on all tabs when no detail
+            // panel is open (avoid interrupting reading).
+            if (SelectedItemId == 0 && string.IsNullOrEmpty(SelectedUsername))
             {
                 InjectAutoRefreshScript();
             }
@@ -185,51 +193,125 @@ namespace MyWebForms
             }
         }
 
-        // ── Auto-refresh ─────────────────────────────────────────────────────
+        // ── Auto-refresh (background polling) ────────────────────────────────
 
         /// <summary>
-        /// Injects a JavaScript countdown timer that, after AutoRefreshSeconds,
-        /// clicks the "New" tab LinkButton to trigger a fresh postback.
+        /// Injects a JavaScript poller that calls HackerNewsRefresh.ashx
+        /// every AutoRefreshSeconds seconds.
         ///
-        /// Educational notes:
-        ///   - RegisterStartupScript emits the script after the page form so
-        ///     all controls are in the DOM when it runs.
-        ///   - We use __doPostBack directly (the standard Web Forms JS function)
-        ///     because LinkButton renders as an anchor that calls __doPostBack.
-        ///   - The countdown label is updated via setInterval so users see a
-        ///     live "refreshing in N s" indicator — making the LIVE badge honest.
-        ///   - C# 7.3 compatible string building (no interpolated verbatim $@"").
+        /// On each poll:
+        ///   1. Score spans in the DOM are updated in-place — no postback.
+        ///   2. If the server reports the story list has changed (new IDs),
+        ///      we do a __doPostBack to reload the page with fresh data.
+        ///
+        /// The countdown label gives the user a live "next check in N s" cue.
+        ///
+        /// Score span convention (set in HnStoryRow.ascx):
+        ///   Each score element must have  data-hn-score-id="{itemId}"
+        ///   so the JS can find it by story ID.
+        ///
+        /// C# 7.3 compatible — no $@ interpolated verbatim strings.
         /// </summary>
         private void InjectAutoRefreshScript()
         {
             lblRefreshCountdown.Visible = true;
             lblRefreshCountdown.Text = string.Format(
-                "refreshing in {0}s", AutoRefreshSeconds);
+                "next check in {0}s", AutoRefreshSeconds);
 
-            // The UniqueID of a LinkButton is what __doPostBack expects as its
-            // first argument (the event target).
-            var newTabUniqueId = btnTabNew.UniqueID;
+            // Collect the IDs currently shown so we can send them to the handler.
+            var shownIds = new List<string>();
+            if (_storyPage != null)
+            {
+                foreach (var s in _storyPage)
+                    shownIds.Add(s.Id.ToString());
+            }
+
+            var activeTab = ActiveTab;
             var countdownClientId = lblRefreshCountdown.ClientID;
             var seconds = AutoRefreshSeconds;
+            var handlerUrl = ResolveUrl("~/hn-refresh");
+            // Build the current tab's postback target (whatever tab we are on).
+            string currentTabBtnUniqueId;
+            switch (activeTab)
+            {
+                case "new": currentTabBtnUniqueId = btnTabNew.UniqueID; break;
+                case "best": currentTabBtnUniqueId = btnTabBest.UniqueID; break;
+                case "ask": currentTabBtnUniqueId = btnTabAsk.UniqueID; break;
+                case "show": currentTabBtnUniqueId = btnTabShow.UniqueID; break;
+                case "jobs": currentTabBtnUniqueId = btnTabJobs.UniqueID; break;
+                default: currentTabBtnUniqueId = btnTabTop.UniqueID; break;
+            }
+            var shownIdsJson = string.Join(",", shownIds.ToArray());
 
             var sb = new StringBuilder();
             sb.AppendLine("(function () {");
             sb.AppendLine("    var remaining = " + seconds + ";");
             sb.AppendLine("    var lbl = document.getElementById('" + countdownClientId + "');");
+            sb.AppendLine("    var handlerUrl = '" + handlerUrl + "';");
+            sb.AppendLine("    var tab = '" + activeTab + "';");
+            sb.AppendLine("    var postbackTarget = '" + currentTabBtnUniqueId + "';");
+            sb.AppendLine("    var shownIds = '" + shownIdsJson + "';");
+            sb.AppendLine("");
+            sb.AppendLine("    function updateCountdown() {");
+            sb.AppendLine("        if (lbl) { lbl.textContent = 'next check in ' + remaining + 's'; }");
+            sb.AppendLine("    }");
+            sb.AppendLine("");
+            sb.AppendLine("    // Poll the lightweight handler — no full postback unless needed.");
+            sb.AppendLine("    function poll() {");
+            sb.AppendLine("        if (lbl) { lbl.textContent = 'checking\u2026'; }");
+            sb.AppendLine("        var url = handlerUrl + '?tab=' + tab + '&ids=' + shownIds;");
+            sb.AppendLine("        var xhr = new XMLHttpRequest();");
+            sb.AppendLine("        xhr.open('GET', url, true);");
+            sb.AppendLine("        xhr.onreadystatechange = function () {");
+            sb.AppendLine("            if (xhr.readyState !== 4) return;");
+            sb.AppendLine("            if (xhr.status === 200) {");
+            sb.AppendLine("                try {");
+            sb.AppendLine("                    var data = JSON.parse(xhr.responseText);");
+            sb.AppendLine("                    // Update scores in the DOM without a postback.");
+            sb.AppendLine("                    if (data.scores) {");
+            sb.AppendLine("                        Object.keys(data.scores).forEach(function (id) {");
+            sb.AppendLine("                            var els = document.querySelectorAll('[data-hn-score-id=\"' + id + '\"]');");
+            sb.AppendLine("                            for (var i = 0; i < els.length; i++) {");
+            sb.AppendLine("                                els[i].textContent = data.scores[id] + ' pts';");
+            sb.AppendLine("                            }");
+            sb.AppendLine("                        });");
+            sb.AppendLine("                    }");
+            sb.AppendLine("                    // Only do a full postback if the story list changed.");
+            sb.AppendLine("                    if (data.listChanged) {");
+            sb.AppendLine("                        if (lbl) { lbl.textContent = 'new stories — reloading\u2026'; }");
+            sb.AppendLine("                        __doPostBack(postbackTarget, '');");
+            sb.AppendLine("                        return;");
+            sb.AppendLine("                    }");
+            sb.AppendLine("                } catch (ex) { /* ignore parse errors */ }");
+            sb.AppendLine("            }");
+            sb.AppendLine("            // Reset countdown for next poll.");
+            sb.AppendLine("            remaining = " + seconds + ";");
+            sb.AppendLine("            updateCountdown();");
+            sb.AppendLine("        };");
+            sb.AppendLine("        xhr.send();");
+            sb.AppendLine("    }");
+            sb.AppendLine("");
+            sb.AppendLine("    // Tick the countdown every second; poll when it hits zero.");
             sb.AppendLine("    var timer = setInterval(function () {");
             sb.AppendLine("        remaining--;");
-            sb.AppendLine("        if (lbl) { lbl.textContent = 'refreshing in ' + remaining + 's'; }");
             sb.AppendLine("        if (remaining <= 0) {");
             sb.AppendLine("            clearInterval(timer);");
-            sb.AppendLine("            if (lbl) { lbl.textContent = 'refreshing\u2026'; }");
-            // __doPostBack(eventTarget, eventArgument) — standard Web Forms postback mechanism.
-            sb.AppendLine("            __doPostBack('" + newTabUniqueId + "', '');");
+            sb.AppendLine("            poll();");
+            sb.AppendLine("            // After the poll resets 'remaining', restart the ticker.");
+            sb.AppendLine("            // We restart it inside the XHR callback above by re-invoking");
+            sb.AppendLine("            // the whole IIFE via a recursive call — but to keep things");
+            sb.AppendLine("            // simple and avoid a closure loop, we just restart the interval");
+            sb.AppendLine("            // after a short grace period to let the XHR finish.");
+            sb.AppendLine("            setTimeout(function () {");
+            sb.AppendLine("                remaining = " + seconds + ";");
+            sb.AppendLine("                timer = setInterval(arguments.callee.caller, 1000);");
+            sb.AppendLine("            }, 2000);");
+            sb.AppendLine("        } else {");
+            sb.AppendLine("            updateCountdown();");
             sb.AppendLine("        }");
             sb.AppendLine("    }, 1000);");
             sb.AppendLine("})();");
 
-            // RegisterStartupScript key must be unique per script block.
-            // Using the page type as the type argument is the standard idiom.
             ScriptManager.RegisterStartupScript(
                 this,
                 typeof(HackerNews),
@@ -298,8 +380,6 @@ namespace MyWebForms
                 row.Item = story;
                 row.Rank = offset + i + 1;
 
-                // Wire bubble-up events so clicks update ViewState before the
-                // next LoadDataAsync call (triggered by the postback).
                 row.StorySelected += OnStorySelected;
                 row.AuthorSelected += OnAuthorSelected;
 
@@ -311,77 +391,30 @@ namespace MyWebForms
         {
             if (SelectedItemId == 0 || _selectedStory == null)
             {
-                pnlStoryDetail.Visible = false;
+                pnlDetail.Visible = false;
                 return;
             }
 
-            pnlStoryDetail.Visible = true;
+            pnlDetail.Visible = true;
+            ucStoryDetail.Item = _selectedStory;
+            ucStoryDetail.PollOptions = _pollOptions;
+            ucStoryDetail.AuthorSelected += OnAuthorSelected;
 
-            litDetailTitle.Text = System.Web.HttpUtility.HtmlEncode(
-                _selectedStory.Title ?? "(untitled)");
-
-            litDetailMeta.Text = string.Format(
-                "{0} points &middot; by {1} &middot; {2}",
-                _selectedStory.Score,
-                System.Web.HttpUtility.HtmlEncode(_selectedStory.By ?? "unknown"),
-                _selectedStory.TimeAgo);
-
-            // Self-text (Ask HN, polls, jobs)
-            if (!string.IsNullOrEmpty(_selectedStory.Text))
-            {
-                pnlDetailText.Visible = true;
-                litDetailText.Text = _selectedStory.Text;
-            }
-            else
-            {
-                pnlDetailText.Visible = false;
-            }
-
-            // Poll options
-            if (_pollOptions != null && _pollOptions.Count > 0)
-            {
-                pnlPollOptions.Visible = true;
-                phPollOptions.Controls.Clear();
-                foreach (var opt in _pollOptions)
-                {
-                    var div = new HtmlGenericControl("div");
-                    div.Attributes["class"] = "hn-poll-option d-flex justify-content-between";
-                    div.InnerHtml = string.Format(
-                        "<span class=\"small\">{0}</span>" +
-                        "<span class=\"badge bg-secondary\">{1} votes</span>",
-                        System.Web.HttpUtility.HtmlEncode(opt.Text ?? string.Empty),
-                        opt.Score);
-                    phPollOptions.Controls.Add(div);
-                }
-            }
-            else
-            {
-                pnlPollOptions.Visible = false;
-            }
-
-            litDetailCommentCount.Text = _selectedStory.Descendants.ToString();
-            pnlCommentLoading.Visible = false;
-
-            // Render flat comment list with depth tracking
             phComments.Controls.Clear();
-            if (_comments != null && _comments.Count > 0)
-            {
-                RenderCommentTree(_comments, _selectedStory.Id, 0);
-            }
-            else if (_selectedStory.Descendants > 0)
+
+            if (_comments == null || _comments.Count == 0)
             {
                 var noComments = new HtmlGenericControl("p");
                 noComments.Attributes["class"] = "text-muted small";
-                noComments.InnerText = "Comments could not be loaded.";
+                noComments.InnerText = "No comments yet.";
                 phComments.Controls.Add(noComments);
+            }
+            else
+            {
+                RenderCommentTree(_comments, _selectedStory.Id, 0);
             }
         }
 
-        /// <summary>
-        /// Walks the flat comment list (pre-order, depth already encoded via
-        /// parent relationships) and creates HnComment controls at the
-        /// correct visual depth.
-        /// </summary>
         private void RenderCommentTree(List<HackerNewsItem> comments, int parentId, int depth)
         {
             foreach (var comment in comments)
@@ -394,11 +427,8 @@ namespace MyWebForms
                 ctrl.AuthorSelected += OnAuthorSelected;
                 phComments.Controls.Add(ctrl);
 
-                // Recurse for children if within depth limit
                 if (depth < MaxCommentDepth)
-                {
                     RenderCommentTree(comments, comment.Id, depth + 1);
-                }
             }
         }
 
@@ -429,7 +459,6 @@ namespace MyWebForms
 
         private void HighlightActiveTab()
         {
-            // Reset all tabs then activate the current one.
             foreach (var btn in new[] { btnTabTop, btnTabNew, btnTabBest,
                                         btnTabAsk, btnTabShow, btnTabJobs })
             {
@@ -447,18 +476,17 @@ namespace MyWebForms
             }
         }
 
-        // ── Event handlers from child controls ───────────────────────────────
+        // ── Bubble-up event handlers ─────────────────────────────────────────
 
         private void OnStorySelected(object sender, StorySelectedEventArgs e)
         {
             SelectedItemId = e.ItemId;
-            SelectedUsername = null;        // close user panel when opening story
+            SelectedUsername = null;
         }
 
         private void OnAuthorSelected(object sender, AuthorSelectedEventArgs e)
         {
             SelectedUsername = e.Username;
-            // Keep story detail open — user profile appears below it
         }
 
         // ── API tab → ID list routing ────────────────────────────────────────

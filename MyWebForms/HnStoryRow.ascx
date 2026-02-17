@@ -13,6 +13,13 @@
       - "N comments" link   -> LinkButton -- triggers a postback so the parent
         page can load the story detail panel server-side without a full redirect
       - Author name link    -> LinkButton -- same pattern for the user panel
+
+    data-hn-score-id attribute
+    --------------------------
+    The score <span> carries  data-hn-score-id="{itemId}"  so the background
+    polling script (injected by HackerNews.aspx.cs InjectAutoRefreshScript)
+    can locate it via  querySelectorAll('[data-hn-score-id="N"]')  and update
+    the score text in place without a full postback.
 --%>
 
 <div class="hn-story-row d-flex align-items-start py-2 border-bottom border-light">
@@ -22,8 +29,14 @@
         <asp:Literal ID="litRank" runat="server" />
     </span>
 
-    <%-- Score badge: "▲ NNN" — arrow then number, space-separated --%>
-    <span class="hn-score badge bg-warning text-dark me-3 mt-1" style="min-width:3.5rem; text-align:center;">
+    <%--
+        Score badge: "▲ NNN pts"
+        The data-hn-score-id attribute is set from code-behind once Item.Id
+        is known, allowing the JS poller to update it without a postback.
+    --%>
+    <span class="hn-score badge bg-warning text-dark me-3 mt-1"
+          style="min-width:3.5rem; text-align:center;"
+          runat="server" id="spanScore">
         &#9650;&nbsp;<asp:Literal ID="litScore" runat="server" />
     </span>
 

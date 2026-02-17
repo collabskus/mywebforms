@@ -24,6 +24,15 @@ namespace MyWebForms
         protected global::System.Web.UI.WebControls.Literal litRank;
 
         /// <summary>
+        /// spanScore control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl spanScore;
+
+        /// <summary>
         /// litScore control.
         /// </summary>
         /// <remarks>
