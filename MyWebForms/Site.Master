@@ -14,6 +14,7 @@
 
     <webopt:bundlereference runat="server" path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="~/Content/animate.css/animate.min.css" rel="stylesheet" />
 
 </head>
 <body>
@@ -64,7 +65,6 @@
     </form>
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/Scripts/bootstrap.js") %>
-        <link href="~/Content/animate.css/animate.min.css" rel="stylesheet" />
         <script src='<%= ResolveUrl("~/Scripts/lib/chartjs/chart.umd.js") %>'></script>
     </asp:PlaceHolder>
 </body>
