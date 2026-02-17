@@ -1,7 +1,7 @@
 ﻿
 ===============================================================================
 ASP.NET PROJECT EXPORT
-Generated: 02/17/2026 14:34:50
+Generated: 02/17/2026 14:36:14
 Project Path: D:\DEV\personal\MyWebForms
 ===============================================================================
 
@@ -123,6 +123,7 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   +---obj
 |   |   +---Debug
 |   |   |   |   .NETFramework,Version=v4.8.1.AssemblyAttributes.cs
+|   |   |   |   build.force
 |   |   |   |   DesignTimeResolveAssemblyReferences.cache
 |   |   |   |   DesignTimeResolveAssemblyReferencesInput.cache
 |   |   |   |   MyWebForms.csproj.AssemblyReference.cache
@@ -970,10 +971,10 @@ D:\DEV\PERSONAL\MYWEBFORMS
     |               \---netstandard1.3
     |                       System.Net.Http.dll
     |                       
-    +---System.Runtime.4.3.0
+    +---System.Runtime.4.3.1
     |   |   .signature.p7s
     |   |   dotnet_library_license.txt
-    |   |   System.Runtime.4.3.0.nupkg
+    |   |   System.Runtime.4.3.1.nupkg
     |   |   ThirdPartyNotices.txt
     |   |   
     |   +---lib
@@ -1205,10 +1206,10 @@ D:\DEV\PERSONAL\MYWEBFORMS
     |       \---xamarinwatchos10
     |               _._
     |               
-    +---System.Security.Cryptography.Algorithms.4.3.0
+    +---System.Security.Cryptography.Algorithms.4.3.1
     |   |   .signature.p7s
     |   |   dotnet_library_license.txt
-    |   |   System.Security.Cryptography.Algorithms.4.3.0.nupkg
+    |   |   System.Security.Cryptography.Algorithms.4.3.1.nupkg
     |   |   ThirdPartyNotices.txt
     |   |   
     |   +---lib
@@ -1455,10 +1456,10 @@ D:\DEV\PERSONAL\MYWEBFORMS
     |       \---xamarinwatchos10
     |               _._
     |               
-    +---System.Security.Cryptography.X509Certificates.4.3.0
+    +---System.Security.Cryptography.X509Certificates.4.3.2
     |   |   .signature.p7s
     |   |   dotnet_library_license.txt
-    |   |   System.Security.Cryptography.X509Certificates.4.3.0.nupkg
+    |   |   System.Security.Cryptography.X509Certificates.4.3.2.nupkg
     |   |   ThirdPartyNotices.txt
     |   |   
     |   +---lib
@@ -1500,67 +1501,11 @@ D:\DEV\PERSONAL\MYWEBFORMS
     |   |   |       System.Security.Cryptography.X509Certificates.dll
     |   |   |       
     |   |   +---netstandard1.3
-    |   |   |   |   System.Security.Cryptography.X509Certificates.dll
-    |   |   |   |   System.Security.Cryptography.X509Certificates.xml
-    |   |   |   |   
-    |   |   |   +---de
-    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
-    |   |   |   |       
-    |   |   |   +---es
-    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
-    |   |   |   |       
-    |   |   |   +---fr
-    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
-    |   |   |   |       
-    |   |   |   +---it
-    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
-    |   |   |   |       
-    |   |   |   +---ja
-    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
-    |   |   |   |       
-    |   |   |   +---ko
-    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
-    |   |   |   |       
-    |   |   |   +---ru
-    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
-    |   |   |   |       
-    |   |   |   +---zh-hans
-    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
-    |   |   |   |       
-    |   |   |   \---zh-hant
-    |   |   |           System.Security.Cryptography.X509Certificates.xml
-    |   |   |           
+    |   |   |       System.Security.Cryptography.X509Certificates.dll
+    |   |   |       
     |   |   +---netstandard1.4
-    |   |   |   |   System.Security.Cryptography.X509Certificates.dll
-    |   |   |   |   System.Security.Cryptography.X509Certificates.xml
-    |   |   |   |   
-    |   |   |   +---de
-    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
-    |   |   |   |       
-    |   |   |   +---es
-    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
-    |   |   |   |       
-    |   |   |   +---fr
-    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
-    |   |   |   |       
-    |   |   |   +---it
-    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
-    |   |   |   |       
-    |   |   |   +---ja
-    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
-    |   |   |   |       
-    |   |   |   +---ko
-    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
-    |   |   |   |       
-    |   |   |   +---ru
-    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
-    |   |   |   |       
-    |   |   |   +---zh-hans
-    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
-    |   |   |   |       
-    |   |   |   \---zh-hant
-    |   |   |           System.Security.Cryptography.X509Certificates.xml
-    |   |   |           
+    |   |   |       System.Security.Cryptography.X509Certificates.dll
+    |   |   |       
     |   |   +---xamarinios10
     |   |   |       _._
     |   |   |       
@@ -4274,7 +4219,7 @@ namespace MyWebForms.Models
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\MyWebForms.csproj
 SIZE: 20.59 KB
-MODIFIED: 02/17/2026 14:33:24
+MODIFIED: 02/17/2026 14:35:55
 ================================================================================
 
 <?xml version="1.0" encoding="utf-8"?>
@@ -4346,13 +4291,13 @@ MODIFIED: 02/17/2026 14:33:24
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
+    <Reference Include="System.Runtime, Version=4.1.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.4.3.1\lib\net462\System.Runtime.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Security.Cryptography.Algorithms, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
@@ -4366,8 +4311,8 @@ MODIFIED: 02/17/2026 14:33:24
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.2\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
@@ -4657,7 +4602,7 @@ MODIFIED: 02/17/2026 14:33:24
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\packages.config
 SIZE: 1.96 KB
-MODIFIED: 02/17/2026 14:11:40
+MODIFIED: 02/17/2026 14:35:55
 ================================================================================
 
 <?xml version="1.0" encoding="utf-8"?>
@@ -4678,11 +4623,11 @@ MODIFIED: 02/17/2026 14:11:40
   <package id="Newtonsoft.Json" version="13.0.4" targetFramework="net481" />
   <package id="System.IO" version="4.3.0" targetFramework="net481" />
   <package id="System.Net.Http" version="4.3.4" targetFramework="net481" />
-  <package id="System.Runtime" version="4.3.0" targetFramework="net481" />
-  <package id="System.Security.Cryptography.Algorithms" version="4.3.0" targetFramework="net481" />
+  <package id="System.Runtime" version="4.3.1" targetFramework="net481" />
+  <package id="System.Security.Cryptography.Algorithms" version="4.3.1" targetFramework="net481" />
   <package id="System.Security.Cryptography.Encoding" version="4.3.0" targetFramework="net481" />
   <package id="System.Security.Cryptography.Primitives" version="4.3.0" targetFramework="net481" />
-  <package id="System.Security.Cryptography.X509Certificates" version="4.3.0" targetFramework="net481" />
+  <package id="System.Security.Cryptography.X509Certificates" version="4.3.2" targetFramework="net481" />
   <package id="WebGrease" version="1.6.0" targetFramework="net481" />
 </packages>
 
@@ -5154,7 +5099,7 @@ namespace MyWebForms
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\Web.config
 SIZE: 2.44 KB
-MODIFIED: 02/17/2026 14:11:41
+MODIFIED: 02/17/2026 14:35:56
 ================================================================================
 
 <?xml version="1.0" encoding="utf-8"?>
@@ -5282,7 +5227,7 @@ MODIFIED: 02/17/2026 12:40:45
 
 
 ===============================================================================
-EXPORT COMPLETED: 02/17/2026 14:34:54
+EXPORT COMPLETED: 02/17/2026 14:36:19
 Total Files Exported: 40
 Output File: .\docs\llm\dump.txt
 ===============================================================================
