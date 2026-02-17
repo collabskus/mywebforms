@@ -1,4 +1,4 @@
-<%@ Control Language="C#" AutoEventWireup="true"
+<%@ Control Language="C#" AutoEventWireup="True"
     CodeBehind="ChartWidget.ascx.cs"
     Inherits="MyWebForms.ChartWidget" %>
 
@@ -56,9 +56,9 @@
     // any page content (see Site.Master ScriptManager block).
     (function () {
         // Read values the code-behind serialised into the hidden fields.
-        var labels    = JSON.parse(document.getElementById('<%= hfLabels.ClientID %>').value);
-        var values    = JSON.parse(document.getElementById('<%= hfValues.ClientID %>').value);
-        var colors    = JSON.parse(document.getElementById('<%= hfColors.ClientID %>').value);
+        var labels = JSON.parse(document.getElementById('<%= hfLabels.ClientID %>').value);
+        var values = JSON.parse(document.getElementById('<%= hfValues.ClientID %>').value);
+        var colors = JSON.parse(document.getElementById('<%= hfColors.ClientID %>').value);
         var chartType = document.getElementById('<%= hfChartType.ClientID %>').value;
 
         var ctx = document.getElementById('<%= chartCanvas.ClientID %>').getContext('2d');

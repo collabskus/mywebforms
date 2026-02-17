@@ -176,6 +176,9 @@
       <DependentUpon>ChartWidget.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="ChartWidget.ascx.designer.cs">
+      <DependentUpon>ChartWidget.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Contact.aspx.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
