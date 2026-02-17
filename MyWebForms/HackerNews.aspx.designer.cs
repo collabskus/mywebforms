@@ -15,6 +15,33 @@ namespace MyWebForms
     {
 
         /// <summary>
+        /// hfActiveTab control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfActiveTab;
+
+        /// <summary>
+        /// lblRefreshCountdown control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblRefreshCountdown;
+
+        /// <summary>
+        /// lblLiveBadge control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblLiveBadge;
+
+        /// <summary>
         /// btnTabTop control.
         /// </summary>
         /// <remarks>
@@ -150,15 +177,6 @@ namespace MyWebForms
         protected global::System.Web.UI.WebControls.Panel pnlStoryDetail;
 
         /// <summary>
-        /// litDetailTitle control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litDetailTitle;
-
-        /// <summary>
         /// btnCloseDetail control.
         /// </summary>
         /// <remarks>
@@ -166,6 +184,15 @@ namespace MyWebForms
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton btnCloseDetail;
+
+        /// <summary>
+        /// litDetailTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litDetailTitle;
 
         /// <summary>
         /// litDetailMeta control.

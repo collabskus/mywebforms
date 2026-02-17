@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
@@ -17,7 +18,8 @@ namespace MyWebForms
     /// 1. Page_Load   — restores tab/page state from ViewState; calls
     ///                  RegisterAsyncTask to queue the async data load.
     /// 2. PreRenderComplete (raised after all async tasks finish) — binds
-    ///                  the story rows and detail panel to the loaded data.
+    ///                  the story rows and detail panel to the loaded data,
+    ///                  and injects the auto-refresh script when on the New tab.
     ///
     /// Why RegisterAsyncTask instead of async void Page_Load?
     ///   RegisterAsyncTask is the correct Web Forms idiom for async work.
@@ -29,6 +31,13 @@ namespace MyWebForms
     ///   UpdatePanel would add MS Ajax partial rendering — valid, but this
     ///   demo keeps the dependency surface small and lets LinkButton postbacks
     ///   do a full-page render, which is simpler to reason about.
+    ///
+    /// Auto-refresh (New tab only)
+    /// ---------------------------
+    ///   When ActiveTab == "new" a JavaScript countdown is injected via
+    ///   RegisterStartupScript. After AutoRefreshSeconds the script submits
+    ///   btnTabNew to trigger a fresh server-side load — the same postback
+    ///   the user would do manually. The LIVE badge is shown only on this tab.
     /// </summary>
     public partial class HackerNews : Page
     {
@@ -36,6 +45,12 @@ namespace MyWebForms
 
         private const int PageSize = 20;
         private const int MaxCommentDepth = 4;
+
+        /// <summary>
+        /// How many seconds between automatic refreshes on the New tab.
+        /// 60 seconds is respectful of the HN Firebase API rate limits.
+        /// </summary>
+        private const int AutoRefreshSeconds = 60;
 
         // ── Service (injectable via property for testability) ────────────────
 
@@ -96,6 +111,10 @@ namespace MyWebForms
                 CurrentPage = 1;
             }
 
+            // Expose the active tab to JavaScript via a hidden field so the
+            // client-side countdown script can confirm which tab is active.
+            hfActiveTab.Value = ActiveTab;
+
             HighlightActiveTab();
 
             // Queue async data fetching. PreRenderComplete fires after all
@@ -150,6 +169,73 @@ namespace MyWebForms
             BindDetailPanel();
             BindUserPanel();
             BindPager();
+
+            // Show the LIVE badge only on the "new" tab.
+            lblLiveBadge.Visible = (ActiveTab == "new");
+
+            // Inject the auto-refresh countdown script when on the New tab
+            // and no detail/user panel is open (to avoid interrupting reading).
+            if (ActiveTab == "new" && SelectedItemId == 0 && string.IsNullOrEmpty(SelectedUsername))
+            {
+                InjectAutoRefreshScript();
+            }
+            else
+            {
+                lblRefreshCountdown.Visible = false;
+            }
+        }
+
+        // ── Auto-refresh ─────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Injects a JavaScript countdown timer that, after AutoRefreshSeconds,
+        /// clicks the "New" tab LinkButton to trigger a fresh postback.
+        ///
+        /// Educational notes:
+        ///   - RegisterStartupScript emits the script after the page form so
+        ///     all controls are in the DOM when it runs.
+        ///   - We use __doPostBack directly (the standard Web Forms JS function)
+        ///     because LinkButton renders as an anchor that calls __doPostBack.
+        ///   - The countdown label is updated via setInterval so users see a
+        ///     live "refreshing in N s" indicator — making the LIVE badge honest.
+        ///   - C# 7.3 compatible string building (no interpolated verbatim $@"").
+        /// </summary>
+        private void InjectAutoRefreshScript()
+        {
+            lblRefreshCountdown.Visible = true;
+            lblRefreshCountdown.Text = string.Format(
+                "refreshing in {0}s", AutoRefreshSeconds);
+
+            // The UniqueID of a LinkButton is what __doPostBack expects as its
+            // first argument (the event target).
+            var newTabUniqueId = btnTabNew.UniqueID;
+            var countdownClientId = lblRefreshCountdown.ClientID;
+            var seconds = AutoRefreshSeconds;
+
+            var sb = new StringBuilder();
+            sb.AppendLine("(function () {");
+            sb.AppendLine("    var remaining = " + seconds + ";");
+            sb.AppendLine("    var lbl = document.getElementById('" + countdownClientId + "');");
+            sb.AppendLine("    var timer = setInterval(function () {");
+            sb.AppendLine("        remaining--;");
+            sb.AppendLine("        if (lbl) { lbl.textContent = 'refreshing in ' + remaining + 's'; }");
+            sb.AppendLine("        if (remaining <= 0) {");
+            sb.AppendLine("            clearInterval(timer);");
+            sb.AppendLine("            if (lbl) { lbl.textContent = 'refreshing\u2026'; }");
+            // __doPostBack(eventTarget, eventArgument) — standard Web Forms postback mechanism.
+            sb.AppendLine("            __doPostBack('" + newTabUniqueId + "', '');");
+            sb.AppendLine("        }");
+            sb.AppendLine("    }, 1000);");
+            sb.AppendLine("})();");
+
+            // RegisterStartupScript key must be unique per script block.
+            // Using the page type as the type argument is the standard idiom.
+            ScriptManager.RegisterStartupScript(
+                this,
+                typeof(HackerNews),
+                "HnAutoRefresh",
+                sb.ToString(),
+                addScriptTags: true);
         }
 
         // ── Tab click ────────────────────────────────────────────────────────
@@ -296,12 +382,9 @@ namespace MyWebForms
         /// parent relationships) and creates HnComment controls at the
         /// correct visual depth.
         /// </summary>
-        private void RenderCommentTree(
-            List<HackerNewsItem> allComments, int parentId, int depth)
+        private void RenderCommentTree(List<HackerNewsItem> comments, int parentId, int depth)
         {
-            if (depth > MaxCommentDepth) return;
-
-            foreach (var comment in allComments)
+            foreach (var comment in comments)
             {
                 if (comment.Parent != parentId) continue;
 
@@ -311,8 +394,11 @@ namespace MyWebForms
                 ctrl.AuthorSelected += OnAuthorSelected;
                 phComments.Controls.Add(ctrl);
 
-                // Recurse for children
-                RenderCommentTree(allComments, comment.Id, depth + 1);
+                // Recurse for children if within depth limit
+                if (depth < MaxCommentDepth)
+                {
+                    RenderCommentTree(comments, comment.Id, depth + 1);
+                }
             }
         }
 

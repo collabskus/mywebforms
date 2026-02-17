@@ -1,7 +1,7 @@
 ﻿
 ===============================================================================
 ASP.NET PROJECT EXPORT
-Generated: 02/17/2026 14:18:46
+Generated: 02/17/2026 14:24:54
 Project Path: D:\DEV\personal\MyWebForms
 ===============================================================================
 
@@ -2790,8 +2790,8 @@ namespace MyWebForms
 
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\HackerNews.aspx
-SIZE: 8.02 KB
-MODIFIED: 02/17/2026 14:06:38
+SIZE: 8.91 KB
+MODIFIED: 02/17/2026 14:24:15
 ================================================================================
 
 <%@ Page Title="Hacker News" Language="C#" MasterPageFile="~/Site.Master"
@@ -2812,8 +2812,17 @@ MODIFIED: 02/17/2026 14:06:38
     <div class="d-flex align-items-center mb-3">
         <span class="hn-logo me-2" style="background:#ff6600;color:#fff;font-weight:bold;padding:2px 6px;font-family:monospace;">Y</span>
         <h4 class="mb-0 fw-bold">Hacker News</h4>
-        <span class="ms-auto badge bg-success animate__animated animate__pulse animate__infinite"
-              style="font-size:.65rem;">LIVE</span>
+
+        <%-- LIVE badge: only shown/animated when on the "new" tab.
+             The server sets its Visible flag; the JS countdown sits next to it. --%>
+        <asp:HiddenField ID="hfActiveTab" runat="server" />
+        <span class="ms-auto d-flex align-items-center gap-2">
+            <asp:Label ID="lblRefreshCountdown" runat="server" Visible="false"
+                CssClass="text-muted small" />
+            <asp:Label ID="lblLiveBadge" runat="server"
+                CssClass="badge bg-success animate__animated animate__pulse animate__infinite"
+                style="font-size:.65rem;">LIVE</asp:Label>
+        </span>
     </div>
 
     <%-- ═══════════════════════════════════════════════════════════
@@ -2830,10 +2839,10 @@ MODIFIED: 02/17/2026 14:06:38
             <asp:LinkButton ID="btnTabBest"  runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="best">Best</asp:LinkButton>
         </li>
         <li class="nav-item">
-            <asp:LinkButton ID="btnTabAsk"   runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="ask">Ask HN</asp:LinkButton>
+            <asp:LinkButton ID="btnTabAsk"   runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="ask">Ask</asp:LinkButton>
         </li>
         <li class="nav-item">
-            <asp:LinkButton ID="btnTabShow"  runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="show">Show HN</asp:LinkButton>
+            <asp:LinkButton ID="btnTabShow"  runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="show">Show</asp:LinkButton>
         </li>
         <li class="nav-item">
             <asp:LinkButton ID="btnTabJobs"  runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="jobs">Jobs</asp:LinkButton>
@@ -2841,88 +2850,82 @@ MODIFIED: 02/17/2026 14:06:38
     </ul>
 
     <%-- ═══════════════════════════════════════════════════════════
-         Main two-column layout
+         Message panel (errors / empty state)
     ════════════════════════════════════════════════════════════════ --%>
-    <div class="row">
+    <asp:Panel ID="pnlMessage" runat="server" Visible="false"
+        CssClass="alert alert-warning">
+        <asp:Literal ID="litMessage" runat="server" />
+    </asp:Panel>
 
-        <%-- ── Left: story list ─────────────────────────────────── --%>
-        <div class="col-md-7">
+    <%-- ═══════════════════════════════════════════════════════════
+         Story list
+    ════════════════════════════════════════════════════════════════ --%>
+    <asp:PlaceHolder ID="phStories" runat="server" />
 
-            <%-- Loading / error message --%>
-            <asp:Panel ID="pnlMessage" runat="server" Visible="false">
-                <div class="alert alert-info small">
-                    <asp:Literal ID="litMessage" runat="server" />
-                </div>
-            </asp:Panel>
+    <%-- ═══════════════════════════════════════════════════════════
+         Pager
+    ════════════════════════════════════════════════════════════════ --%>
+    <asp:Panel ID="pnlPager" runat="server" CssClass="d-flex align-items-center gap-3 mt-3">
+        <asp:LinkButton ID="btnPrev" runat="server" CssClass="btn btn-outline-secondary btn-sm"
+            OnClick="btnPrev_Click">&laquo; Prev</asp:LinkButton>
+        <span class="small text-muted">
+            Page <asp:Literal ID="litPage" runat="server" /> of
+            <asp:Literal ID="litPageCount" runat="server" />
+        </span>
+        <asp:LinkButton ID="btnNext" runat="server" CssClass="btn btn-outline-secondary btn-sm"
+            OnClick="btnNext_Click">Next &raquo;</asp:LinkButton>
+    </asp:Panel>
 
-            <%-- Story rows injected here by code-behind --%>
-            <asp:PlaceHolder ID="phStories" runat="server" />
+    <%-- ═══════════════════════════════════════════════════════════
+         Story detail panel
+    ════════════════════════════════════════════════════════════════ --%>
+    <asp:Panel ID="pnlStoryDetail" runat="server" Visible="false"
+        CssClass="mt-4 p-3 border rounded animate__animated animate__fadeIn">
 
-            <%-- Pagination --%>
-            <asp:Panel ID="pnlPager" runat="server" CssClass="d-flex justify-content-between align-items-center mt-3">
-                <asp:LinkButton ID="btnPrev" runat="server" CssClass="btn btn-sm btn-outline-secondary"
-                    OnClick="btnPrev_Click">&#8592; Prev</asp:LinkButton>
-                <small class="text-muted">
-                    Page <asp:Literal ID="litPage" runat="server" />
-                    of <asp:Literal ID="litPageCount" runat="server" />
-                </small>
-                <asp:LinkButton ID="btnNext" runat="server" CssClass="btn btn-sm btn-outline-secondary"
-                    OnClick="btnNext_Click">Next &#8594;</asp:LinkButton>
-            </asp:Panel>
-
+        <div class="d-flex justify-content-end mb-1">
+            <asp:LinkButton ID="btnCloseDetail" runat="server"
+                CssClass="btn btn-sm btn-outline-secondary"
+                OnClick="btnCloseDetail_Click">&#10005; Close</asp:LinkButton>
         </div>
 
-        <%-- ── Right: detail / user panel ──────────────────────── --%>
-        <div class="col-md-5">
+        <h5><asp:Literal ID="litDetailTitle" runat="server" /></h5>
+        <p class="small text-muted mb-2">
+            <asp:Literal ID="litDetailMeta" runat="server" />
+        </p>
 
-            <%-- Story detail panel --%>
-            <asp:Panel ID="pnlStoryDetail" runat="server" Visible="false"
-                CssClass="card shadow-sm mb-3 animate__animated animate__fadeIn">
-                <div class="card-header bg-dark text-white d-flex justify-content-between">
-                    <span class="fw-semibold small">
-                        <asp:Literal ID="litDetailTitle" runat="server" />
-                    </span>
-                    <asp:LinkButton ID="btnCloseDetail" runat="server"
-                        CssClass="btn-close btn-close-white btn-sm"
-                        OnClick="btnCloseDetail_Click" />
-                </div>
-                <div class="card-body">
-                    <div class="small text-muted mb-2">
-                        <asp:Literal ID="litDetailMeta" runat="server" />
-                    </div>
-                    <%-- Self-text (Ask HN / polls) --%>
-                    <asp:Panel ID="pnlDetailText" runat="server" CssClass="hn-story-text small mb-3">
-                        <asp:Literal ID="litDetailText" runat="server" Mode="PassThrough" />
-                    </asp:Panel>
-                    <%-- Poll options --%>
-                    <asp:Panel ID="pnlPollOptions" runat="server">
-                        <asp:PlaceHolder ID="phPollOptions" runat="server" />
-                    </asp:Panel>
-                </div>
-                <div class="card-body border-top">
-                    <h6 class="text-muted small mb-2">
-                        Comments (<asp:Literal ID="litDetailCommentCount" runat="server" />)
-                    </h6>
-                    <asp:Panel ID="pnlCommentLoading" runat="server" CssClass="text-muted small">
-                        Loading comments&#8230;
-                    </asp:Panel>
-                    <asp:PlaceHolder ID="phComments" runat="server" />
-                </div>
-            </asp:Panel>
+        <%-- Self text (Ask HN / jobs) --%>
+        <asp:Panel ID="pnlDetailText" runat="server" Visible="false"
+            CssClass="hn-story-text mb-3 p-2 bg-light rounded small">
+            <asp:Literal ID="litDetailText" runat="server" />
+        </asp:Panel>
 
-            <%-- User profile panel --%>
-            <asp:Panel ID="pnlUserProfile" runat="server" Visible="false"
-                CssClass="animate__animated animate__fadeIn">
-                <div class="d-flex justify-content-end mb-1">
-                    <asp:LinkButton ID="btnCloseUser" runat="server"
-                        CssClass="btn btn-sm btn-outline-secondary"
-                        OnClick="btnCloseUser_Click">&#10005; Close</asp:LinkButton>
-                </div>
-                <uc:UserCard ID="ucUserCard" runat="server" />
-            </asp:Panel>
+        <%-- Poll options --%>
+        <asp:Panel ID="pnlPollOptions" runat="server" Visible="false" CssClass="mb-3">
+            <h6 class="small text-uppercase text-muted">Poll options</h6>
+            <asp:PlaceHolder ID="phPollOptions" runat="server" />
+        </asp:Panel>
 
+        <%-- Comments --%>
+        <h6 class="mt-3">
+            <asp:Literal ID="litDetailCommentCount" runat="server" /> comments
+        </h6>
+        <asp:Panel ID="pnlCommentLoading" runat="server" Visible="true"
+            CssClass="text-muted small">Loading comments&hellip;</asp:Panel>
+        <asp:PlaceHolder ID="phComments" runat="server" />
+    </asp:Panel>
+
+    <%-- ═══════════════════════════════════════════════════════════
+         User profile panel
+    ════════════════════════════════════════════════════════════════ --%>
+    <asp:Panel ID="pnlUserProfile" runat="server" Visible="false"
+        CssClass="animate__animated animate__fadeIn">
+        <div class="d-flex justify-content-end mb-1">
+            <asp:LinkButton ID="btnCloseUser" runat="server"
+                CssClass="btn btn-sm btn-outline-secondary"
+                OnClick="btnCloseUser_Click">&#10005; Close</asp:LinkButton>
         </div>
-    </div>
+        <uc:UserCard ID="ucUserCard" runat="server" />
+    </asp:Panel>
 
 </main>
 
@@ -2950,12 +2953,13 @@ MODIFIED: 02/17/2026 14:06:38
 
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\HackerNews.aspx.cs
-SIZE: 14.92 KB
-MODIFIED: 02/17/2026 14:07:01
+SIZE: 19.2 KB
+MODIFIED: 02/17/2026 14:24:34
 ================================================================================
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
@@ -2973,7 +2977,8 @@ namespace MyWebForms
     /// 1. Page_Load   — restores tab/page state from ViewState; calls
     ///                  RegisterAsyncTask to queue the async data load.
     /// 2. PreRenderComplete (raised after all async tasks finish) — binds
-    ///                  the story rows and detail panel to the loaded data.
+    ///                  the story rows and detail panel to the loaded data,
+    ///                  and injects the auto-refresh script when on the New tab.
     ///
     /// Why RegisterAsyncTask instead of async void Page_Load?
     ///   RegisterAsyncTask is the correct Web Forms idiom for async work.
@@ -2985,6 +2990,13 @@ namespace MyWebForms
     ///   UpdatePanel would add MS Ajax partial rendering — valid, but this
     ///   demo keeps the dependency surface small and lets LinkButton postbacks
     ///   do a full-page render, which is simpler to reason about.
+    ///
+    /// Auto-refresh (New tab only)
+    /// ---------------------------
+    ///   When ActiveTab == "new" a JavaScript countdown is injected via
+    ///   RegisterStartupScript. After AutoRefreshSeconds the script submits
+    ///   btnTabNew to trigger a fresh server-side load — the same postback
+    ///   the user would do manually. The LIVE badge is shown only on this tab.
     /// </summary>
     public partial class HackerNews : Page
     {
@@ -2992,6 +3004,12 @@ namespace MyWebForms
 
         private const int PageSize = 20;
         private const int MaxCommentDepth = 4;
+
+        /// <summary>
+        /// How many seconds between automatic refreshes on the New tab.
+        /// 60 seconds is respectful of the HN Firebase API rate limits.
+        /// </summary>
+        private const int AutoRefreshSeconds = 60;
 
         // ── Service (injectable via property for testability) ────────────────
 
@@ -3052,6 +3070,10 @@ namespace MyWebForms
                 CurrentPage = 1;
             }
 
+            // Expose the active tab to JavaScript via a hidden field so the
+            // client-side countdown script can confirm which tab is active.
+            hfActiveTab.Value = ActiveTab;
+
             HighlightActiveTab();
 
             // Queue async data fetching. PreRenderComplete fires after all
@@ -3106,6 +3128,73 @@ namespace MyWebForms
             BindDetailPanel();
             BindUserPanel();
             BindPager();
+
+            // Show the LIVE badge only on the "new" tab.
+            lblLiveBadge.Visible = (ActiveTab == "new");
+
+            // Inject the auto-refresh countdown script when on the New tab
+            // and no detail/user panel is open (to avoid interrupting reading).
+            if (ActiveTab == "new" && SelectedItemId == 0 && string.IsNullOrEmpty(SelectedUsername))
+            {
+                InjectAutoRefreshScript();
+            }
+            else
+            {
+                lblRefreshCountdown.Visible = false;
+            }
+        }
+
+        // ── Auto-refresh ─────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Injects a JavaScript countdown timer that, after AutoRefreshSeconds,
+        /// clicks the "New" tab LinkButton to trigger a fresh postback.
+        ///
+        /// Educational notes:
+        ///   - RegisterStartupScript emits the script after the page form so
+        ///     all controls are in the DOM when it runs.
+        ///   - We use __doPostBack directly (the standard Web Forms JS function)
+        ///     because LinkButton renders as an anchor that calls __doPostBack.
+        ///   - The countdown label is updated via setInterval so users see a
+        ///     live "refreshing in N s" indicator — making the LIVE badge honest.
+        ///   - C# 7.3 compatible string building (no interpolated verbatim $@"").
+        /// </summary>
+        private void InjectAutoRefreshScript()
+        {
+            lblRefreshCountdown.Visible = true;
+            lblRefreshCountdown.Text = string.Format(
+                "refreshing in {0}s", AutoRefreshSeconds);
+
+            // The UniqueID of a LinkButton is what __doPostBack expects as its
+            // first argument (the event target).
+            var newTabUniqueId = btnTabNew.UniqueID;
+            var countdownClientId = lblRefreshCountdown.ClientID;
+            var seconds = AutoRefreshSeconds;
+
+            var sb = new StringBuilder();
+            sb.AppendLine("(function () {");
+            sb.AppendLine("    var remaining = " + seconds + ";");
+            sb.AppendLine("    var lbl = document.getElementById('" + countdownClientId + "');");
+            sb.AppendLine("    var timer = setInterval(function () {");
+            sb.AppendLine("        remaining--;");
+            sb.AppendLine("        if (lbl) { lbl.textContent = 'refreshing in ' + remaining + 's'; }");
+            sb.AppendLine("        if (remaining <= 0) {");
+            sb.AppendLine("            clearInterval(timer);");
+            sb.AppendLine("            if (lbl) { lbl.textContent = 'refreshing\u2026'; }");
+            // __doPostBack(eventTarget, eventArgument) — standard Web Forms postback mechanism.
+            sb.AppendLine("            __doPostBack('" + newTabUniqueId + "', '');");
+            sb.AppendLine("        }");
+            sb.AppendLine("    }, 1000);");
+            sb.AppendLine("})();");
+
+            // RegisterStartupScript key must be unique per script block.
+            // Using the page type as the type argument is the standard idiom.
+            ScriptManager.RegisterStartupScript(
+                this,
+                typeof(HackerNews),
+                "HnAutoRefresh",
+                sb.ToString(),
+                addScriptTags: true);
         }
 
         // ── Tab click ────────────────────────────────────────────────────────
@@ -3252,12 +3341,9 @@ namespace MyWebForms
         /// parent relationships) and creates HnComment controls at the
         /// correct visual depth.
         /// </summary>
-        private void RenderCommentTree(
-            List<HackerNewsItem> allComments, int parentId, int depth)
+        private void RenderCommentTree(List<HackerNewsItem> comments, int parentId, int depth)
         {
-            if (depth > MaxCommentDepth) return;
-
-            foreach (var comment in allComments)
+            foreach (var comment in comments)
             {
                 if (comment.Parent != parentId) continue;
 
@@ -3267,8 +3353,11 @@ namespace MyWebForms
                 ctrl.AuthorSelected += OnAuthorSelected;
                 phComments.Controls.Add(ctrl);
 
-                // Recurse for children
-                RenderCommentTree(allComments, comment.Id, depth + 1);
+                // Recurse for children if within depth limit
+                if (depth < MaxCommentDepth)
+                {
+                    RenderCommentTree(comments, comment.Id, depth + 1);
+                }
             }
         }
 
@@ -3457,8 +3546,8 @@ namespace MyWebForms
 
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\HnStoryRow.ascx
-SIZE: 2.04 KB
-MODIFIED: 02/17/2026 14:13:28
+SIZE: 2.11 KB
+MODIFIED: 02/17/2026 14:24:00
 ================================================================================
 
 <%@ Control Language="C#" AutoEventWireup="True"
@@ -3472,10 +3561,10 @@ MODIFIED: 02/17/2026 14:13:28
     The parent page supplies the Item and Rank properties before Page_Load runs.
 
     LinkButton vs HyperLink:
-      - External story URL  â†’ plain <a> (HyperLink) â€” leaves the app entirely
-      - "N comments" link   â†’ LinkButton â€” triggers a postback so the parent
+      - External story URL  -> plain <a> (HyperLink) -- leaves the app entirely
+      - "N comments" link   -> LinkButton -- triggers a postback so the parent
         page can load the story detail panel server-side without a full redirect
-      - Author name link    â†’ LinkButton â€” same pattern for the user panel
+      - Author name link    -> LinkButton -- same pattern for the user panel
 --%>
 
 <div class="hn-story-row d-flex align-items-start py-2 border-bottom border-light">
@@ -3485,13 +3574,13 @@ MODIFIED: 02/17/2026 14:13:28
         <asp:Literal ID="litRank" runat="server" />
     </span>
 
-    <%-- Score badge --%>
-    <span class="hn-score badge bg-warning text-dark me-3 mt-1" style="min-width:3rem;">
-        <asp:Literal ID="litScore" runat="server" />â–²
+    <%-- Score badge: "â–² NNN" â€” arrow then number, space-separated --%>
+    <span class="hn-score badge bg-warning text-dark me-3 mt-1" style="min-width:3.5rem; text-align:center;">
+        &#9650;&nbsp;<asp:Literal ID="litScore" runat="server" />
     </span>
 
     <div class="flex-grow-1">
-        <%-- Story title â€” external URL opens in new tab --%>
+        <%-- Story title -- external URL opens in new tab --%>
         <asp:HyperLink ID="lnkTitle" runat="server"
             CssClass="hn-title fw-semibold text-decoration-none text-dark"
             Target="_blank" />
@@ -5022,7 +5111,7 @@ MODIFIED: 02/17/2026 12:40:45
 
 
 ===============================================================================
-EXPORT COMPLETED: 02/17/2026 14:18:50
+EXPORT COMPLETED: 02/17/2026 14:24:59
 Total Files Exported: 39
 Output File: .\docs\llm\dump.txt
 ===============================================================================
