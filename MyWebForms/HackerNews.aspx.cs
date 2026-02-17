@@ -187,38 +187,10 @@ namespace MyWebForms
             {
                 InjectAutoRefreshScript();
             }
-            else
-            {
-                lblRefreshCountdown.Visible = false;
-            }
         }
 
-        // ── Auto-refresh (background polling) ────────────────────────────────
-
-        /// <summary>
-        /// Injects a JavaScript poller that calls HackerNewsRefresh.ashx
-        /// every AutoRefreshSeconds seconds.
-        ///
-        /// On each poll:
-        ///   1. Score spans in the DOM are updated in-place — no postback.
-        ///   2. If the server reports the story list has changed (new IDs),
-        ///      we do a __doPostBack to reload the page with fresh data.
-        ///
-        /// The countdown label gives the user a live "next check in N s" cue.
-        ///
-        /// Score span convention (set in HnStoryRow.ascx):
-        ///   Each score element must have  data-hn-score-id="{itemId}"
-        ///   so the JS can find it by story ID.
-        ///
-        /// C# 7.3 compatible — no $@ interpolated verbatim strings.
-        /// </summary>
         private void InjectAutoRefreshScript()
         {
-            lblRefreshCountdown.Visible = true;
-            lblRefreshCountdown.Text = string.Format(
-                "next check in {0}s", AutoRefreshSeconds);
-
-            // Collect the IDs currently shown so we can send them to the handler.
             var shownIds = new List<string>();
             if (_storyPage != null)
             {
@@ -278,7 +250,7 @@ namespace MyWebForms
             sb.AppendLine("                    }");
             sb.AppendLine("                    // Only do a full postback if the story list changed.");
             sb.AppendLine("                    if (data.listChanged) {");
-            sb.AppendLine("                        if (lbl) { lbl.textContent = 'new stories — reloading\u2026'; }");
+            sb.AppendLine("                        if (lbl) { lbl.textContent = 'new stories \u2014 reloading\u2026'; }");
             sb.AppendLine("                        __doPostBack(postbackTarget, '');");
             sb.AppendLine("                        return;");
             sb.AppendLine("                    }");
@@ -356,7 +328,7 @@ namespace MyWebForms
             SelectedUsername = null;
         }
 
-        // ── Binding helpers ───────────────────────────────────────────────────
+        // ── Binding helpers ──────────────────────────────────────────────────
 
         private void BindStoryList()
         {
@@ -391,16 +363,62 @@ namespace MyWebForms
         {
             if (SelectedItemId == 0 || _selectedStory == null)
             {
-                pnlDetail.Visible = false;
+                pnlStoryDetail.Visible = false;
                 return;
             }
 
-            pnlDetail.Visible = true;
-            ucStoryDetail.Item = _selectedStory;
-            ucStoryDetail.PollOptions = _pollOptions;
-            ucStoryDetail.AuthorSelected += OnAuthorSelected;
+            pnlStoryDetail.Visible = true;
 
+            // ── Header literals ───────────────────────────────────────────────
+            litDetailTitle.Text = System.Web.HttpUtility.HtmlEncode(
+                _selectedStory.Title ?? "(untitled)");
+
+            litDetailMeta.Text = string.Format(
+                "{0} points by {1} &nbsp;|&nbsp; {2} &nbsp;|&nbsp; {3} comments",
+                _selectedStory.Score,
+                System.Web.HttpUtility.HtmlEncode(_selectedStory.By ?? "[deleted]"),
+                _selectedStory.TimeAgo,
+                _selectedStory.Descendants);
+
+            // ── Self-text (Ask HN / Jobs) ─────────────────────────────────────
+            if (!string.IsNullOrEmpty(_selectedStory.Text))
+            {
+                // HN returns HTML; render verbatim (source is trusted API).
+                litDetailText.Text = _selectedStory.Text;
+                pnlDetailText.Visible = true;
+            }
+            else
+            {
+                pnlDetailText.Visible = false;
+            }
+
+            // ── Poll options ──────────────────────────────────────────────────
+            if (_pollOptions != null && _pollOptions.Count > 0)
+            {
+                phPollOptions.Controls.Clear();
+                foreach (var opt in _pollOptions)
+                {
+                    var div = new HtmlGenericControl("div");
+                    div.Attributes["class"] = "hn-poll-option";
+                    div.InnerHtml = string.Format(
+                        "<strong>{0}</strong> &nbsp;<span class=\"badge bg-secondary\">{1} pts</span>",
+                        System.Web.HttpUtility.HtmlEncode(opt.Text ?? opt.Title ?? string.Empty),
+                        opt.Score);
+                    phPollOptions.Controls.Add(div);
+                }
+                pnlPollOptions.Visible = true;
+            }
+            else
+            {
+                pnlPollOptions.Visible = false;
+            }
+
+            // ── Comment count ─────────────────────────────────────────────────
+            litDetailCommentCount.Text = _selectedStory.Descendants.ToString();
+
+            // ── Comment tree ──────────────────────────────────────────────────
             phComments.Controls.Clear();
+            pnlCommentLoading.Visible = false;
 
             if (_comments == null || _comments.Count == 0)
             {
