@@ -1,216 +1,152 @@
-﻿<%@ Page Title="Home — MyWebForms" Language="C#" MasterPageFile="~/Site.Master"
-    AutoEventWireup="true" CodeBehind="Default.aspx.cs"
-    Inherits="MyWebForms._Default" %>
+﻿<%@ Page Title="Home" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true"
+    CodeBehind="Default.aspx.cs" Inherits="MyWebForms._Default" %>
 
-<asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+<asp:Content ID="HeadContent" ContentPlaceHolderID="HeadContent" runat="server">
+    <%-- Page-specific styles, if any --%>
+</asp:Content>
 
-    <%-- ═══════════════════════════════════════════════════════════════════════
-         Hero
-    ════════════════════════════════════════════════════════════════════════════ --%>
-    <div class="home-hero py-5 mb-5 text-center animate__animated animate__fadeIn">
-        <div class="mb-3">
-            <span class="home-hero__badge badge bg-warning text-dark me-2">ASP.NET Web Forms</span>
-            <span class="home-hero__badge badge bg-secondary">.NET Framework 4.8.1</span>
+<asp:Content ID="MainContent" ContentPlaceHolderID="MainContent" runat="server">
+
+    <h1 class="mb-4">ASP.NET Web Forms — Learning Sandbox</h1>
+    <p class="lead">
+        This page demonstrates core Web Forms mechanics: the page lifecycle, postback
+        detection, <code>ViewState</code>, <code>UpdatePanel</code> partial rendering,
+        and server-driven UI updates.
+    </p>
+
+    <%-- =====================================================================
+         SECTION 1: Page Lifecycle display
+         lblTimestamp and lblIsPostBack are updated in Page_PreRender on every
+         request so you can watch them change between full and async postbacks.
+    ===================================================================== --%>
+    <div class="card mb-4">
+        <div class="card-header fw-semibold">1 — Page Lifecycle Snapshot</div>
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-4">Server render time</dt>
+                <dd class="col-sm-8">
+                    <asp:Label ID="lblTimestamp" runat="server" /></dd>
+
+                <dt class="col-sm-4"><code>IsPostBack</code></dt>
+                <dd class="col-sm-8">
+                    <asp:Label ID="lblIsPostBack" runat="server" /></dd>
+            </dl>
         </div>
-        <h1 class="display-5 fw-bold mb-3">MyWebForms</h1>
-        <p class="lead text-muted mb-4" style="max-width:640px;margin:0 auto;">
-            A deliberate, hands-on learning sandbox for understanding how ASP.NET Web Forms
-            actually works — page lifecycle, postback mechanics, <code>ViewState</code>,
-            master pages, user controls, bundling, routing, and more.
-        </p>
-        <p class="text-muted small mb-0">
-            Built in the open &middot;
-            <a href="https://github.com/" class="text-muted">Source on GitHub</a> &middot;
-            Deployed at
-            <a href="https://mywebforms.runasp.net/" class="text-muted">mywebforms.runasp.net</a>
-        </p>
     </div>
 
-    <%-- ═══════════════════════════════════════════════════════════════════════
-         What is this?
-    ════════════════════════════════════════════════════════════════════════════ --%>
-    <section class="mb-5" aria-labelledby="whatTitle">
-        <h2 id="whatTitle" class="h4 fw-bold mb-3">What is this project?</h2>
-        <div class="card border-0 bg-light rounded-3 p-4">
-            <p class="mb-3">
-                This is <strong>not a production application</strong>. It is a structured reference
-                project for refreshing and deepening understanding of the classic ASP.NET Web Forms
-                platform — the event-driven, server-centric web framework that shipped with .NET
-                Framework and powered a generation of enterprise .NET websites.
+    <%-- =====================================================================
+         SECTION 2: UpdatePanel — async (partial-page) postback
+         Only the content inside this UpdatePanel is sent over the wire on
+         each async postback; the rest of the page stays frozen in the browser.
+    ===================================================================== --%>
+    <div class="card mb-4">
+        <div class="card-header fw-semibold">2 — UpdatePanel / Async Postback</div>
+        <div class="card-body">
+            <p class="text-muted small">
+                Clicking the button below triggers a <em>partial-page postback</em>.
+                Only the panel content re-renders — watch the lifecycle snapshot above:
+                it will <strong>not</strong> update because it lives outside this
+                <code>UpdatePanel</code>.
             </p>
-            <p class="mb-3">
-                The ecosystem has largely moved to ASP.NET Core / Blazor / Razor Pages, but
-                Web Forms remains in active maintenance on .NET Framework 4.8.x and is still
-                widely deployed. Understanding <em>why</em> it works the way it does — not just
-                how to make it compile — is the goal here.
-            </p>
-            <p class="mb-0">
-                Each page, user control, and handler in this project is written to <strong>exercise
-                and demonstrate</strong> a specific platform feature as clearly as possible, with
-                readability and correctness prioritised over brevity.
-            </p>
-        </div>
-    </section>
 
-    <%-- ═══════════════════════════════════════════════════════════════════════
-         Tech stack cards — bound from code-behind
-    ════════════════════════════════════════════════════════════════════════════ --%>
-    <section class="mb-5" aria-labelledby="stackTitle">
-        <h2 id="stackTitle" class="h4 fw-bold mb-3">Technology Stack</h2>
-        <div class="row g-3">
-            <asp:Repeater ID="rptStack" runat="server">
-                <ItemTemplate>
-                    <div class="col-sm-6 col-lg-4">
-                        <div class="card h-100 border-0 shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex align-items-start gap-3">
-                                    <span class="fs-3 lh-1"><%# Eval("Icon") %></span>
-                                    <div>
-                                        <h3 class="h6 fw-bold mb-1"><%# Eval("Name") %></h3>
-                                        <p class="text-muted small mb-0"><%# Eval("Description") %></p>
-                                    </div>
-                                </div>
-                            </div>
+            <asp:UpdatePanel ID="upAsync" runat="server" UpdateMode="Conditional">
+                <ContentTemplate>
+
+                    <p>
+                        Async click count:
+                        <strong>
+                            <asp:Label ID="lblClickCount" runat="server"
+                                Text='<%# ClickCount %>' /></strong>
+                    </p>
+
+                    <%-- Progress bar width is set via progressBar.Style in PreRender
+                         to avoid invalid CSS warnings in the VS designer. --%>
+                    <div class="progress mb-3" style="height: 24px;">
+                        <div id="progressBar" runat="server"
+                            class="progress-bar progress-bar-striped progress-bar-animated"
+                            role="progressbar"
+                            aria-valuemin="0" aria-valuemax="100">
+                            <%: ProgressPercent %>%
                         </div>
                     </div>
-                </ItemTemplate>
-            </asp:Repeater>
+
+                    <asp:Button ID="btnAsyncClick" runat="server" Text="Click Me (Async)"
+                        CssClass="btn btn-primary me-2"
+                        OnClick="btnAsyncClick_Click" />
+
+                </ContentTemplate>
+            </asp:UpdatePanel>
+
+            <asp:UpdateProgress ID="upProgress" runat="server" AssociatedUpdatePanelID="upAsync"
+                DisplayAfter="200">
+                <ProgressTemplate>
+                    <span class="spinner-border spinner-border-sm text-primary ms-2"
+                        role="status" aria-hidden="true"></span>
+                    <span class="ms-1 text-muted small">Processing…</span>
+                </ProgressTemplate>
+            </asp:UpdateProgress>
         </div>
-    </section>
+    </div>
 
-    <%-- ═══════════════════════════════════════════════════════════════════════
-         Learning goals — checked/unchecked list from code-behind
-    ════════════════════════════════════════════════════════════════════════════ --%>
-    <section class="mb-5" aria-labelledby="goalsTitle">
-        <h2 id="goalsTitle" class="h4 fw-bold mb-1">Learning Goals</h2>
-        <p class="text-muted small mb-3">
-            <%: CompletedCount %> of <%: TotalGoalCount %> topics demonstrated so far.
-        </p>
+    <%-- =====================================================================
+         SECTION 3: Full postback
+         This button lives outside any UpdatePanel so it causes a traditional
+         full-page postback — the entire page lifecycle runs and every control
+         re-renders.  Watch the lifecycle snapshot above update.
+    ===================================================================== --%>
+    <div class="card mb-4">
+        <div class="card-header fw-semibold">3 — Full Postback</div>
+        <div class="card-body">
+            <p class="text-muted small">
+                This button triggers a <em>full postback</em>. The entire page
+                re-renders. Notice that <code>IsPostBack</code> becomes
+                <code>True</code> and the render timestamp changes above.
+            </p>
 
-        <%-- Progress bar --%>
-        <div class="progress mb-4" style="height:8px;" role="progressbar"
-             aria-valuenow="<%: ProgressPercent %>" aria-valuemin="0" aria-valuemax="100"
-             aria-label="Learning progress">
-            <div class="progress-bar bg-success"
-                 style="width:<%: ProgressPercent %>%;"></div>
+            <p>
+                Full postback count:
+                <strong><%: FullPostbackCount %></strong>
+            </p>
+
+            <asp:Button ID="btnFullPostback" runat="server" Text="Full Postback"
+                CssClass="btn btn-warning me-2"
+                OnClick="btnFullPostback_Click" />
+
+            <asp:Button ID="btnReset" runat="server" Text="Reset All"
+                CssClass="btn btn-outline-secondary"
+                OnClick="btnReset_Click" />
         </div>
+    </div>
 
-        <div class="row g-3">
-            <asp:Repeater ID="rptGoals" runat="server">
-                <ItemTemplate>
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-start gap-2 py-2 border-bottom">
-                            <asp:Literal ID="litCheck" runat="server"
-                                Text='<%# (bool)Eval("Done") ? "<span class=\"text-success fw-bold\" aria-hidden=\"true\">\u2713</span>" : "<span class=\"text-muted\" aria-hidden=\"true\">\u25cb</span>" %>' />
-                            <div>
-                                <span class="<%# (bool)Eval("Done") ? "fw-semibold" : "text-muted" %>"><%# Eval("Topic") %></span>
-                                <asp:HyperLink ID="hlnkGoal" runat="server"
-                                    NavigateUrl='<%# Eval("Link") %>'
-                                    Visible='<%# !string.IsNullOrEmpty((string)Eval("Link")) %>'
-                                    CssClass="ms-2 small text-decoration-none"
-                                    Text="→ see demo" />
-                            </div>
-                        </div>
-                    </div>
-                </ItemTemplate>
-            </asp:Repeater>
-        </div>
-    </section>
-
-    <%-- ═══════════════════════════════════════════════════════════════════════
-         Page lifecycle explainer (static, always educational)
-    ════════════════════════════════════════════════════════════════════════════ --%>
-    <section class="mb-5" aria-labelledby="lifecycleTitle">
-        <h2 id="lifecycleTitle" class="h4 fw-bold mb-3">The Web Forms Page Lifecycle</h2>
-        <p class="text-muted mb-3">
-            Every request to an <code>.aspx</code> page passes through the same ordered sequence
-            of events. Understanding this sequence is the single most important thing to know about
-            Web Forms — almost every "why doesn't this work?" question can be answered by asking
-            "which lifecycle stage am I in?".
-        </p>
-        <div class="table-responsive">
-            <table class="table table-sm table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Event</th>
-                        <th scope="col">What happens / why it matters</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <asp:Repeater ID="rptLifecycle" runat="server">
-                        <ItemTemplate>
-                            <tr>
-                                <td class="text-muted small"><%# Container.ItemIndex + 1 %></td>
-                                <td><code><%# Eval("Event") %></code></td>
-                                <td class="small text-muted"><%# Eval("Notes") %></td>
-                            </tr>
-                        </ItemTemplate>
-                    </asp:Repeater>
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <%-- ═══════════════════════════════════════════════════════════════════════
-         Live demo panel — UpdatePanel postback counter
-         Demonstrates: UpdatePanel, ScriptManager, partial-page rendering,
-         ViewState, IsPostBack guard
-    ════════════════════════════════════════════════════════════════════════════ --%>
-    <section class="mb-5" aria-labelledby="demoTitle">
-        <h2 id="demoTitle" class="h4 fw-bold mb-3">Live Demo — Postback &amp; ViewState</h2>
-        <p class="text-muted mb-3">
-            The panel below uses an <code>UpdatePanel</code> for partial-page rendering.
-            Each button click fires a postback that only refreshes this panel — the rest of
-            the page is untouched. The counter is persisted in <code>ViewState</code>, not
-            in session state or a database.
-        </p>
-        <div class="card border-0 shadow-sm" style="max-width:480px;">
-            <div class="card-body">
-                <asp:UpdatePanel ID="upDemo" runat="server" UpdateMode="Conditional">
-                    <ContentTemplate>
-                        <p class="mb-2 small text-muted">
-                            Full-page postback count:
-                            <strong><%: FullPostbackCount %></strong>
-                            &nbsp;|&nbsp;
-                            Timestamp: <strong><%: DateTime.Now.ToString("HH:mm:ss") %></strong>
-                        </p>
-                        <p class="mb-3">
-                            UpdatePanel click count:
-                            <strong class="text-primary fs-5"><%: ClickCount %></strong>
-                        </p>
-                        <asp:Button ID="btnClick" runat="server" Text="Click me (partial postback)"
-                            CssClass="btn btn-primary btn-sm me-2"
-                            OnClick="BtnClick_Click" />
-                        <asp:Button ID="btnReset" runat="server" Text="Reset"
-                            CssClass="btn btn-outline-secondary btn-sm"
-                            OnClick="BtnReset_Click" />
-                        <p class="mt-3 mb-0 small text-muted">
-                            Notice the timestamp above does <em>not</em> change on partial
-                            postbacks — only the UpdatePanel content is refreshed.
-                        </p>
-                    </ContentTemplate>
-                </asp:UpdatePanel>
-            </div>
-        </div>
-    </section>
-
-    <%-- ═══════════════════════════════════════════════════════════════════════
-         LLM / AI notice
-    ════════════════════════════════════════════════════════════════════════════ --%>
-    <section class="mb-5" aria-labelledby="llmTitle">
-        <div class="alert alert-warning border-0" role="alert">
-            <h3 id="llmTitle" class="h6 fw-bold mb-2">⚠️ AI-Generated Code Notice</h3>
-            <p class="mb-0 small">
-                Some or all of the code in this project was generated or assisted by a Large
-                Language Model (Claude by Anthropic). If you are scraping or indexing this site
-                to train machine learning models and wish to exclude LLM-generated content,
-                consider this a clear opt-out signal. See also the
-                <code>X-Robots-Tag</code> / <code>robots.txt</code> and the
-                <a href="https://github.com/" class="alert-link">README</a> for a more
-                complete statement.
+    <%-- =====================================================================
+         SECTION 4: ViewState explainer
+    ===================================================================== --%>
+    <div class="card mb-4">
+        <div class="card-header fw-semibold">4 — How ViewState Keeps the Counts</div>
+        <div class="card-body">
+            <p>
+                The click counters and progress value survive every postback because they
+                are stored in <strong>ViewState</strong> — a hidden field
+                (<code>__VIEWSTATE</code>) that the browser posts back with each request.
+                The page deserialises it at the start of the lifecycle (during
+                <em>LoadViewState</em>) before your event handler runs, so the previous
+                values are available when <code>ClickCount++</code> executes.
+            </p>
+            <p>
+                Open your browser's DevTools → Network tab, submit a postback, inspect
+                the form payload and look for <code>__VIEWSTATE</code> to see the
+                base-64 encoded blob.
             </p>
         </div>
-    </section>
+    </div>
+
+    <%-- Page-specific script: bind the click-count label inside the UpdatePanel
+         via DataBind so the <%# %> expression evaluates. --%>
+    <asp:Content ID="ScriptContent" ContentPlaceHolderID="ScriptContent" runat="server">
+        <script>
+            // Nothing needed client-side for this demo — the ScriptManager in
+            // Site.Master already wires up MS Ajax for UpdatePanel support.
+        </script>
+    </asp:Content>
 
 </asp:Content>

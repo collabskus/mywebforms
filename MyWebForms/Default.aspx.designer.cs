@@ -15,49 +15,76 @@ namespace MyWebForms
     {
 
         /// <summary>
-        /// rptStack control.
+        /// lblTimestamp control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptStack;
+        protected global::System.Web.UI.WebControls.Label lblTimestamp;
 
         /// <summary>
-        /// rptGoals control.
+        /// lblIsPostBack control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptGoals;
+        protected global::System.Web.UI.WebControls.Label lblIsPostBack;
 
         /// <summary>
-        /// rptLifecycle control.
+        /// upAsync control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptLifecycle;
+        protected global::System.Web.UI.UpdatePanel upAsync;
 
         /// <summary>
-        /// upDemo control.
+        /// lblClickCount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel upDemo;
+        protected global::System.Web.UI.WebControls.Label lblClickCount;
 
         /// <summary>
-        /// btnClick control.
+        /// progressBar control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnClick;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl progressBar;
+
+        /// <summary>
+        /// btnAsyncClick control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAsyncClick;
+
+        /// <summary>
+        /// upProgress control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdateProgress upProgress;
+
+        /// <summary>
+        /// btnFullPostback control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnFullPostback;
 
         /// <summary>
         /// btnReset control.
