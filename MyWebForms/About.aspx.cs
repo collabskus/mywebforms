@@ -3,29 +3,20 @@ using System.Web.UI;
 
 namespace MyWebForms
 {
+    /// <summary>
+    /// About page — intentionally thin code-behind.
+    /// All chart logic lives in ChartWidget.ascx.cs;
+    /// all status-bar logic lives in LibraryStatusWidget.ascx.cs.
+    /// This page is responsible only for wiring them together.
+    /// </summary>
     public partial class About : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
-            {
-                SetDefaultData();
-            }
-        }
-
-        private void SetDefaultData()
-        {
-            int[] values = { 95, 88, 100 };
-            hfChartData.Value = "[" + string.Join(",", values) + "]";
-            lblMessage.Text = "System initialized with Server-Side Data.";
-        }
-
-        protected void btnRefresh_Click(object sender, EventArgs e)
-        {
-            Random rng = new Random();
-            int[] newValues = { rng.Next(70, 100), rng.Next(70, 100), rng.Next(70, 100) };
-            hfChartData.Value = "[" + string.Join(",", newValues) + "]";
-            lblMessage.Text = "Data refreshed via Code-Behind at " + DateTime.Now.ToLongTimeString();
+            // Nothing to do here: both user controls initialise themselves.
+            // This empty guard is left deliberately so you can see the pattern —
+            // IsPostBack checks belong in Page_Load when the page itself needs
+            // to distinguish first load from postback.
         }
     }
 }
