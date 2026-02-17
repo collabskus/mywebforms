@@ -26,7 +26,10 @@ $IncludeExtensions = @(
     "*.sql",          # SQL files
     "*.props",        # MSBuild props files
     "*.targets",      # MSBuild targets files
-    "*.sh"            # Shell scripts
+    "*.sh",           # Shell scripts
+    "*.aspx",         # Web Forms pages
+    "*.ascx",         # Web Forms user controls
+    "*.master"        # Web Forms master pages
 )
 
 # Specific files without extensions to include
@@ -49,7 +52,9 @@ $ExcludeDirectories = @(
     "packages",
     ".vscode",
     ".idea",
-    "docs"            # Documentation folder
+    "docs",           # Documentation folder
+    "Scripts\WebForms",  # Built-in WebForms scripts (MsAjax, GridView, etc.)
+    "Scripts\lib"        # Third-party lib folder (Chart.js, etc.)
 )
 
 # Files to exclude
@@ -59,10 +64,25 @@ $ExcludeFiles = @(
     "*.pdb",
     "*.cache",
     "*.log",
-    "*.md",           # Markdown files
-    "*.txt",          # Text files (except specific ones)
-    "LICENSE*",       # License files
-    "LICENCE*"        # Alternative spelling
+    "*.md",
+    "*.txt",
+    "LICENSE*",
+    "LICENCE*",
+    # Bootstrap CSS (all variants)
+    "bootstrap*.css",
+    "bootstrap*.css.map",
+    # Bootstrap JS (all variants)
+    "bootstrap*.js",
+    "bootstrap*.js.map",
+    # jQuery (all variants)
+    "jquery*.js",
+    "jquery*.js.map",
+    # Modernizr
+    "modernizr*.js",
+    # Animate.css
+    "animate*.css",
+    # Designer files - auto-generated, rarely useful for review
+    "*.designer.cs"
 )
 
 Write-Host "Starting project export..." -ForegroundColor Green
@@ -85,14 +105,13 @@ Project Path: $((Resolve-Path $ProjectPath).Path)
 
 $Header | Out-File -FilePath $OutputPath -Append -Encoding UTF8
 
-# Generate directory structure using tree command if available, otherwise use PowerShell
+# Generate directory structure
 Write-Host "Generating directory structure..." -ForegroundColor Cyan
 
 "DIRECTORY STRUCTURE:" | Out-File -FilePath $OutputPath -Append -Encoding UTF8
 "===================" | Out-File -FilePath $OutputPath -Append -Encoding UTF8
 "" | Out-File -FilePath $OutputPath -Append -Encoding UTF8
 
-# Try to use tree command first
 try {
     $treeOutput = & tree $ProjectPath /F /A 2>$null
     if ($LASTEXITCODE -eq 0) {
@@ -101,7 +120,6 @@ try {
         throw "Tree command failed"
     }
 } catch {
-    # Fallback to PowerShell-based tree
     Write-Host "Tree command not available, using PowerShell alternative..." -ForegroundColor Yellow
 
     function Get-DirectoryTree {
@@ -137,49 +155,39 @@ Write-Host "Collecting files..." -ForegroundColor Cyan
 
 $AllFiles = @()
 
+# Helper: check if a file should be excluded
+function Should-Exclude {
+    param($File)
+
+    # Check excluded directories (supports both \ and / path separators)
+    foreach ($excludeDir in $ExcludeDirectories) {
+        $normalizedExclude = $excludeDir.Replace("/", "\")
+        if ($File.FullName -like "*\$normalizedExclude\*") {
+            return $true
+        }
+    }
+
+    # Check excluded file patterns
+    foreach ($excludePattern in $ExcludeFiles) {
+        if ($File.Name -like $excludePattern) {
+            return $true
+        }
+    }
+
+    return $false
+}
+
 # Collect files by extension
 foreach ($extension in $IncludeExtensions) {
-    $files = Get-ChildItem -Path $ProjectPath -Recurse -Include $extension -File | Where-Object {
-        $exclude = $false
-        
-        # Check excluded directories
-        foreach ($excludeDir in $ExcludeDirectories) {
-            if ($_.FullName -like "*\$excludeDir\*") {
-                $exclude = $true
-                break
-            }
-        }
-        
-        # Check excluded files
-        if (-not $exclude) {
-            foreach ($excludeFile in $ExcludeFiles) {
-                if ($_.Name -like $excludeFile) {
-                    $exclude = $true
-                    break
-                }
-            }
-        }
-        
-        -not $exclude
-    }
+    $files = Get-ChildItem -Path $ProjectPath -Recurse -Include $extension -File |
+        Where-Object { -not (Should-Exclude $_) }
     $AllFiles += $files
 }
 
 # Collect specific files without extensions (like Dockerfile)
 foreach ($specificFile in $IncludeSpecificFiles) {
-    $files = Get-ChildItem -Path $ProjectPath -Recurse -Include $specificFile -File | Where-Object {
-        $exclude = $false
-        
-        # Check excluded directories
-        foreach ($excludeDir in $ExcludeDirectories) {
-            if ($_.FullName -like "*\$excludeDir\*") {
-                $exclude = $true
-                break
-            }
-        }
-        
-        -not $exclude
-    }
+    $files = Get-ChildItem -Path $ProjectPath -Recurse -Include $specificFile -File |
+        Where-Object { -not (Should-Exclude $_) }
     $AllFiles += $files
 }
 
@@ -213,7 +221,6 @@ $separator
     $fileHeader | Out-File -FilePath $OutputPath -Append -Encoding UTF8
 
     try {
-        # Read file content with error handling
         $content = Get-Content -Path $file.FullName -Raw -ErrorAction Stop
         if ($content) {
             $content | Out-File -FilePath $OutputPath -Append -Encoding UTF8
@@ -243,6 +250,5 @@ Write-Host "`nExport completed successfully!" -ForegroundColor Green
 Write-Host "Output file: $OutputPath" -ForegroundColor Yellow
 Write-Host "Total files exported: $fileCount" -ForegroundColor Green
 
-# Display file size
 $outputFileInfo = Get-Item $OutputPath
 Write-Host "Output file size: $([math]::Round($outputFileInfo.Length / 1MB, 2)) MB" -ForegroundColor Cyan
