@@ -1,7 +1,7 @@
 ﻿
 ===============================================================================
 ASP.NET PROJECT EXPORT
-Generated: 02/17/2026 14:11:09
+Generated: 02/17/2026 14:18:46
 Project Path: D:\DEV\personal\MyWebForms
 ===============================================================================
 
@@ -45,10 +45,13 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   |   HackerNews.aspx.designer.cs
 |   |   HnComment.ascx
 |   |   HnComment.ascx.cs
+|   |   HnComment.ascx.designer.cs
 |   |   HnStoryRow.ascx
 |   |   HnStoryRow.ascx.cs
+|   |   HnStoryRow.ascx.designer.cs
 |   |   HnUserCard.ascx
 |   |   HnUserCard.ascx.cs
+|   |   HnUserCard.ascx.designer.cs
 |   |   libman.json
 |   |   LibraryStatusWidget.ascx
 |   |   LibraryStatusWidget.ascx.cs
@@ -72,7 +75,58 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   |       RouteConfig.cs
 |   |       
 |   +---bin
+|   |   |   Antlr3.Runtime.dll
+|   |   |   Antlr3.Runtime.pdb
+|   |   |   Microsoft.AspNet.FriendlyUrls.dll
+|   |   |   Microsoft.AspNet.FriendlyUrls.xml
+|   |   |   Microsoft.AspNet.Web.Optimization.WebForms.dll
+|   |   |   Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+|   |   |   Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+|   |   |   Microsoft.ScriptManager.MSAjax.dll
+|   |   |   Microsoft.ScriptManager.WebForms.dll
+|   |   |   Microsoft.Web.Infrastructure.dll
+|   |   |   MyWebForms.dll
+|   |   |   MyWebForms.dll.config
+|   |   |   MyWebForms.pdb
+|   |   |   Newtonsoft.Json.dll
+|   |   |   Newtonsoft.Json.xml
+|   |   |   System.Web.Optimization.dll
+|   |   |   System.Web.Optimization.xml
+|   |   |   WebGrease.dll
+|   |   |   
 |   |   \---roslyn
+|   |           csc.exe
+|   |           csc.exe.config
+|   |           csc.rsp
+|   |           csi.exe
+|   |           csi.exe.config
+|   |           csi.rsp
+|   |           Microsoft.Build.Tasks.CodeAnalysis.dll
+|   |           Microsoft.CodeAnalysis.CSharp.dll
+|   |           Microsoft.CodeAnalysis.CSharp.Scripting.dll
+|   |           Microsoft.CodeAnalysis.dll
+|   |           Microsoft.CodeAnalysis.Scripting.dll
+|   |           Microsoft.CodeAnalysis.VisualBasic.dll
+|   |           Microsoft.CSharp.Core.targets
+|   |           Microsoft.DiaSymReader.Native.amd64.dll
+|   |           Microsoft.DiaSymReader.Native.x86.dll
+|   |           Microsoft.Managed.Core.CurrentVersions.targets
+|   |           Microsoft.Managed.Core.targets
+|   |           Microsoft.VisualBasic.Core.targets
+|   |           System.Buffers.dll
+|   |           System.Collections.Immutable.dll
+|   |           System.Memory.dll
+|   |           System.Numerics.Vectors.dll
+|   |           System.Reflection.Metadata.dll
+|   |           System.Runtime.CompilerServices.Unsafe.dll
+|   |           System.Text.Encoding.CodePages.dll
+|   |           System.Threading.Tasks.Extensions.dll
+|   |           vbc.exe
+|   |           vbc.exe.config
+|   |           vbc.rsp
+|   |           VBCSCompiler.exe
+|   |           VBCSCompiler.exe.config
+|   |           
 |   +---Content
 |   |   |   bootstrap-grid.css
 |   |   |   bootstrap-grid.css.map
@@ -123,6 +177,9 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   |   |   |   MyWebForms.csproj.AssemblyReference.cache
 |   |   |   |   MyWebForms.csproj.CoreCompileInputs.cache
 |   |   |   |   MyWebForms.csproj.FileListAbsolute.txt
+|   |   |   |   MyWebForms.csproj.Up2Date
+|   |   |   |   MyWebForms.dll
+|   |   |   |   MyWebForms.pdb
 |   |   |   |   
 |   |   |   \---TempPE
 |   |   \---Release
@@ -661,6 +718,933 @@ D:\DEV\PERSONAL\MYWEBFORMS
     |               Newtonsoft.Json.dll
     |               Newtonsoft.Json.xml
     |               
+    +---System.IO.4.3.0
+    |   |   .signature.p7s
+    |   |   dotnet_library_license.txt
+    |   |   System.IO.4.3.0.nupkg
+    |   |   ThirdPartyNotices.txt
+    |   |   
+    |   +---lib
+    |   |   +---MonoAndroid10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---MonoTouch10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---net45
+    |   |   |       _._
+    |   |   |       
+    |   |   +---net462
+    |   |   |       System.IO.dll
+    |   |   |       
+    |   |   +---portable-net45+win8+wp8+wpa81
+    |   |   |       _._
+    |   |   |       
+    |   |   +---win8
+    |   |   |       _._
+    |   |   |       
+    |   |   +---wp80
+    |   |   |       _._
+    |   |   |       
+    |   |   +---wpa81
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarinios10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarinmac20
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarintvos10
+    |   |   |       _._
+    |   |   |       
+    |   |   \---xamarinwatchos10
+    |   |           _._
+    |   |           
+    |   \---ref
+    |       +---MonoAndroid10
+    |       |       _._
+    |       |       
+    |       +---MonoTouch10
+    |       |       _._
+    |       |       
+    |       +---net45
+    |       |       _._
+    |       |       
+    |       +---net462
+    |       |       System.IO.dll
+    |       |       
+    |       +---netcore50
+    |       |   |   System.IO.dll
+    |       |   |   System.IO.xml
+    |       |   |   
+    |       |   +---de
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---es
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---fr
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---it
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---ja
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---ko
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---ru
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---zh-hans
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   \---zh-hant
+    |       |           System.IO.xml
+    |       |           
+    |       +---netstandard1.0
+    |       |   |   System.IO.dll
+    |       |   |   System.IO.xml
+    |       |   |   
+    |       |   +---de
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---es
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---fr
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---it
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---ja
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---ko
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---ru
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---zh-hans
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   \---zh-hant
+    |       |           System.IO.xml
+    |       |           
+    |       +---netstandard1.3
+    |       |   |   System.IO.dll
+    |       |   |   System.IO.xml
+    |       |   |   
+    |       |   +---de
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---es
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---fr
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---it
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---ja
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---ko
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---ru
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---zh-hans
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   \---zh-hant
+    |       |           System.IO.xml
+    |       |           
+    |       +---netstandard1.5
+    |       |   |   System.IO.dll
+    |       |   |   System.IO.xml
+    |       |   |   
+    |       |   +---de
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---es
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---fr
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---it
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---ja
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---ko
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---ru
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   +---zh-hans
+    |       |   |       System.IO.xml
+    |       |   |       
+    |       |   \---zh-hant
+    |       |           System.IO.xml
+    |       |           
+    |       +---portable-net45+win8+wp8+wpa81
+    |       |       _._
+    |       |       
+    |       +---win8
+    |       |       _._
+    |       |       
+    |       +---wp80
+    |       |       _._
+    |       |       
+    |       +---wpa81
+    |       |       _._
+    |       |       
+    |       +---xamarinios10
+    |       |       _._
+    |       |       
+    |       +---xamarinmac20
+    |       |       _._
+    |       |       
+    |       +---xamarintvos10
+    |       |       _._
+    |       |       
+    |       \---xamarinwatchos10
+    |               _._
+    |               
+    +---System.Net.Http.4.3.4
+    |   |   .signature.p7s
+    |   |   dotnet_library_license.txt
+    |   |   System.Net.Http.4.3.4.nupkg
+    |   |   ThirdPartyNotices.txt
+    |   |   
+    |   +---lib
+    |   |   +---monoandroid10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---monotouch10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---net45
+    |   |   |       _._
+    |   |   |       
+    |   |   +---net46
+    |   |   |       System.Net.Http.dll
+    |   |   |       
+    |   |   +---portable-net45+win8+wpa81
+    |   |   |       _._
+    |   |   |       
+    |   |   +---win8
+    |   |   |       _._
+    |   |   |       
+    |   |   +---wpa81
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarinios10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---Xamarinmac20
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarintvos10
+    |   |   |       _._
+    |   |   |       
+    |   |   \---xamarinwatchos10
+    |   |           _._
+    |   |           
+    |   +---ref
+    |   |   +---monoandroid10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---monotouch10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---net45
+    |   |   |       _._
+    |   |   |       
+    |   |   +---net46
+    |   |   |       System.Net.Http.dll
+    |   |   |       
+    |   |   +---netcore50
+    |   |   |       System.Net.Http.dll
+    |   |   |       
+    |   |   +---netstandard1.1
+    |   |   |       System.Net.Http.dll
+    |   |   |       
+    |   |   +---netstandard1.3
+    |   |   |       System.Net.Http.dll
+    |   |   |       
+    |   |   +---portable-net45+win8+wpa81
+    |   |   |       _._
+    |   |   |       
+    |   |   +---win8
+    |   |   |       _._
+    |   |   |       
+    |   |   +---wpa81
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarinios10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---Xamarinmac20
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarintvos10
+    |   |   |       _._
+    |   |   |       
+    |   |   \---xamarinwatchos10
+    |   |           _._
+    |   |           
+    |   \---runtimes
+    |       +---unix
+    |       |   \---lib
+    |       |       \---netstandard1.6
+    |       |               System.Net.Http.dll
+    |       |               
+    |       \---win
+    |           \---lib
+    |               +---net46
+    |               |       System.Net.Http.dll
+    |               |       
+    |               +---netcore50
+    |               |       System.Net.Http.dll
+    |               |       
+    |               \---netstandard1.3
+    |                       System.Net.Http.dll
+    |                       
+    +---System.Runtime.4.3.0
+    |   |   .signature.p7s
+    |   |   dotnet_library_license.txt
+    |   |   System.Runtime.4.3.0.nupkg
+    |   |   ThirdPartyNotices.txt
+    |   |   
+    |   +---lib
+    |   |   +---MonoAndroid10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---MonoTouch10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---net45
+    |   |   |       _._
+    |   |   |       
+    |   |   +---net462
+    |   |   |       System.Runtime.dll
+    |   |   |       
+    |   |   +---portable-net45+win8+wp80+wpa81
+    |   |   |       _._
+    |   |   |       
+    |   |   +---win8
+    |   |   |       _._
+    |   |   |       
+    |   |   +---wp80
+    |   |   |       _._
+    |   |   |       
+    |   |   +---wpa81
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarinios10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarinmac20
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarintvos10
+    |   |   |       _._
+    |   |   |       
+    |   |   \---xamarinwatchos10
+    |   |           _._
+    |   |           
+    |   \---ref
+    |       +---MonoAndroid10
+    |       |       _._
+    |       |       
+    |       +---MonoTouch10
+    |       |       _._
+    |       |       
+    |       +---net45
+    |       |       _._
+    |       |       
+    |       +---net462
+    |       |       System.Runtime.dll
+    |       |       
+    |       +---netcore50
+    |       |   |   System.Runtime.dll
+    |       |   |   System.Runtime.xml
+    |       |   |   
+    |       |   +---de
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---es
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---fr
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---it
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---ja
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---ko
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---ru
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---zh-hans
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   \---zh-hant
+    |       |           System.Runtime.xml
+    |       |           
+    |       +---netstandard1.0
+    |       |   |   System.Runtime.dll
+    |       |   |   System.Runtime.xml
+    |       |   |   
+    |       |   +---de
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---es
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---fr
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---it
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---ja
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---ko
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---ru
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---zh-hans
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   \---zh-hant
+    |       |           System.Runtime.xml
+    |       |           
+    |       +---netstandard1.2
+    |       |   |   System.Runtime.dll
+    |       |   |   System.Runtime.xml
+    |       |   |   
+    |       |   +---de
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---es
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---fr
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---it
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---ja
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---ko
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---ru
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---zh-hans
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   \---zh-hant
+    |       |           System.Runtime.xml
+    |       |           
+    |       +---netstandard1.3
+    |       |   |   System.Runtime.dll
+    |       |   |   System.Runtime.xml
+    |       |   |   
+    |       |   +---de
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---es
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---fr
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---it
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---ja
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---ko
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---ru
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---zh-hans
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   \---zh-hant
+    |       |           System.Runtime.xml
+    |       |           
+    |       +---netstandard1.5
+    |       |   |   System.Runtime.dll
+    |       |   |   System.Runtime.xml
+    |       |   |   
+    |       |   +---de
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---es
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---fr
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---it
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---ja
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---ko
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---ru
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   +---zh-hans
+    |       |   |       System.Runtime.xml
+    |       |   |       
+    |       |   \---zh-hant
+    |       |           System.Runtime.xml
+    |       |           
+    |       +---portable-net45+win8+wp80+wpa81
+    |       |       _._
+    |       |       
+    |       +---win8
+    |       |       _._
+    |       |       
+    |       +---wp80
+    |       |       _._
+    |       |       
+    |       +---wpa81
+    |       |       _._
+    |       |       
+    |       +---xamarinios10
+    |       |       _._
+    |       |       
+    |       +---xamarinmac20
+    |       |       _._
+    |       |       
+    |       +---xamarintvos10
+    |       |       _._
+    |       |       
+    |       \---xamarinwatchos10
+    |               _._
+    |               
+    +---System.Security.Cryptography.Algorithms.4.3.0
+    |   |   .signature.p7s
+    |   |   dotnet_library_license.txt
+    |   |   System.Security.Cryptography.Algorithms.4.3.0.nupkg
+    |   |   ThirdPartyNotices.txt
+    |   |   
+    |   +---lib
+    |   |   +---MonoAndroid10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---MonoTouch10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---net46
+    |   |   |       System.Security.Cryptography.Algorithms.dll
+    |   |   |       
+    |   |   +---net461
+    |   |   |       System.Security.Cryptography.Algorithms.dll
+    |   |   |       
+    |   |   +---net463
+    |   |   |       System.Security.Cryptography.Algorithms.dll
+    |   |   |       
+    |   |   +---xamarinios10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarinmac20
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarintvos10
+    |   |   |       _._
+    |   |   |       
+    |   |   \---xamarinwatchos10
+    |   |           _._
+    |   |           
+    |   +---ref
+    |   |   +---MonoAndroid10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---MonoTouch10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---net46
+    |   |   |       System.Security.Cryptography.Algorithms.dll
+    |   |   |       
+    |   |   +---net461
+    |   |   |       System.Security.Cryptography.Algorithms.dll
+    |   |   |       
+    |   |   +---net463
+    |   |   |       System.Security.Cryptography.Algorithms.dll
+    |   |   |       
+    |   |   +---netstandard1.3
+    |   |   |       System.Security.Cryptography.Algorithms.dll
+    |   |   |       
+    |   |   +---netstandard1.4
+    |   |   |       System.Security.Cryptography.Algorithms.dll
+    |   |   |       
+    |   |   +---netstandard1.6
+    |   |   |       System.Security.Cryptography.Algorithms.dll
+    |   |   |       
+    |   |   +---xamarinios10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarinmac20
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarintvos10
+    |   |   |       _._
+    |   |   |       
+    |   |   \---xamarinwatchos10
+    |   |           _._
+    |   |           
+    |   \---runtimes
+    |       +---osx
+    |       |   \---lib
+    |       |       \---netstandard1.6
+    |       |               System.Security.Cryptography.Algorithms.dll
+    |       |               
+    |       +---unix
+    |       |   \---lib
+    |       |       \---netstandard1.6
+    |       |               System.Security.Cryptography.Algorithms.dll
+    |       |               
+    |       \---win
+    |           \---lib
+    |               +---net46
+    |               |       System.Security.Cryptography.Algorithms.dll
+    |               |       
+    |               +---net461
+    |               |       System.Security.Cryptography.Algorithms.dll
+    |               |       
+    |               +---net463
+    |               |       System.Security.Cryptography.Algorithms.dll
+    |               |       
+    |               +---netcore50
+    |               |       System.Security.Cryptography.Algorithms.dll
+    |               |       
+    |               \---netstandard1.6
+    |                       System.Security.Cryptography.Algorithms.dll
+    |                       
+    +---System.Security.Cryptography.Encoding.4.3.0
+    |   |   .signature.p7s
+    |   |   dotnet_library_license.txt
+    |   |   System.Security.Cryptography.Encoding.4.3.0.nupkg
+    |   |   ThirdPartyNotices.txt
+    |   |   
+    |   +---lib
+    |   |   +---MonoAndroid10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---MonoTouch10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---net46
+    |   |   |       System.Security.Cryptography.Encoding.dll
+    |   |   |       
+    |   |   +---xamarinios10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarinmac20
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarintvos10
+    |   |   |       _._
+    |   |   |       
+    |   |   \---xamarinwatchos10
+    |   |           _._
+    |   |           
+    |   +---ref
+    |   |   +---MonoAndroid10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---MonoTouch10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---net46
+    |   |   |       System.Security.Cryptography.Encoding.dll
+    |   |   |       
+    |   |   +---netstandard1.3
+    |   |   |   |   System.Security.Cryptography.Encoding.dll
+    |   |   |   |   System.Security.Cryptography.Encoding.xml
+    |   |   |   |   
+    |   |   |   +---de
+    |   |   |   |       System.Security.Cryptography.Encoding.xml
+    |   |   |   |       
+    |   |   |   +---es
+    |   |   |   |       System.Security.Cryptography.Encoding.xml
+    |   |   |   |       
+    |   |   |   +---fr
+    |   |   |   |       System.Security.Cryptography.Encoding.xml
+    |   |   |   |       
+    |   |   |   +---it
+    |   |   |   |       System.Security.Cryptography.Encoding.xml
+    |   |   |   |       
+    |   |   |   +---ja
+    |   |   |   |       System.Security.Cryptography.Encoding.xml
+    |   |   |   |       
+    |   |   |   +---ko
+    |   |   |   |       System.Security.Cryptography.Encoding.xml
+    |   |   |   |       
+    |   |   |   +---ru
+    |   |   |   |       System.Security.Cryptography.Encoding.xml
+    |   |   |   |       
+    |   |   |   +---zh-hans
+    |   |   |   |       System.Security.Cryptography.Encoding.xml
+    |   |   |   |       
+    |   |   |   \---zh-hant
+    |   |   |           System.Security.Cryptography.Encoding.xml
+    |   |   |           
+    |   |   +---xamarinios10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarinmac20
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarintvos10
+    |   |   |       _._
+    |   |   |       
+    |   |   \---xamarinwatchos10
+    |   |           _._
+    |   |           
+    |   \---runtimes
+    |       +---unix
+    |       |   \---lib
+    |       |       \---netstandard1.3
+    |       |               System.Security.Cryptography.Encoding.dll
+    |       |               
+    |       \---win
+    |           \---lib
+    |               +---net46
+    |               |       System.Security.Cryptography.Encoding.dll
+    |               |       
+    |               \---netstandard1.3
+    |                       System.Security.Cryptography.Encoding.dll
+    |                       
+    +---System.Security.Cryptography.Primitives.4.3.0
+    |   |   .signature.p7s
+    |   |   dotnet_library_license.txt
+    |   |   System.Security.Cryptography.Primitives.4.3.0.nupkg
+    |   |   ThirdPartyNotices.txt
+    |   |   
+    |   +---lib
+    |   |   +---MonoAndroid10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---MonoTouch10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---net46
+    |   |   |       System.Security.Cryptography.Primitives.dll
+    |   |   |       
+    |   |   +---netstandard1.3
+    |   |   |       System.Security.Cryptography.Primitives.dll
+    |   |   |       
+    |   |   +---xamarinios10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarinmac20
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarintvos10
+    |   |   |       _._
+    |   |   |       
+    |   |   \---xamarinwatchos10
+    |   |           _._
+    |   |           
+    |   \---ref
+    |       +---MonoAndroid10
+    |       |       _._
+    |       |       
+    |       +---MonoTouch10
+    |       |       _._
+    |       |       
+    |       +---net46
+    |       |       System.Security.Cryptography.Primitives.dll
+    |       |       
+    |       +---netstandard1.3
+    |       |       System.Security.Cryptography.Primitives.dll
+    |       |       
+    |       +---xamarinios10
+    |       |       _._
+    |       |       
+    |       +---xamarinmac20
+    |       |       _._
+    |       |       
+    |       +---xamarintvos10
+    |       |       _._
+    |       |       
+    |       \---xamarinwatchos10
+    |               _._
+    |               
+    +---System.Security.Cryptography.X509Certificates.4.3.0
+    |   |   .signature.p7s
+    |   |   dotnet_library_license.txt
+    |   |   System.Security.Cryptography.X509Certificates.4.3.0.nupkg
+    |   |   ThirdPartyNotices.txt
+    |   |   
+    |   +---lib
+    |   |   +---MonoAndroid10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---MonoTouch10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---net46
+    |   |   |       System.Security.Cryptography.X509Certificates.dll
+    |   |   |       
+    |   |   +---net461
+    |   |   |       System.Security.Cryptography.X509Certificates.dll
+    |   |   |       
+    |   |   +---xamarinios10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarinmac20
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarintvos10
+    |   |   |       _._
+    |   |   |       
+    |   |   \---xamarinwatchos10
+    |   |           _._
+    |   |           
+    |   +---ref
+    |   |   +---MonoAndroid10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---MonoTouch10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---net46
+    |   |   |       System.Security.Cryptography.X509Certificates.dll
+    |   |   |       
+    |   |   +---net461
+    |   |   |       System.Security.Cryptography.X509Certificates.dll
+    |   |   |       
+    |   |   +---netstandard1.3
+    |   |   |   |   System.Security.Cryptography.X509Certificates.dll
+    |   |   |   |   System.Security.Cryptography.X509Certificates.xml
+    |   |   |   |   
+    |   |   |   +---de
+    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
+    |   |   |   |       
+    |   |   |   +---es
+    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
+    |   |   |   |       
+    |   |   |   +---fr
+    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
+    |   |   |   |       
+    |   |   |   +---it
+    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
+    |   |   |   |       
+    |   |   |   +---ja
+    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
+    |   |   |   |       
+    |   |   |   +---ko
+    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
+    |   |   |   |       
+    |   |   |   +---ru
+    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
+    |   |   |   |       
+    |   |   |   +---zh-hans
+    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
+    |   |   |   |       
+    |   |   |   \---zh-hant
+    |   |   |           System.Security.Cryptography.X509Certificates.xml
+    |   |   |           
+    |   |   +---netstandard1.4
+    |   |   |   |   System.Security.Cryptography.X509Certificates.dll
+    |   |   |   |   System.Security.Cryptography.X509Certificates.xml
+    |   |   |   |   
+    |   |   |   +---de
+    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
+    |   |   |   |       
+    |   |   |   +---es
+    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
+    |   |   |   |       
+    |   |   |   +---fr
+    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
+    |   |   |   |       
+    |   |   |   +---it
+    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
+    |   |   |   |       
+    |   |   |   +---ja
+    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
+    |   |   |   |       
+    |   |   |   +---ko
+    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
+    |   |   |   |       
+    |   |   |   +---ru
+    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
+    |   |   |   |       
+    |   |   |   +---zh-hans
+    |   |   |   |       System.Security.Cryptography.X509Certificates.xml
+    |   |   |   |       
+    |   |   |   \---zh-hant
+    |   |   |           System.Security.Cryptography.X509Certificates.xml
+    |   |   |           
+    |   |   +---xamarinios10
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarinmac20
+    |   |   |       _._
+    |   |   |       
+    |   |   +---xamarintvos10
+    |   |   |       _._
+    |   |   |       
+    |   |   \---xamarinwatchos10
+    |   |           _._
+    |   |           
+    |   \---runtimes
+    |       +---unix
+    |       |   \---lib
+    |       |       \---netstandard1.6
+    |       |               System.Security.Cryptography.X509Certificates.dll
+    |       |               
+    |       \---win
+    |           \---lib
+    |               +---net46
+    |               |       System.Security.Cryptography.X509Certificates.dll
+    |               |       
+    |               +---net461
+    |               |       System.Security.Cryptography.X509Certificates.dll
+    |               |       
+    |               +---netcore50
+    |               |       System.Security.Cryptography.X509Certificates.dll
+    |               |       
+    |               \---netstandard1.6
+    |                       System.Security.Cryptography.X509Certificates.dll
+    |                       
     \---WebGrease.1.6.0
         |   .signature.p7s
         |   WebGrease.1.6.0.nupkg
@@ -2369,10 +3353,10 @@ namespace MyWebForms
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\HnComment.ascx
 SIZE: 1.29 KB
-MODIFIED: 02/17/2026 14:05:14
+MODIFIED: 02/17/2026 14:13:28
 ================================================================================
 
-<%@ Control Language="C#" AutoEventWireup="true"
+<%@ Control Language="C#" AutoEventWireup="True"
     CodeBehind="HnComment.ascx.cs"
     Inherits="MyWebForms.HnComment" %>
 
@@ -2411,7 +3395,7 @@ MODIFIED: 02/17/2026 14:05:14
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\HnComment.ascx.cs
 SIZE: 2.26 KB
-MODIFIED: 02/17/2026 14:05:31
+MODIFIED: 02/17/2026 14:13:33
 ================================================================================
 
 using System;
@@ -2474,10 +3458,10 @@ namespace MyWebForms
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\HnStoryRow.ascx
 SIZE: 2.04 KB
-MODIFIED: 02/17/2026 14:04:32
+MODIFIED: 02/17/2026 14:13:28
 ================================================================================
 
-<%@ Control Language="C#" AutoEventWireup="true"
+<%@ Control Language="C#" AutoEventWireup="True"
     CodeBehind="HnStoryRow.ascx.cs"
     Inherits="MyWebForms.HnStoryRow" %>
 
@@ -2537,7 +3521,7 @@ MODIFIED: 02/17/2026 14:04:32
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\HnStoryRow.ascx.cs
 SIZE: 3.19 KB
-MODIFIED: 02/17/2026 14:04:54
+MODIFIED: 02/17/2026 14:13:33
 ================================================================================
 
 using System;
@@ -2622,10 +3606,10 @@ namespace MyWebForms
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\HnUserCard.ascx
 SIZE: 1.6 KB
-MODIFIED: 02/17/2026 14:06:01
+MODIFIED: 02/17/2026 14:13:27
 ================================================================================
 
-<%@ Control Language="C#" AutoEventWireup="true"
+<%@ Control Language="C#" AutoEventWireup="True"
     CodeBehind="HnUserCard.ascx.cs"
     Inherits="MyWebForms.HnUserCard" %>
 
@@ -2679,7 +3663,7 @@ MODIFIED: 02/17/2026 14:06:01
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\HnUserCard.ascx.cs
 SIZE: 1.76 KB
-MODIFIED: 02/17/2026 14:06:18
+MODIFIED: 02/17/2026 14:13:33
 ================================================================================
 
 using System;
@@ -3033,8 +4017,8 @@ namespace MyWebForms.Models
 
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\MyWebForms.csproj
-SIZE: 17.6 KB
-MODIFIED: 02/17/2026 14:10:02
+SIZE: 20.41 KB
+MODIFIED: 02/17/2026 14:13:33
 ================================================================================
 
 <?xml version="1.0" encoding="utf-8"?>
@@ -3090,11 +4074,47 @@ MODIFIED: 02/17/2026 14:10:02
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
@@ -3250,13 +4270,22 @@ MODIFIED: 02/17/2026 14:10:02
       <DependentUpon>HnComment.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="HnComment.ascx.designer.cs">
+      <DependentUpon>HnComment.ascx</DependentUpon>
+    </Compile>
     <Compile Include="HnStoryRow.ascx.cs">
       <DependentUpon>HnStoryRow.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="HnStoryRow.ascx.designer.cs">
+      <DependentUpon>HnStoryRow.ascx</DependentUpon>
+    </Compile>
     <Compile Include="HnUserCard.ascx.cs">
       <DependentUpon>HnUserCard.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HnUserCard.ascx.designer.cs">
+      <DependentUpon>HnUserCard.ascx</DependentUpon>
     </Compile>
     <Compile Include="LibraryStatusWidget.ascx.cs">
       <DependentUpon>LibraryStatusWidget.ascx</DependentUpon>
@@ -3367,8 +4396,8 @@ MODIFIED: 02/17/2026 14:10:02
 
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\packages.config
-SIZE: 1.35 KB
-MODIFIED: 02/17/2026 13:07:13
+SIZE: 1.96 KB
+MODIFIED: 02/17/2026 14:11:40
 ================================================================================
 
 <?xml version="1.0" encoding="utf-8"?>
@@ -3387,6 +4416,13 @@ MODIFIED: 02/17/2026 13:07:13
   <package id="Microsoft.Web.LibraryManager.Build" version="3.0.71" targetFramework="net481" />
   <package id="Modernizr" version="2.8.3" targetFramework="net481" />
   <package id="Newtonsoft.Json" version="13.0.4" targetFramework="net481" />
+  <package id="System.IO" version="4.3.0" targetFramework="net481" />
+  <package id="System.Net.Http" version="4.3.4" targetFramework="net481" />
+  <package id="System.Runtime" version="4.3.0" targetFramework="net481" />
+  <package id="System.Security.Cryptography.Algorithms" version="4.3.0" targetFramework="net481" />
+  <package id="System.Security.Cryptography.Encoding" version="4.3.0" targetFramework="net481" />
+  <package id="System.Security.Cryptography.Primitives" version="4.3.0" targetFramework="net481" />
+  <package id="System.Security.Cryptography.X509Certificates" version="4.3.0" targetFramework="net481" />
   <package id="WebGrease" version="1.6.0" targetFramework="net481" />
 </packages>
 
@@ -3858,7 +4894,7 @@ namespace MyWebForms
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\Web.config
 SIZE: 2.44 KB
-MODIFIED: 02/17/2026 13:07:14
+MODIFIED: 02/17/2026 14:11:41
 ================================================================================
 
 <?xml version="1.0" encoding="utf-8"?>
@@ -3986,7 +5022,7 @@ MODIFIED: 02/17/2026 12:40:45
 
 
 ===============================================================================
-EXPORT COMPLETED: 02/17/2026 14:11:11
+EXPORT COMPLETED: 02/17/2026 14:18:50
 Total Files Exported: 39
 Output File: .\docs\llm\dump.txt
 ===============================================================================
