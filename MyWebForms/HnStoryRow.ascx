@@ -1,4 +1,4 @@
-<%@ Control Language="C#" AutoEventWireup="true"
+<%@ Control Language="C#" AutoEventWireup="True"
     CodeBehind="HnStoryRow.ascx.cs"
     Inherits="MyWebForms.HnStoryRow" %>
 

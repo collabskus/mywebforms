@@ -1,4 +1,4 @@
-<%@ Control Language="C#" AutoEventWireup="true"
+<%@ Control Language="C#" AutoEventWireup="True"
     CodeBehind="HnUserCard.ascx.cs"
     Inherits="MyWebForms.HnUserCard" %>
 
