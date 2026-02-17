@@ -121,6 +121,10 @@
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="HackerNews.aspx" />
+    <Content Include="HnComment.ascx" />
+    <Content Include="HnStoryRow.ascx" />
+    <Content Include="HnUserCard.ascx" />
     <Content Include="LibraryStatusWidget.ascx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -196,6 +200,25 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="HackerNews.aspx.cs">
+      <DependentUpon>HackerNews.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HackerNews.aspx.designer.cs">
+      <DependentUpon>HackerNews.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="HnComment.ascx.cs">
+      <DependentUpon>HnComment.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HnStoryRow.ascx.cs">
+      <DependentUpon>HnStoryRow.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HnUserCard.ascx.cs">
+      <DependentUpon>HnUserCard.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="LibraryStatusWidget.ascx.cs">
       <DependentUpon>LibraryStatusWidget.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -203,7 +226,10 @@
     <Compile Include="LibraryStatusWidget.ascx.designer.cs">
       <DependentUpon>LibraryStatusWidget.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Models\HackerNewsItem.cs" />
+    <Compile Include="Models\HackerNewsUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\HackerNewsService.cs" />
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

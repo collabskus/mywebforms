@@ -19,3 +19,61 @@ textarea {
         padding: 0;
     }
 }
+
+/* ── Hacker News page ──────────────────────────────────────────────────── */
+
+/* Story row hover */
+.hn-story-row:hover {
+    background-color: #fffaf5;
+}
+
+/* Story title link colour — matches classic HN */
+.hn-title {
+    color: #000 !important;
+}
+
+    .hn-title:hover {
+        color: #ff6600 !important;
+    }
+
+/* Comment text inherits HN's HTML tags cleanly */
+.hn-comment-text p:last-child,
+.hn-story-text p:last-child {
+    margin-bottom: 0;
+}
+
+.hn-comment-text pre,
+.hn-story-text pre {
+    background: #f6f8fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 4px;
+    padding: .5rem;
+    font-size: .78rem;
+}
+
+/* Depth connector line */
+.hn-comment + .hn-comment {
+    border-top: 1px solid #f0f0f0;
+}
+
+/* User about HTML passthrough */
+.hn-user-about a {
+    color: #555;
+    word-break: break-all;
+}
+
+/* Smooth tab transitions */
+.nav-link {
+    transition: color .15s ease;
+}
+
+/* Poll option bar */
+.hn-poll-option {
+    padding: .4rem 0;
+    border-bottom: 1px solid #eee;
+    font-size: .85rem;
+}
+
+    .hn-poll-option:last-child {
+        border-bottom: none;
+    }
