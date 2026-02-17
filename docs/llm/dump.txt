@@ -1,6 +1,6 @@
 ===============================================================================
 ASP.NET PROJECT EXPORT
-Generated: 02/17/2026 17:38:06
+Generated: 02/17/2026 17:41:20
 Project Path: D:\DEV\personal\MyWebForms\MyWebForms
 ===============================================================================
 
@@ -64,21 +64,6 @@ D:\DEV\PERSONAL\MYWEBFORMS\MYWEBFORMS
 ª       RouteConfig.cs
 ª       
 +---bin
-ª   ª   Antlr3.Runtime.dll
-ª   ª   Antlr3.Runtime.pdb
-ª   ª   Microsoft.AspNet.FriendlyUrls.dll
-ª   ª   Microsoft.AspNet.FriendlyUrls.xml
-ª   ª   Microsoft.AspNet.Web.Optimization.WebForms.dll
-ª   ª   Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
-ª   ª   Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-ª   ª   Microsoft.ScriptManager.MSAjax.dll
-ª   ª   Microsoft.ScriptManager.WebForms.dll
-ª   ª   Microsoft.Web.Infrastructure.dll
-ª   ª   MyWebForms.dll
-ª   ª   MyWebForms.dll.config
-ª   ª   MyWebForms.pdb
-ª   ª   Newtonsoft.Json.dll
-ª   ª   Newtonsoft.Json.xml
 ª   ª   System.IO.dll
 ª   ª   System.Net.Http.dll
 ª   ª   System.Runtime.dll
@@ -86,43 +71,8 @@ D:\DEV\PERSONAL\MYWEBFORMS\MYWEBFORMS
 ª   ª   System.Security.Cryptography.Encoding.dll
 ª   ª   System.Security.Cryptography.Primitives.dll
 ª   ª   System.Security.Cryptography.X509Certificates.dll
-ª   ª   System.Web.Optimization.dll
-ª   ª   System.Web.Optimization.xml
-ª   ª   WebGrease.dll
 ª   ª   
 ª   +---roslyn
-ª           csc.exe
-ª           csc.exe.config
-ª           csc.rsp
-ª           csi.exe
-ª           csi.exe.config
-ª           csi.rsp
-ª           Microsoft.Build.Tasks.CodeAnalysis.dll
-ª           Microsoft.CodeAnalysis.CSharp.dll
-ª           Microsoft.CodeAnalysis.CSharp.Scripting.dll
-ª           Microsoft.CodeAnalysis.dll
-ª           Microsoft.CodeAnalysis.Scripting.dll
-ª           Microsoft.CodeAnalysis.VisualBasic.dll
-ª           Microsoft.CSharp.Core.targets
-ª           Microsoft.DiaSymReader.Native.amd64.dll
-ª           Microsoft.DiaSymReader.Native.x86.dll
-ª           Microsoft.Managed.Core.CurrentVersions.targets
-ª           Microsoft.Managed.Core.targets
-ª           Microsoft.VisualBasic.Core.targets
-ª           System.Buffers.dll
-ª           System.Collections.Immutable.dll
-ª           System.Memory.dll
-ª           System.Numerics.Vectors.dll
-ª           System.Reflection.Metadata.dll
-ª           System.Runtime.CompilerServices.Unsafe.dll
-ª           System.Text.Encoding.CodePages.dll
-ª           System.Threading.Tasks.Extensions.dll
-ª           vbc.exe
-ª           vbc.exe.config
-ª           vbc.rsp
-ª           VBCSCompiler.exe
-ª           VBCSCompiler.exe.config
-ª           
 +---Content
 ª   ª   bootstrap-grid.css
 ª   ª   bootstrap-grid.css.map
@@ -173,9 +123,6 @@ D:\DEV\PERSONAL\MYWEBFORMS\MYWEBFORMS
 ª   ª   ª   MyWebForms.csproj.AssemblyReference.cache
 ª   ª   ª   MyWebForms.csproj.CoreCompileInputs.cache
 ª   ª   ª   MyWebForms.csproj.FileListAbsolute.txt
-ª   ª   ª   MyWebForms.csproj.Up2Date
-ª   ª   ª   MyWebForms.dll
-ª   ª   ª   MyWebForms.pdb
 ª   ª   ª   
 ª   ª   +---TempPE
 ª   +---Release
@@ -1607,8 +1554,8 @@ MODIFIED: 02/17/2026 14:24:15
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\HackerNews.aspx.cs
-SIZE: 26.77 KB
-MODIFIED: 02/17/2026 17:37:45
+SIZE: 26.86 KB
+MODIFIED: 02/17/2026 17:41:12
 ================================================================================
 
 using System;
@@ -2169,8 +2116,11 @@ namespace MyWebForms
                 ctrl.AuthorSelected += OnAuthorSelected;
                 phComments.Controls.Add(ctrl);
 
-                // Cache the minimal data needed to recreate this stub on postback.
-                newMeta.Add(new int[] { comment.Id, comment.Parent });
+                if (null != comment.Parent)
+                {
+                    // Cache the minimal data needed to recreate this stub on postback.
+                    newMeta.Add(new int[] { comment.Id, (int)comment.Parent }); 
+                }
                 newAuthors.Add(comment.By ?? string.Empty);
 
                 if (depth < MaxCommentDepth)
@@ -4304,5 +4254,5 @@ MODIFIED: 02/17/2026 12:40:45
 
 
 ===============================================================================
-END OF EXPORT — 42 files, 147.92 KB total
+END OF EXPORT — 42 files, 148.02 KB total
 ===============================================================================

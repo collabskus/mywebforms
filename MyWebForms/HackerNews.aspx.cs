@@ -34,20 +34,20 @@ namespace MyWebForms
     /// if they exist in the control tree BEFORE the event-dispatch phase (which
     /// runs between Page_Load and Page_PreRender).
     ///
-    /// Story rows: cache the current page's story IDs in ViewState ("ShownIds").
+    /// Story rows: cache the current page's story IDs in ViewState ("ShownIds")
+    /// AND their author names in ViewState ("ShownAuthors") — both parallel lists.
     /// On every postback, RecreateStoryRowsForEventRouting() runs in Page_Load,
     /// adding invisible stub HnStoryRow controls with the same stable IDs
-    /// (row_{storyId}).  These stubs carry the event-handler wiring, so
-    /// lnkComments_Click and lnkAuthor_Click route correctly.
+    /// (row_{storyId}).  Stubs set StubItemId and StubItemBy so the click
+    /// handlers can fire the correct events even though Item == null.
     ///
     /// Comments: the same problem applies to HnComment controls inside the
     /// detail panel.  If the user clicks an author link in the comment list,
     /// the postback targets an HnComment control — but those controls are only
     /// added in PreRenderComplete (too late).  Fix: cache a flat list of
-    /// (CommentId, AuthorName, ParentId) in ViewState ("ShownComments") and
-    /// recreate minimal stub HnComment controls in Page_Load on every postback
-    /// when a story is selected.  The stubs have Item set just enough for the
-    /// click handler to read Item.By; they are Visible=false so they don't render.
+    /// (CommentId, ParentId) in ViewState ("ShownCommentMeta") and author names
+    /// in ViewState ("ShownCommentAuthors"), then recreate minimal stub HnComment
+    /// controls in Page_Load on every postback when a story is selected.
     ///
     /// Background refresh
     /// ------------------
@@ -57,13 +57,13 @@ namespace MyWebForms
     /// </summary>
     public partial class HackerNews : Page
     {
-        // ── Constants ────────────────────────────────────────────────────────
+        // ── Constants ─────────────────────────────────────────────────────────
 
         private const int PageSize = 20;
         private const int MaxCommentDepth = 4;
         private const int AutoRefreshSeconds = 60;
 
-        // ── Service ──────────────────────────────────────────────────────────
+        // ── Service ───────────────────────────────────────────────────────────
 
         private HackerNewsService _service;
 
@@ -73,7 +73,7 @@ namespace MyWebForms
             set { _service = value; }
         }
 
-        // ── Data loaded by async tasks ───────────────────────────────────────
+        // ── Data loaded by async tasks ────────────────────────────────────────
 
         private List<HackerNewsItem> _storyPage;
         private int _totalIds;
@@ -82,7 +82,7 @@ namespace MyWebForms
         private List<HackerNewsItem> _pollOptions;
         private HackerNewsUser _selectedUser;
 
-        // ── ViewState keys ───────────────────────────────────────────────────
+        // ── ViewState keys ────────────────────────────────────────────────────
 
         private string ActiveTab
         {
@@ -110,7 +110,7 @@ namespace MyWebForms
 
         /// <summary>
         /// IDs of the story items currently shown on the page.
-        /// Stored so we can recreate event-routing stubs on the next postback.
+        /// Parallel to ShownAuthors — same index = same story.
         /// </summary>
         private List<int> ShownIds
         {
@@ -119,13 +119,22 @@ namespace MyWebForms
         }
 
         /// <summary>
+        /// Author names for each story currently shown on the page.
+        /// Parallel to ShownIds — ShownAuthors[i] is the author of ShownIds[i].
+        /// Needed so event-routing stubs can fire AuthorSelected with the correct
+        /// username even though the stubs carry no HackerNewsItem.
+        /// </summary>
+        private List<string> ShownAuthors
+        {
+            get { return ViewState["ShownAuthors"] as List<string> ?? new List<string>(); }
+            set { ViewState["ShownAuthors"] = value; }
+        }
+
+        /// <summary>
         /// Minimal comment data needed to recreate event-routing stub controls.
-        /// Each entry is [commentId, authorName, parentId].
-        /// Stored as a List of int-arrays so it survives ViewState serialisation
-        /// without needing a custom serialisable type.
-        /// Format: [ [id, parentId], ... ] — authorName stored separately in
-        /// ShownCommentAuthors because ViewState only reliably round-trips
-        /// primitives and simple arrays.
+        /// Format: [ [commentId, parentId], ... ]
+        /// Author names stored separately in ShownCommentAuthors (same index)
+        /// because ViewState only reliably round-trips primitive arrays.
         /// </summary>
         private List<int[]> ShownCommentMeta
         {
@@ -135,8 +144,6 @@ namespace MyWebForms
 
         /// <summary>
         /// Author names parallel to ShownCommentMeta (same index).
-        /// Stored separately because ViewState doesn't reliably round-trip
-        /// mixed-type arrays.
         /// </summary>
         private List<string> ShownCommentAuthors
         {
@@ -144,7 +151,7 @@ namespace MyWebForms
             set { ViewState["ShownCommentAuthors"] = value; }
         }
 
-        // ── Page lifecycle ───────────────────────────────────────────────────
+        // ── Page lifecycle ────────────────────────────────────────────────────
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -160,9 +167,6 @@ namespace MyWebForms
                 RecreateStoryRowsForEventRouting();
 
                 // Recreate comment stubs for the same reason.
-                // Without this, clicking an author link inside the comment list
-                // causes a runtime error because the HnComment control does not
-                // yet exist in the control tree when the event-dispatch phase runs.
                 if (SelectedItemId > 0)
                 {
                     RecreateCommentStubsForEventRouting();
@@ -174,23 +178,29 @@ namespace MyWebForms
         }
 
         /// <summary>
-        /// Adds invisible HnStoryRow stubs to phStories using only the IDs
-        /// cached in ShownIds.  The stubs have no Item data (Item == null →
-        /// Visible = false), but their UniqueIDs match those produced by
-        /// BindStoryList, giving ASP.NET a valid event target for each row's
-        /// LinkButtons.
+        /// Adds invisible HnStoryRow stubs to phStories using IDs cached in
+        /// ShownIds and author names from ShownAuthors.
+        ///
+        /// Stubs set StubItemId and StubItemBy instead of Item, so the click
+        /// handlers on HnStoryRow can fire StorySelected / AuthorSelected
+        /// with the correct values even though Item == null (and the control
+        /// renders nothing — Visible = false).
         /// </summary>
         private void RecreateStoryRowsForEventRouting()
         {
             phStories.Controls.Clear();
             var ids = ShownIds;
+            var authors = ShownAuthors;
             int startRank = (CurrentPage - 1) * PageSize + 1;
+
             for (int i = 0; i < ids.Count; i++)
             {
                 var row = (HnStoryRow)LoadControl("~/HnStoryRow.ascx");
                 row.ID = "row_" + ids[i];
-                row.Item = null;  // Stub — no data, will be invisible
+                row.Item = null;                   // Stub — renders nothing
                 row.Rank = startRank + i;
+                row.StubItemId = ids[i];
+                row.StubItemBy = i < authors.Count ? authors[i] : string.Empty;
                 row.StorySelected += OnStorySelected;
                 row.AuthorSelected += OnAuthorSelected;
                 phStories.Controls.Add(row);
@@ -218,15 +228,14 @@ namespace MyWebForms
 
                 var stub = (HnComment)LoadControl("~/HnComment.ascx");
                 stub.ID = "cmt_" + commentId;   // must match RenderCommentTree
-                stub.Item = new HackerNewsItem     // minimal — just enough for the event handler
+                stub.Item = new HackerNewsItem
                 {
                     Id = commentId,
                     By = by,
                     Parent = parentId
                 };
-                stub.Depth = 0;           // depth doesn't matter for invisible stubs
+                stub.Depth = 0;    // depth doesn't matter for invisible stubs
                 stub.AuthorSelected += OnAuthorSelected;
-                // Keep it invisible so it doesn't render duplicate HTML.
                 stub.Visible = false;
                 phComments.Controls.Add(stub);
             }
@@ -288,7 +297,7 @@ namespace MyWebForms
             }
         }
 
-        // ── Auto-refresh script ──────────────────────────────────────────────
+        // ── Auto-refresh script ───────────────────────────────────────────────
 
         private void InjectAutoRefreshScript()
         {
@@ -331,35 +340,27 @@ namespace MyWebForms
             sb.AppendLine("    }");
             sb.AppendLine("");
             sb.AppendLine("    function poll() {");
-            sb.AppendLine("        var xhr = new XMLHttpRequest();");
-            sb.AppendLine("        xhr.open('GET', '" + handlerUrl + "?tab=" + activeTab + "&ids=" + shownIdsJoined + "', true);");
-            sb.AppendLine("        xhr.onreadystatechange = function () {");
-            sb.AppendLine("            if (xhr.readyState !== 4) return;");
-            sb.AppendLine("            if (xhr.status === 200) {");
-            sb.AppendLine("                try {");
-            sb.AppendLine("                    var result = JSON.parse(xhr.responseText);");
-            sb.AppendLine("                    if (result.listChanged) {");
-            sb.AppendLine("                        __doPostBack('" + currentTabBtnUniqueId + "', '');");
-            sb.AppendLine("                        return;");
-            sb.AppendLine("                    }");
-            sb.AppendLine("                    if (result.scores) {");
-            sb.AppendLine("                        for (var id in result.scores) {");
-            sb.AppendLine("                            var span = document.querySelector('[data-hn-score-num=\"' + id + '\"]');");
-            sb.AppendLine("                            if (span) span.textContent = result.scores[id] + ' pts';");
-            sb.AppendLine("                        }");
-            sb.AppendLine("                    }");
-            sb.AppendLine("                } catch (ex) { }");
-            sb.AppendLine("            }");
-            sb.AppendLine("            remaining = " + seconds + ";");
-            sb.AppendLine("            updateCountdown();");
-            sb.AppendLine("            timer = setInterval(tick, 1000);");
-            sb.AppendLine("        };");
-            sb.AppendLine("        xhr.send();");
+            sb.AppendLine("        var url = '" + handlerUrl + "?tab=" + activeTab + "&ids=" + shownIdsJoined + "';");
+            sb.AppendLine("        fetch(url)");
+            sb.AppendLine("            .then(function(r) { return r.json(); })");
+            sb.AppendLine("            .then(function(data) {");
+            sb.AppendLine("                if (data.scores) {");
+            sb.AppendLine("                    Object.keys(data.scores).forEach(function(id) {");
+            sb.AppendLine("                        var el = document.querySelector('[data-hn-score-num=\"' + id + '\"]');");
+            sb.AppendLine("                        if (el) el.textContent = data.scores[id] + ' pts';");
+            sb.AppendLine("                    });");
+            sb.AppendLine("                }");
+            sb.AppendLine("                if (data.listChanged) {");
+            sb.AppendLine("                    __doPostBack('" + currentTabBtnUniqueId + "', '');");
+            sb.AppendLine("                }");
+            sb.AppendLine("            })");
+            sb.AppendLine("            .catch(function() { /* ignore network errors during poll */ });");
             sb.AppendLine("    }");
             sb.AppendLine("");
             sb.AppendLine("    function tick() {");
             sb.AppendLine("        remaining--;");
             sb.AppendLine("        if (remaining <= 0) {");
+            sb.AppendLine("            remaining = " + seconds + ";");
             sb.AppendLine("            clearInterval(timer);");
             sb.AppendLine("            poll();");
             sb.AppendLine("        } else {");
@@ -379,7 +380,7 @@ namespace MyWebForms
                 addScriptTags: true);
         }
 
-        // ── Tab click ────────────────────────────────────────────────────────
+        // ── Tab click ─────────────────────────────────────────────────────────
 
         protected void btnTab_Click(object sender, EventArgs e)
         {
@@ -390,7 +391,7 @@ namespace MyWebForms
             SelectedUsername = null;
         }
 
-        // ── Pager clicks ─────────────────────────────────────────────────────
+        // ── Pager clicks ──────────────────────────────────────────────────────
 
         protected void btnPrev_Click(object sender, EventArgs e)
         {
@@ -408,7 +409,6 @@ namespace MyWebForms
         protected void btnCloseDetail_Click(object sender, EventArgs e)
         {
             SelectedItemId = 0;
-            // Clear comment stubs too so stale data doesn't linger in ViewState.
             ShownCommentMeta = new List<int[]>();
             ShownCommentAuthors = new List<string>();
         }
@@ -418,7 +418,7 @@ namespace MyWebForms
             SelectedUsername = null;
         }
 
-        // ── Binding helpers ──────────────────────────────────────────────────
+        // ── Binding helpers ───────────────────────────────────────────────────
 
         private void BindStoryList()
         {
@@ -430,16 +430,25 @@ namespace MyWebForms
                     "The API may be temporarily unavailable.";
                 pnlMessage.Visible = true;
                 ShownIds = new List<int>();
+                ShownAuthors = new List<string>();
                 return;
             }
 
             pnlMessage.Visible = false;
 
-            // Cache IDs so the next postback can create event-routing stubs.
+            // Cache IDs and author names so the next postback can create stubs
+            // that fire the correct events.
             var newShownIds = new List<int>();
+            var newShownAuthors = new List<string>();
+
             foreach (var s in _storyPage)
+            {
                 newShownIds.Add(s.Id);
+                newShownAuthors.Add(s.By ?? string.Empty);
+            }
+
             ShownIds = newShownIds;
+            ShownAuthors = newShownAuthors;
 
             int startRank = (CurrentPage - 1) * PageSize + 1;
             for (int i = 0; i < _storyPage.Count; i++)
@@ -476,7 +485,7 @@ namespace MyWebForms
 
             if (!string.IsNullOrEmpty(_selectedStory.Text))
             {
-                litDetailText.Text = _selectedStory.Text; // HN returns trusted HTML
+                litDetailText.Text = _selectedStory.Text;
                 pnlDetailText.Visible = true;
             }
             else
@@ -515,19 +524,16 @@ namespace MyWebForms
                 noComments.InnerText = "No comments yet.";
                 phComments.Controls.Add(noComments);
 
-                // No comments to stub — clear cached comment meta.
                 ShownCommentMeta = new List<int[]>();
                 ShownCommentAuthors = new List<string>();
             }
             else
             {
-                // Reset the comment-stub caches before rebuilding.
                 var newMeta = new List<int[]>();
                 var newAuthors = new List<string>();
 
                 RenderCommentTree(_comments, _selectedStory.Id, 0, newMeta, newAuthors);
 
-                // Persist so the next postback can recreate stubs.
                 ShownCommentMeta = newMeta;
                 ShownCommentAuthors = newAuthors;
             }
@@ -535,8 +541,13 @@ namespace MyWebForms
 
         /// <summary>
         /// Recursively renders the comment tree into phComments and simultaneously
-        /// populates the stub-cache lists (newMeta / newAuthors) so that the next
-        /// postback can recreate invisible routing stubs without re-fetching data.
+        /// populates the stub-cache lists so the next postback can recreate invisible
+        /// routing stubs without re-fetching data.
+        ///
+        /// newMeta and newAuthors are always appended together so their indices
+        /// stay in sync.  Every HN comment has a Parent set by the API, so
+        /// comment.Parent is treated as non-null here; if it ever is null
+        /// (malformed API response) we default to 0 to avoid a crash.
         /// </summary>
         private void RenderCommentTree(
             List<HackerNewsItem> comments,
@@ -550,14 +561,16 @@ namespace MyWebForms
                 if (comment.Parent != parentId) continue;
 
                 var ctrl = (HnComment)LoadControl("~/HnComment.ascx");
-                ctrl.ID = "cmt_" + comment.Id;  // must match RecreateCommentStubsForEventRouting
+                ctrl.ID = "cmt_" + comment.Id;   // must match RecreateCommentStubsForEventRouting
                 ctrl.Item = comment;
                 ctrl.Depth = depth;
                 ctrl.AuthorSelected += OnAuthorSelected;
                 phComments.Controls.Add(ctrl);
 
-                // Cache the minimal data needed to recreate this stub on postback.
-                newMeta.Add(new int[] { comment.Id, comment.Parent });
+                // Always add both entries together to keep the parallel lists in sync.
+                // comment.Parent is int? but the HN API always sets it for comments;
+                // default to 0 on the off chance of a malformed item.
+                newMeta.Add(new int[] { comment.Id, comment.Parent ?? 0 });
                 newAuthors.Add(comment.By ?? string.Empty);
 
                 if (depth < MaxCommentDepth)
@@ -609,7 +622,7 @@ namespace MyWebForms
             }
         }
 
-        // ── Bubble-up event handlers ─────────────────────────────────────────
+        // ── Bubble-up event handlers ──────────────────────────────────────────
 
         private void OnStorySelected(object sender, StorySelectedEventArgs e)
         {
@@ -623,7 +636,7 @@ namespace MyWebForms
             SelectedItemId = 0;
         }
 
-        // ── API tab → ID list routing ────────────────────────────────────────
+        // ── API tab → ID list routing ─────────────────────────────────────────
 
         private Task<List<int>> GetIdsForTabAsync(string tab)
         {
