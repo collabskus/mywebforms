@@ -1,7 +1,7 @@
 ﻿
 ===============================================================================
 ASP.NET PROJECT EXPORT
-Generated: 02/17/2026 14:36:14
+Generated: 02/17/2026 14:40:17
 Project Path: D:\DEV\personal\MyWebForms
 ===============================================================================
 
@@ -43,6 +43,7 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   |   HackerNews.aspx
 |   |   HackerNews.aspx.cs
 |   |   HackerNews.aspx.designer.cs
+|   |   HackerNewsEventArgs.cs
 |   |   HackerNewsRefresh.ashx
 |   |   HackerNewsRefresh.ashx.cs
 |   |   HnComment.ascx
@@ -77,6 +78,14 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   |       RouteConfig.cs
 |   |       
 |   +---bin
+|   |   |   System.IO.dll
+|   |   |   System.Net.Http.dll
+|   |   |   System.Runtime.dll
+|   |   |   System.Security.Cryptography.Algorithms.dll
+|   |   |   System.Security.Cryptography.Encoding.dll
+|   |   |   System.Security.Cryptography.Primitives.dll
+|   |   |   System.Security.Cryptography.X509Certificates.dll
+|   |   |   
 |   |   \---roslyn
 |   +---Content
 |   |   |   bootstrap-grid.css
@@ -123,7 +132,6 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   +---obj
 |   |   +---Debug
 |   |   |   |   .NETFramework,Version=v4.8.1.AssemblyAttributes.cs
-|   |   |   |   build.force
 |   |   |   |   DesignTimeResolveAssemblyReferences.cache
 |   |   |   |   DesignTimeResolveAssemblyReferencesInput.cache
 |   |   |   |   MyWebForms.csproj.AssemblyReference.cache
@@ -3391,6 +3399,49 @@ namespace MyWebForms
 
 
 ================================================================================
+FILE: :\DEV\personal\MyWebForms\MyWebForms\HackerNewsEventArgs.cs
+SIZE: 0.99 KB
+MODIFIED: 02/17/2026 14:38:53
+================================================================================
+
+using System;
+
+namespace MyWebForms
+{
+    /// <summary>
+    /// Carries the HN item ID when a user clicks the "N comments" link on a
+    /// story row, causing the host page to load the story detail panel.
+    /// </summary>
+    public sealed class StorySelectedEventArgs : EventArgs
+    {
+        /// <summary>The HN item ID of the selected story.</summary>
+        public int ItemId { get; private set; }
+
+        public StorySelectedEventArgs(int itemId)
+        {
+            ItemId = itemId;
+        }
+    }
+
+    /// <summary>
+    /// Carries the HN username when a user clicks an author link on a story
+    /// row or comment, causing the host page to load the user profile panel.
+    /// </summary>
+    public sealed class AuthorSelectedEventArgs : EventArgs
+    {
+        /// <summary>The HN username of the selected author.</summary>
+        public string Username { get; private set; }
+
+        public AuthorSelectedEventArgs(string username)
+        {
+            Username = username;
+        }
+    }
+}
+
+
+
+================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\HackerNewsRefresh.ashx.cs
 SIZE: 5.74 KB
 MODIFIED: 02/17/2026 14:31:41
@@ -4218,8 +4269,8 @@ namespace MyWebForms.Models
 
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\MyWebForms.csproj
-SIZE: 20.59 KB
-MODIFIED: 02/17/2026 14:35:55
+SIZE: 20.63 KB
+MODIFIED: 02/17/2026 14:38:56
 ================================================================================
 
 <?xml version="1.0" encoding="utf-8"?>
@@ -4468,6 +4519,7 @@ MODIFIED: 02/17/2026 14:35:55
     <Compile Include="HackerNews.aspx.designer.cs">
       <DependentUpon>HackerNews.aspx</DependentUpon>
     </Compile>
+    <Compile Include="HackerNewsEventArgs.cs" />
     <Compile Include="HackerNewsRefresh.ashx.cs">
       <DependentUpon>HackerNewsRefresh.ashx</DependentUpon>
     </Compile>
@@ -5227,7 +5279,7 @@ MODIFIED: 02/17/2026 12:40:45
 
 
 ===============================================================================
-EXPORT COMPLETED: 02/17/2026 14:36:19
-Total Files Exported: 40
+EXPORT COMPLETED: 02/17/2026 14:40:22
+Total Files Exported: 41
 Output File: .\docs\llm\dump.txt
 ===============================================================================
