@@ -4,35 +4,37 @@
 
 param(
     [string]$ProjectPath = ".",
-    [string]$OutputFile = "docs/llm/dump.txt"
+    [string]$OutputFile  = "docs/llm/dump.txt"
 )
 
-# Define file extensions to include
+# ---------------------------------------------------------------------------
+# File extensions to include
+# ---------------------------------------------------------------------------
 $IncludeExtensions = @(
-    "*.cs",           # C# files
-    "*.json",         # JSON configuration files
-    "*.xml",          # XML files
-    "*.csproj",       # C# project files
-    "*.sln",          # Solution files
-    "*.config",       # Configuration files
-    "*.cshtml",       # Razor views
-    "*.razor",        # Razor components
-    "*.js",           # JavaScript files
-    "*.css",          # CSS files
-    "*.scss",         # SCSS files
-    "*.html",         # HTML files
-    "*.yml",          # YAML files
-    "*.yaml",         # YAML files
-    "*.sql",          # SQL files
-    "*.props",        # MSBuild props files
-    "*.targets",      # MSBuild targets files
-    "*.sh",           # Shell scripts
-    "*.aspx",         # Web Forms pages
-    "*.ascx",         # Web Forms user controls
-    "*.master"        # Web Forms master pages
+    "*.cs",       # C# source (including *.designer.cs — useful for LLM control-tree review)
+    "*.json",     # JSON configuration
+    "*.xml",      # XML files
+    "*.csproj",   # C# project files
+    "*.sln",      # Solution files
+    "*.config",   # Web.config, packages.config, etc.
+    "*.cshtml",   # Razor views
+    "*.razor",    # Razor components
+    "*.js",       # JavaScript files
+    "*.css",      # CSS files
+    "*.scss",     # SCSS files
+    "*.html",     # HTML files
+    "*.yml",      # YAML files
+    "*.yaml",     # YAML files
+    "*.sql",      # SQL files
+    "*.props",    # MSBuild props
+    "*.targets",  # MSBuild targets
+    "*.sh",       # Shell scripts
+    "*.aspx",     # Web Forms pages
+    "*.ascx",     # Web Forms user controls
+    "*.master"    # Web Forms master pages
 )
 
-# Specific files without extensions to include
+# Specific filenames (no extension) to include
 $IncludeSpecificFiles = @(
     "Dockerfile",
     "Dockerfile.*",
@@ -42,7 +44,11 @@ $IncludeSpecificFiles = @(
     ".gitattributes"
 )
 
-# Directories to exclude
+# ---------------------------------------------------------------------------
+# Directories to exclude (matched against any segment of the full path)
+# Keep entries as simple folder names where possible; use sub-path entries
+# only when a partial path is required (e.g. Scripts\WebForms).
+# ---------------------------------------------------------------------------
 $ExcludeDirectories = @(
     "bin",
     "obj",
@@ -52,12 +58,14 @@ $ExcludeDirectories = @(
     "packages",
     ".vscode",
     ".idea",
-    "docs",           # Documentation folder
-    "Scripts\WebForms",  # Built-in WebForms scripts (MsAjax, GridView, etc.)
-    "Scripts\lib"        # Third-party lib folder (Chart.js, etc.)
+    "docs",            # Documentation / generated output folder (dump.txt lives here)
+    "Scripts\WebForms", # Built-in WebForms scripts (MsAjax, GridView, etc.) — minified, not authored
+    "Scripts\lib"       # Third-party client libs acquired via LibMan (Chart.js, etc.)
 )
 
-# Files to exclude
+# ---------------------------------------------------------------------------
+# File patterns to exclude
+# ---------------------------------------------------------------------------
 $ExcludeFiles = @(
     "*.exe",
     "*.dll",
@@ -68,7 +76,7 @@ $ExcludeFiles = @(
     "*.txt",
     "LICENSE*",
     "LICENCE*",
-    # Bootstrap CSS (all variants)
+    # Bootstrap CSS (all variants — dist output, not authored)
     "bootstrap*.css",
     "bootstrap*.css.map",
     # Bootstrap JS (all variants)
@@ -79,97 +87,44 @@ $ExcludeFiles = @(
     "jquery*.js.map",
     # Modernizr
     "modernizr*.js",
-    # Animate.css
-    "animate*.css",
-    # Designer files - auto-generated, rarely useful for review
-    "*.designer.cs"
+    # Animate.css (LibMan-acquired)
+    "animate*.css"
+    # NOTE: *.designer.cs is intentionally NOT excluded.
+    # Designer files declare the server-control fields for every .aspx/.ascx/.master
+    # and are essential for the LLM to understand the full control tree of each page.
+    # They are auto-generated and should never be edited manually, but they ARE
+    # valuable reference material for code review and assistance.
 )
 
-Write-Host "Starting project export..." -ForegroundColor Green
-Write-Host "Project Path: $ProjectPath" -ForegroundColor Yellow
-Write-Host "Output File: $OutputFile" -ForegroundColor Yellow
+# ---------------------------------------------------------------------------
+# Helper — resolve and normalise the project root to a consistent absolute path
+# so that relative-path trimming works correctly on both \ and / separators.
+# ---------------------------------------------------------------------------
+$ResolvedProject = (Resolve-Path $ProjectPath).Path.TrimEnd('\').TrimEnd('/')
 
-# Initialize output file
-$OutputPath = Join-Path $ProjectPath $OutputFile
-"" | Out-File -FilePath $OutputPath -Encoding UTF8
-
-# Add header
-$Header = @"
-===============================================================================
-ASP.NET PROJECT EXPORT
-Generated: $(Get-Date)
-Project Path: $((Resolve-Path $ProjectPath).Path)
-===============================================================================
-
-"@
-
-$Header | Out-File -FilePath $OutputPath -Append -Encoding UTF8
-
-# Generate directory structure
-Write-Host "Generating directory structure..." -ForegroundColor Cyan
-
-"DIRECTORY STRUCTURE:" | Out-File -FilePath $OutputPath -Append -Encoding UTF8
-"===================" | Out-File -FilePath $OutputPath -Append -Encoding UTF8
-"" | Out-File -FilePath $OutputPath -Append -Encoding UTF8
-
-try {
-    $treeOutput = & tree $ProjectPath /F /A 2>$null
-    if ($LASTEXITCODE -eq 0) {
-        $treeOutput | Out-File -FilePath $OutputPath -Append -Encoding UTF8
-    } else {
-        throw "Tree command failed"
-    }
-} catch {
-    Write-Host "Tree command not available, using PowerShell alternative..." -ForegroundColor Yellow
-
-    function Get-DirectoryTree {
-        param([string]$Path, [string]$Prefix = "")
-
-        $items = Get-ChildItem -Path $Path -Force | Where-Object {
-            $_.Name -notin $ExcludeDirectories
-        } | Sort-Object @{Expression={$_.PSIsContainer}; Descending=$true}, Name
-
-        for ($i = 0; $i -lt $items.Count; $i++) {
-            $item = $items[$i]
-            $isLast = ($i -eq $items.Count - 1)
-            $connector = if ($isLast) { "+-- " } else { "+-- " }
-
-            "$Prefix$connector$($item.Name)" | Out-File -FilePath $OutputPath -Append -Encoding UTF8
-
-            if ($item.PSIsContainer) {
-                $newPrefix = if ($isLast) { "$Prefix    " } else { "$Prefix|   " }
-                Get-DirectoryTree -Path $item.FullName -Prefix $newPrefix
-            }
-        }
-    }
-
-    (Split-Path $ProjectPath -Leaf) | Out-File -FilePath $OutputPath -Append -Encoding UTF8
-    Get-DirectoryTree -Path $ProjectPath
-}
-
-"" | Out-File -FilePath $OutputPath -Append -Encoding UTF8
-"" | Out-File -FilePath $OutputPath -Append -Encoding UTF8
-
-# Get all relevant files
-Write-Host "Collecting files..." -ForegroundColor Cyan
-
-$AllFiles = @()
-
-# Helper: check if a file should be excluded
+# ---------------------------------------------------------------------------
+# Helper — returns $true if $File should be excluded
+# ---------------------------------------------------------------------------
 function Should-Exclude {
-    param($File)
+    param([System.IO.FileInfo]$File)
 
-    # Check excluded directories (supports both \ and / path separators)
+    # Normalise to backslashes for consistent matching on Windows
+    $fullPath = $File.FullName.Replace('/', '\')
+
+    # Check excluded directory segments.
+    # Each entry is tested as a whole path segment (surrounded by \) so that
+    # e.g. "bin" does not accidentally match a folder called "cabin".
     foreach ($excludeDir in $ExcludeDirectories) {
-        $normalizedExclude = $excludeDir.Replace("/", "\")
-        if ($File.FullName -like "*\$normalizedExclude\*") {
+        $normalised = $excludeDir.Replace('/', '\')
+        # Match as an interior segment (\bin\) or a trailing segment (\bin at end of string).
+        if ($fullPath -like "*\$normalised\*" -or $fullPath -like "*\$normalised") {
             return $true
         }
     }
 
-    # Check excluded file patterns
-    foreach ($excludePattern in $ExcludeFiles) {
-        if ($File.Name -like $excludePattern) {
+    # Check excluded file-name patterns
+    foreach ($pattern in $ExcludeFiles) {
+        if ($File.Name -like $pattern) {
             return $true
         }
     }
@@ -177,55 +132,154 @@ function Should-Exclude {
     return $false
 }
 
-# Collect files by extension
-foreach ($extension in $IncludeExtensions) {
-    $files = Get-ChildItem -Path $ProjectPath -Recurse -Include $extension -File |
-        Where-Object { -not (Should-Exclude $_) }
-    $AllFiles += $files
+# ---------------------------------------------------------------------------
+# Helper — PowerShell-native directory tree (used when tree.com is unavailable)
+# Respects $ExcludeDirectories by name segment, not full path, because at this
+# point we are walking the tree and only have the item Name available cheaply.
+# ---------------------------------------------------------------------------
+function Write-DirectoryTree {
+    param(
+        [string]$Path,
+        [string]$Prefix = "",
+        [string]$OutFile
+    )
+
+    # Exclude by simple folder name (the path-based entries won't match here,
+    # but simple names like bin/obj/packages/.vs/.git will be caught).
+    $simpleExcludes = $ExcludeDirectories | ForEach-Object { $_.Split('\')[-1] }
+
+    $items = Get-ChildItem -Path $Path -Force -ErrorAction SilentlyContinue |
+             Where-Object { $_.Name -notin $simpleExcludes } |
+             Sort-Object @{ Expression = { $_.PSIsContainer }; Descending = $true }, Name
+
+    for ($i = 0; $i -lt $items.Count; $i++) {
+        $item   = $items[$i]
+        $isLast = ($i -eq $items.Count - 1)
+        $branch = if ($isLast) { "+-- " } else { "+-- " }
+
+        "$Prefix$branch$($item.Name)" | Out-File -FilePath $OutFile -Append -Encoding UTF8
+
+        if ($item.PSIsContainer) {
+            $childPrefix = if ($isLast) { "$Prefix    " } else { "$Prefix|   " }
+            Write-DirectoryTree -Path $item.FullName -Prefix $childPrefix -OutFile $OutFile
+        }
+    }
 }
 
-# Collect specific files without extensions (like Dockerfile)
-foreach ($specificFile in $IncludeSpecificFiles) {
-    $files = Get-ChildItem -Path $ProjectPath -Recurse -Include $specificFile -File |
-        Where-Object { -not (Should-Exclude $_) }
-    $AllFiles += $files
+# ===========================================================================
+# Main
+# ===========================================================================
+
+Write-Host "Starting project export..." -ForegroundColor Green
+Write-Host "Project Path : $ResolvedProject"  -ForegroundColor Yellow
+Write-Host "Output File  : $OutputFile"        -ForegroundColor Yellow
+
+# Ensure output directory exists
+$OutputPath    = Join-Path $ResolvedProject $OutputFile
+$OutputDir     = Split-Path $OutputPath -Parent
+if (-not (Test-Path $OutputDir)) {
+    New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
 }
 
-# Remove duplicates and sort
-$AllFiles = $AllFiles | Sort-Object FullName -Unique
+# Write header
+@"
+===============================================================================
+ASP.NET PROJECT EXPORT
+Generated: $(Get-Date)
+Project Path: $ResolvedProject
+===============================================================================
+
+"@ | Out-File -FilePath $OutputPath -Encoding UTF8
+
+# ---------------------------------------------------------------------------
+# Directory tree
+# ---------------------------------------------------------------------------
+Write-Host "Generating directory structure..." -ForegroundColor Cyan
+
+"DIRECTORY STRUCTURE:" | Out-File -FilePath $OutputPath -Append -Encoding UTF8
+"===================" | Out-File -FilePath $OutputPath -Append -Encoding UTF8
+""                    | Out-File -FilePath $OutputPath -Append -Encoding UTF8
+
+$treeWritten = $false
+try {
+    $treeOutput = & tree $ResolvedProject /F /A 2>$null
+    if ($LASTEXITCODE -eq 0 -and $treeOutput) {
+        $treeOutput | Out-File -FilePath $OutputPath -Append -Encoding UTF8
+        $treeWritten = $true
+    }
+} catch { }
+
+if (-not $treeWritten) {
+    Write-Host "tree.com unavailable — using PowerShell fallback." -ForegroundColor Yellow
+    (Split-Path $ResolvedProject -Leaf) | Out-File -FilePath $OutputPath -Append -Encoding UTF8
+    Write-DirectoryTree -Path $ResolvedProject -OutFile $OutputPath
+}
+
+"" | Out-File -FilePath $OutputPath -Append -Encoding UTF8
+"" | Out-File -FilePath $OutputPath -Append -Encoding UTF8
+
+# ---------------------------------------------------------------------------
+# Collect files
+# ---------------------------------------------------------------------------
+Write-Host "Collecting files..." -ForegroundColor Cyan
+
+$AllFiles = [System.Collections.Generic.List[System.IO.FileInfo]]::new()
+$seen     = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+
+# Sweep by extension
+foreach ($ext in $IncludeExtensions) {
+    $found = Get-ChildItem -Path $ResolvedProject -Recurse -Include $ext -File -ErrorAction SilentlyContinue |
+             Where-Object { -not (Should-Exclude $_) }
+    foreach ($f in $found) {
+        if ($seen.Add($f.FullName)) { $AllFiles.Add($f) }
+    }
+}
+
+# Sweep for specific filenames
+foreach ($spec in $IncludeSpecificFiles) {
+    $found = Get-ChildItem -Path $ResolvedProject -Recurse -Include $spec -File -ErrorAction SilentlyContinue |
+             Where-Object { -not (Should-Exclude $_) }
+    foreach ($f in $found) {
+        if ($seen.Add($f.FullName)) { $AllFiles.Add($f) }
+    }
+}
+
+# Sort for deterministic output
+$AllFiles = $AllFiles | Sort-Object FullName
 
 Write-Host "Found $($AllFiles.Count) files to export" -ForegroundColor Green
 
-# Export each file
+# ---------------------------------------------------------------------------
+# Write file contents
+# ---------------------------------------------------------------------------
 "FILE CONTENTS:" | Out-File -FilePath $OutputPath -Append -Encoding UTF8
 "==============" | Out-File -FilePath $OutputPath -Append -Encoding UTF8
-"" | Out-File -FilePath $OutputPath -Append -Encoding UTF8
+""               | Out-File -FilePath $OutputPath -Append -Encoding UTF8
 
 $fileCount = 0
 foreach ($file in $AllFiles) {
     $fileCount++
-    $relativePath = $file.FullName.Substring($ProjectPath.Length).TrimStart('\')
+    # Trim the resolved project root to get a clean relative path
+    $relativePath = $file.FullName.Substring($ResolvedProject.Length).TrimStart('\').TrimStart('/')
 
-    Write-Host "Processing ($fileCount/$($AllFiles.Count)): $relativePath" -ForegroundColor White
+    Write-Host "  ($fileCount/$($AllFiles.Count)) $relativePath" -ForegroundColor White
 
-    $separator = "=" * 80
-    $fileHeader = @"
-$separator
-FILE: $relativePath
+    $bar = "=" * 80
+    @"
+$bar
+FILE: $($file.FullName)
 SIZE: $([math]::Round($file.Length / 1KB, 2)) KB
 MODIFIED: $($file.LastWriteTime)
-$separator
+$bar
 
-"@
-
-    $fileHeader | Out-File -FilePath $OutputPath -Append -Encoding UTF8
+"@ | Out-File -FilePath $OutputPath -Append -Encoding UTF8
 
     try {
         $content = Get-Content -Path $file.FullName -Raw -ErrorAction Stop
-        if ($content) {
-            $content | Out-File -FilePath $OutputPath -Append -Encoding UTF8
-        } else {
+        if ([string]::IsNullOrEmpty($content)) {
             "[EMPTY FILE]" | Out-File -FilePath $OutputPath -Append -Encoding UTF8
+        } else {
+            $content | Out-File -FilePath $OutputPath -Append -Encoding UTF8
         }
     } catch {
         "[ERROR READING FILE: $($_.Exception.Message)]" | Out-File -FilePath $OutputPath -Append -Encoding UTF8
@@ -235,20 +289,17 @@ $separator
     "" | Out-File -FilePath $OutputPath -Append -Encoding UTF8
 }
 
-# Add footer
-$Footer = @"
+# ---------------------------------------------------------------------------
+# Footer
+# ---------------------------------------------------------------------------
+@"
 ===============================================================================
 EXPORT COMPLETED: $(Get-Date)
 Total Files Exported: $fileCount
 Output File: $OutputPath
 ===============================================================================
-"@
+"@ | Out-File -FilePath $OutputPath -Append -Encoding UTF8
 
-$Footer | Out-File -FilePath $OutputPath -Append -Encoding UTF8
-
-Write-Host "`nExport completed successfully!" -ForegroundColor Green
-Write-Host "Output file: $OutputPath" -ForegroundColor Yellow
-Write-Host "Total files exported: $fileCount" -ForegroundColor Green
-
-$outputFileInfo = Get-Item $OutputPath
-Write-Host "Output file size: $([math]::Round($outputFileInfo.Length / 1MB, 2)) MB" -ForegroundColor Cyan
+$sizeKB = [math]::Round((Get-Item $OutputPath).Length / 1MB, 2)
+Write-Host "`nExport complete." -ForegroundColor Green
+Write-Host "Output : $OutputPath ($sizeKB MB, $fileCount files)" -ForegroundColor Yellow
