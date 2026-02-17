@@ -16,12 +16,15 @@
                     </div>
                     <div class="card-body text-center">
                         <canvas id="libmanChart" width="400" height="200"></canvas>
-                        
+
+                        <%-- Hidden field carries server-side data to the client safely --%>
+                        <asp:HiddenField ID="hfChartData" runat="server" />
+
                         <hr />
 
                         <asp:Label ID="lblMessage" runat="server" CssClass="h5 text-success" />
                         <br /><br />
-                        <asp:Button ID="btnRefresh" runat="server" Text="Update Data from Server" 
+                        <asp:Button ID="btnRefresh" runat="server" Text="Update Data from Server"
                             CssClass="btn btn-outline-primary" OnClick="btnRefresh_Click" />
                     </div>
                 </div>
@@ -31,11 +34,12 @@
 
     <script>
         $(document).ready(function () {
-            // 1. Get the data injected from Code-Behind
-            const chartData = <%= ChartDataJson %>;
+            // 1. Read the JSON that the code-behind wrote into the hidden field
+            var rawValue = $('#<%= hfChartData.ClientID %>').val();
+            var chartData = JSON.parse(rawValue);
 
             // 2. Initialize Chart.js
-            const ctx = document.getElementById('libmanChart').getContext('2d');
+            var ctx = document.getElementById('libmanChart').getContext('2d');
             new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -60,10 +64,10 @@
             });
 
             // 3. Simple jQuery effect to show the library is working
-            $("#title").on("mouseenter", function() {
-                $(this).addClass("animate__animated animate__pulse");
-            }).on("mouseleave", function() {
-                $(this).removeClass("animate__animated animate__pulse");
+            $('#title').on('mouseenter', function () {
+                $(this).addClass('animate__animated animate__pulse');
+            }).on('mouseleave', function () {
+                $(this).removeClass('animate__animated animate__pulse');
             });
         });
     </script>
