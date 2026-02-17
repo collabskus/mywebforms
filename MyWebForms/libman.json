@@ -3,13 +3,13 @@
   "defaultProvider": "cdnjs",
   "libraries": [
     {
-      "library": "chart.js@4.4.7",
-      "destination": "MyWebForms/Scripts/lib/chartjs/",
+      "library": "Chart.js@4.4.1",
+      "destination": "Scripts/lib/chartjs/",
       "files": [ "chart.umd.js" ]
     },
     {
       "library": "animate.css@4.1.1",
-      "destination": "MyWebForms/Content/animate.css/",
+      "destination": "Content/animate.css/",
       "files": [ "animate.min.css" ]
     }
   ]
