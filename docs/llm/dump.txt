@@ -1,7 +1,7 @@
 ﻿
 ===============================================================================
 ASP.NET PROJECT EXPORT
-Generated: 02/17/2026 13:18:32
+Generated: 02/17/2026 13:18:56
 Project Path: D:\DEV\personal\MyWebForms
 ===============================================================================
 
@@ -102,8 +102,6 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   |       |   .NETFramework,Version=v4.8.1.AssemblyAttributes.cs
 |   |       |   DesignTimeResolveAssemblyReferences.cache
 |   |       |   DesignTimeResolveAssemblyReferencesInput.cache
-|   |       |   MyWebForms.csproj.AssemblyReference.cache
-|   |       |   MyWebForms.csproj.CoreCompileInputs.cache
 |   |       |   MyWebForms.csproj.FileListAbsolute.txt
 |   |       |   
 |   |       \---TempPE
@@ -89788,7 +89786,7 @@ MODIFIED: 02/17/2026 12:40:45
 
 
 ===============================================================================
-EXPORT COMPLETED: 02/17/2026 13:18:34
+EXPORT COMPLETED: 02/17/2026 13:18:58
 Total Files Exported: 76
 Output File: .\docs\llm\dump.txt
 ===============================================================================
