@@ -22,31 +22,40 @@
     <div class="card mb-4">
         <div class="card-header fw-semibold">1 — Page Lifecycle Snapshot</div>
         <div class="card-body">
+            <p class="text-muted small">
+                These values are written during <code>Page_PreRender</code>, which
+                fires on <em>every</em> request — initial load and postback alike.
+            </p>
             <dl class="row mb-0">
-                <dt class="col-sm-4">Server render time</dt>
-                <dd class="col-sm-8">
+                <dt class="col-sm-3">Rendered at</dt>
+                <dd class="col-sm-9">
                     <asp:Label ID="lblTimestamp" runat="server" /></dd>
 
-                <dt class="col-sm-4"><code>IsPostBack</code></dt>
-                <dd class="col-sm-8">
+                <dt class="col-sm-3">IsPostBack</dt>
+                <dd class="col-sm-9">
                     <asp:Label ID="lblIsPostBack" runat="server" /></dd>
+
+                <dt class="col-sm-3">Is Async Postback</dt>
+                <dd class="col-sm-9">
+                    <asp:Label ID="lblIsAsync" runat="server" /></dd>
             </dl>
         </div>
     </div>
 
     <%-- =====================================================================
          SECTION 2: UpdatePanel — async (partial-page) postback
-         Only the content inside this UpdatePanel is sent over the wire on
-         each async postback; the rest of the page stays frozen in the browser.
+         The UpdatePanel wraps only the counter and progress bar.  Clicking the
+         button inside it triggers a partial-page postback: only the panel's
+         content is sent back by the server and swapped in by MS Ajax — the
+         rest of the page DOM is untouched.
     ===================================================================== --%>
     <div class="card mb-4">
-        <div class="card-header fw-semibold">2 — UpdatePanel / Async Postback</div>
+        <div class="card-header fw-semibold">2 — UpdatePanel (Async Postback)</div>
         <div class="card-body">
             <p class="text-muted small">
-                Clicking the button below triggers a <em>partial-page postback</em>.
-                Only the panel content re-renders — watch the lifecycle snapshot above:
-                it will <strong>not</strong> update because it lives outside this
-                <code>UpdatePanel</code>.
+                Click the button below. Only the counter and progress bar update —
+                notice the page does <em>not</em> flash or scroll, because MS Ajax
+                intercepts the postback and does a partial-page refresh.
             </p>
 
             <asp:UpdatePanel ID="upAsync" runat="server" UpdateMode="Conditional">
@@ -140,13 +149,12 @@
         </div>
     </div>
 
-    <%-- Page-specific script: bind the click-count label inside the UpdatePanel
-         via DataBind so the <%# %> expression evaluates. --%>
-    <asp:Content ID="ScriptContent" ContentPlaceHolderID="ScriptContent" runat="server">
-        <script>
-            // Nothing needed client-side for this demo — the ScriptManager in
-            // Site.Master already wires up MS Ajax for UpdatePanel support.
-        </script>
-    </asp:Content>
+    <%-- Page-specific script at the bottom of MainContent, per coding conventions.
+         Nothing is needed client-side here — ScriptManager in Site.Master wires
+         up MS Ajax for UpdatePanel support automatically. --%>
+    <script>
+        // Intentionally empty: all UpdatePanel wiring is handled by the
+        // ScriptManager declared in Site.Master.
+    </script>
 
 </asp:Content>
