@@ -8,47 +8,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%: Page.Title %> - My ASP.NET Application</title>
 
+    <%-- Modernizr must be in <head> so feature detection runs before <body> is parsed. --%>
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
 
-    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <webopt:BundleReference runat="server" Path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <link href="~/Content/animate.css/animate.min.css" rel="stylesheet" />
 
-    <%-- Content pages may inject page-specific <link> or <meta> tags here --%>
+    <%-- Content pages may inject page-specific <link> or <meta> tags here. --%>
     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
     </asp:ContentPlaceHolder>
 </head>
 <body>
     <form runat="server">
+
+        <%-- ═══════════════════════════════════════════════════════════════════
+             ScriptManager — owns all MS Ajax and framework script delivery.
+             
+             Each Name="..." attribute is resolved via ScriptResourceMapping
+             (registered in BundleConfig.RegisterScriptManagerMappings).
+             Without those mappings ScriptManager falls back to the embedded
+             web resources in System.Web and throws:
+               "Assembly does not contain a Web resource with name '...'"
+             ═══════════════════════════════════════════════════════════════════ --%>
         <asp:ScriptManager runat="server">
             <Scripts>
-                <%--To learn more about bundling scripts in ScriptManager see https://go.microsoft.com/fwlink/?LinkID=301884 --%>
-                <%--Framework Scripts--%>
                 <asp:ScriptReference Name="MsAjaxBundle" />
                 <asp:ScriptReference Name="jquery" />
-                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
-                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
-                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
-                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
-                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
-                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
-                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
-                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
-                <asp:ScriptReference Name="ScriptManager.js" Assembly="System.Web" />
+                <asp:ScriptReference Name="WebForms" />
             </Scripts>
         </asp:ScriptManager>
 
-        <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" runat="server" href="~/">MyWebForms</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarCollapse" aria-controls="navbarCollapse"
-                    aria-expanded="false" aria-label="Toggle navigation">
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse"
+                        data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between" id="navbarCollapse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/">Home</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/About">About</a></li>
@@ -58,6 +60,7 @@
                 </div>
             </div>
         </nav>
+
         <div class="container body-content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
@@ -66,7 +69,11 @@
                 <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
             </footer>
         </div>
+
     </form>
+
+    <%-- Bootstrap and Chart.js are loaded after </form> so they don't
+         interfere with ScriptManager's script registration above. --%>
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/Scripts/bootstrap.js") %>
         <script src='<%= ResolveUrl("~/Scripts/lib/chartjs/chart.umd.js") %>'></script>
