@@ -244,6 +244,7 @@
     <Compile Include="HackerNews.aspx.designer.cs">
       <DependentUpon>HackerNews.aspx</DependentUpon>
     </Compile>
+    <Compile Include="HackerNewsEventArgs.cs" />
     <Compile Include="HackerNewsRefresh.ashx.cs">
       <DependentUpon>HackerNewsRefresh.ashx</DependentUpon>
     </Compile>
