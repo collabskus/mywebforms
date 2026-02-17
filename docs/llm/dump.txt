@@ -1,7 +1,7 @@
 ﻿
 ===============================================================================
 ASP.NET PROJECT EXPORT
-Generated: 02/17/2026 14:33:28
+Generated: 02/17/2026 14:34:50
 Project Path: D:\DEV\personal\MyWebForms
 ===============================================================================
 
@@ -77,58 +77,7 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   |       RouteConfig.cs
 |   |       
 |   +---bin
-|   |   |   Antlr3.Runtime.dll
-|   |   |   Antlr3.Runtime.pdb
-|   |   |   Microsoft.AspNet.FriendlyUrls.dll
-|   |   |   Microsoft.AspNet.FriendlyUrls.xml
-|   |   |   Microsoft.AspNet.Web.Optimization.WebForms.dll
-|   |   |   Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
-|   |   |   Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-|   |   |   Microsoft.ScriptManager.MSAjax.dll
-|   |   |   Microsoft.ScriptManager.WebForms.dll
-|   |   |   Microsoft.Web.Infrastructure.dll
-|   |   |   MyWebForms.dll
-|   |   |   MyWebForms.dll.config
-|   |   |   MyWebForms.pdb
-|   |   |   Newtonsoft.Json.dll
-|   |   |   Newtonsoft.Json.xml
-|   |   |   System.Web.Optimization.dll
-|   |   |   System.Web.Optimization.xml
-|   |   |   WebGrease.dll
-|   |   |   
 |   |   \---roslyn
-|   |           csc.exe
-|   |           csc.exe.config
-|   |           csc.rsp
-|   |           csi.exe
-|   |           csi.exe.config
-|   |           csi.rsp
-|   |           Microsoft.Build.Tasks.CodeAnalysis.dll
-|   |           Microsoft.CodeAnalysis.CSharp.dll
-|   |           Microsoft.CodeAnalysis.CSharp.Scripting.dll
-|   |           Microsoft.CodeAnalysis.dll
-|   |           Microsoft.CodeAnalysis.Scripting.dll
-|   |           Microsoft.CodeAnalysis.VisualBasic.dll
-|   |           Microsoft.CSharp.Core.targets
-|   |           Microsoft.DiaSymReader.Native.amd64.dll
-|   |           Microsoft.DiaSymReader.Native.x86.dll
-|   |           Microsoft.Managed.Core.CurrentVersions.targets
-|   |           Microsoft.Managed.Core.targets
-|   |           Microsoft.VisualBasic.Core.targets
-|   |           System.Buffers.dll
-|   |           System.Collections.Immutable.dll
-|   |           System.Memory.dll
-|   |           System.Numerics.Vectors.dll
-|   |           System.Reflection.Metadata.dll
-|   |           System.Runtime.CompilerServices.Unsafe.dll
-|   |           System.Text.Encoding.CodePages.dll
-|   |           System.Threading.Tasks.Extensions.dll
-|   |           vbc.exe
-|   |           vbc.exe.config
-|   |           vbc.rsp
-|   |           VBCSCompiler.exe
-|   |           VBCSCompiler.exe.config
-|   |           
 |   +---Content
 |   |   |   bootstrap-grid.css
 |   |   |   bootstrap-grid.css.map
@@ -179,9 +128,6 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   |   |   |   MyWebForms.csproj.AssemblyReference.cache
 |   |   |   |   MyWebForms.csproj.CoreCompileInputs.cache
 |   |   |   |   MyWebForms.csproj.FileListAbsolute.txt
-|   |   |   |   MyWebForms.csproj.Up2Date
-|   |   |   |   MyWebForms.dll
-|   |   |   |   MyWebForms.pdb
 |   |   |   |   
 |   |   |   \---TempPE
 |   |   \---Release
@@ -2986,7 +2932,7 @@ MODIFIED: 02/17/2026 14:24:15
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\HackerNews.aspx.cs
 SIZE: 21.56 KB
-MODIFIED: 02/17/2026 14:32:13
+MODIFIED: 02/17/2026 14:34:27
 ================================================================================
 
 using System;
@@ -5336,7 +5282,7 @@ MODIFIED: 02/17/2026 12:40:45
 
 
 ===============================================================================
-EXPORT COMPLETED: 02/17/2026 14:33:34
+EXPORT COMPLETED: 02/17/2026 14:34:54
 Total Files Exported: 40
 Output File: .\docs\llm\dump.txt
 ===============================================================================
