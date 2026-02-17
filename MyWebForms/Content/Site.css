@@ -77,3 +77,37 @@ textarea {
     .hn-poll-option:last-child {
         border-bottom: none;
     }
+
+/* ── (append these rules to the bottom of the existing Site.css) ──────── */
+
+/* ── Home page hero ─────────────────────────────────────────────────────── */
+
+.home-hero {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: .75rem;
+}
+
+    .home-hero code {
+        background: rgba(0,0,0,.07);
+        padding: .1em .35em;
+        border-radius: .25em;
+        font-size: .88em;
+    }
+
+/* ── Learning goals progress bar ─────────────────────────────────────────── */
+
+.progress {
+    border-radius: 999px;
+    background-color: #e9ecef;
+}
+
+/* ── Stack / goal cards ──────────────────────────────────────────────────── */
+
+.card {
+    transition: box-shadow .15s ease;
+}
+
+    .card:hover {
+        box-shadow: 0 .25rem .75rem rgba(0,0,0,.1) !important;
+    }
+
