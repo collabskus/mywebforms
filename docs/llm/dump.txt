@@ -1,7 +1,7 @@
 ﻿
 ===============================================================================
 ASP.NET PROJECT EXPORT
-Generated: 02/17/2026 14:01:49
+Generated: 02/17/2026 14:11:09
 Project Path: D:\DEV\personal\MyWebForms
 ===============================================================================
 
@@ -40,6 +40,15 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   |   favicon.ico
 |   |   Global.asax
 |   |   Global.asax.cs
+|   |   HackerNews.aspx
+|   |   HackerNews.aspx.cs
+|   |   HackerNews.aspx.designer.cs
+|   |   HnComment.ascx
+|   |   HnComment.ascx.cs
+|   |   HnStoryRow.ascx
+|   |   HnStoryRow.ascx.cs
+|   |   HnUserCard.ascx
+|   |   HnUserCard.ascx.cs
 |   |   libman.json
 |   |   LibraryStatusWidget.ascx
 |   |   LibraryStatusWidget.ascx.cs
@@ -63,58 +72,7 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   |       RouteConfig.cs
 |   |       
 |   +---bin
-|   |   |   Antlr3.Runtime.dll
-|   |   |   Antlr3.Runtime.pdb
-|   |   |   Microsoft.AspNet.FriendlyUrls.dll
-|   |   |   Microsoft.AspNet.FriendlyUrls.xml
-|   |   |   Microsoft.AspNet.Web.Optimization.WebForms.dll
-|   |   |   Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
-|   |   |   Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-|   |   |   Microsoft.ScriptManager.MSAjax.dll
-|   |   |   Microsoft.ScriptManager.WebForms.dll
-|   |   |   Microsoft.Web.Infrastructure.dll
-|   |   |   MyWebForms.dll
-|   |   |   MyWebForms.dll.config
-|   |   |   MyWebForms.pdb
-|   |   |   Newtonsoft.Json.dll
-|   |   |   Newtonsoft.Json.xml
-|   |   |   System.Web.Optimization.dll
-|   |   |   System.Web.Optimization.xml
-|   |   |   WebGrease.dll
-|   |   |   
 |   |   \---roslyn
-|   |           csc.exe
-|   |           csc.exe.config
-|   |           csc.rsp
-|   |           csi.exe
-|   |           csi.exe.config
-|   |           csi.rsp
-|   |           Microsoft.Build.Tasks.CodeAnalysis.dll
-|   |           Microsoft.CodeAnalysis.CSharp.dll
-|   |           Microsoft.CodeAnalysis.CSharp.Scripting.dll
-|   |           Microsoft.CodeAnalysis.dll
-|   |           Microsoft.CodeAnalysis.Scripting.dll
-|   |           Microsoft.CodeAnalysis.VisualBasic.dll
-|   |           Microsoft.CSharp.Core.targets
-|   |           Microsoft.DiaSymReader.Native.amd64.dll
-|   |           Microsoft.DiaSymReader.Native.x86.dll
-|   |           Microsoft.Managed.Core.CurrentVersions.targets
-|   |           Microsoft.Managed.Core.targets
-|   |           Microsoft.VisualBasic.Core.targets
-|   |           System.Buffers.dll
-|   |           System.Collections.Immutable.dll
-|   |           System.Memory.dll
-|   |           System.Numerics.Vectors.dll
-|   |           System.Reflection.Metadata.dll
-|   |           System.Runtime.CompilerServices.Unsafe.dll
-|   |           System.Text.Encoding.CodePages.dll
-|   |           System.Threading.Tasks.Extensions.dll
-|   |           vbc.exe
-|   |           vbc.exe.config
-|   |           vbc.rsp
-|   |           VBCSCompiler.exe
-|   |           VBCSCompiler.exe.config
-|   |           
 |   +---Content
 |   |   |   bootstrap-grid.css
 |   |   |   bootstrap-grid.css.map
@@ -153,6 +111,10 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   |   \---animate.css
 |   |           animate.min.css
 |   |           
+|   +---Models
+|   |       HackerNewsItem.cs
+|   |       HackerNewsUser.cs
+|   |       
 |   +---obj
 |   |   +---Debug
 |   |   |   |   .NETFramework,Version=v4.8.1.AssemblyAttributes.cs
@@ -161,9 +123,6 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   |   |   |   MyWebForms.csproj.AssemblyReference.cache
 |   |   |   |   MyWebForms.csproj.CoreCompileInputs.cache
 |   |   |   |   MyWebForms.csproj.FileListAbsolute.txt
-|   |   |   |   MyWebForms.csproj.Up2Date
-|   |   |   |   MyWebForms.dll
-|   |   |   |   MyWebForms.pdb
 |   |   |   |   
 |   |   |   \---TempPE
 |   |   \---Release
@@ -173,57 +132,60 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   +---Properties
 |   |       AssemblyInfo.cs
 |   |       
-|   \---Scripts
-|       |   bootstrap.bundle.js
-|       |   bootstrap.bundle.js.map
-|       |   bootstrap.bundle.min.js
-|       |   bootstrap.bundle.min.js.map
-|       |   bootstrap.esm.js
-|       |   bootstrap.esm.js.map
-|       |   bootstrap.esm.min.js
-|       |   bootstrap.esm.min.js.map
-|       |   bootstrap.js
-|       |   bootstrap.js.map
-|       |   bootstrap.min.js
-|       |   bootstrap.min.js.map
-|       |   jquery-3.7.1.intellisense.js
-|       |   jquery-3.7.1.js
-|       |   jquery-3.7.1.min.js
-|       |   jquery-3.7.1.min.map
-|       |   jquery-3.7.1.slim.js
-|       |   jquery-3.7.1.slim.min.js
-|       |   jquery-3.7.1.slim.min.map
-|       |   modernizr-2.8.3.js
-|       |   
-|       +---lib
-|       |   \---chartjs
-|       |           chart.umd.js
-|       |           
-|       \---WebForms
-|           |   DetailsView.js
-|           |   Focus.js
-|           |   GridView.js
-|           |   Menu.js
-|           |   MenuStandards.js
-|           |   SmartNav.js
-|           |   TreeView.js
-|           |   WebForms.js
-|           |   WebParts.js
-|           |   WebUIValidation.js
-|           |   
-|           \---MSAjax
-|                   MicrosoftAjax.js
-|                   MicrosoftAjaxApplicationServices.js
-|                   MicrosoftAjaxComponentModel.js
-|                   MicrosoftAjaxCore.js
-|                   MicrosoftAjaxGlobalization.js
-|                   MicrosoftAjaxHistory.js
-|                   MicrosoftAjaxNetwork.js
-|                   MicrosoftAjaxSerialization.js
-|                   MicrosoftAjaxTimer.js
-|                   MicrosoftAjaxWebForms.js
-|                   MicrosoftAjaxWebServices.js
-|                   
+|   +---Scripts
+|   |   |   bootstrap.bundle.js
+|   |   |   bootstrap.bundle.js.map
+|   |   |   bootstrap.bundle.min.js
+|   |   |   bootstrap.bundle.min.js.map
+|   |   |   bootstrap.esm.js
+|   |   |   bootstrap.esm.js.map
+|   |   |   bootstrap.esm.min.js
+|   |   |   bootstrap.esm.min.js.map
+|   |   |   bootstrap.js
+|   |   |   bootstrap.js.map
+|   |   |   bootstrap.min.js
+|   |   |   bootstrap.min.js.map
+|   |   |   jquery-3.7.1.intellisense.js
+|   |   |   jquery-3.7.1.js
+|   |   |   jquery-3.7.1.min.js
+|   |   |   jquery-3.7.1.min.map
+|   |   |   jquery-3.7.1.slim.js
+|   |   |   jquery-3.7.1.slim.min.js
+|   |   |   jquery-3.7.1.slim.min.map
+|   |   |   modernizr-2.8.3.js
+|   |   |   
+|   |   +---lib
+|   |   |   \---chartjs
+|   |   |           chart.umd.js
+|   |   |           
+|   |   \---WebForms
+|   |       |   DetailsView.js
+|   |       |   Focus.js
+|   |       |   GridView.js
+|   |       |   Menu.js
+|   |       |   MenuStandards.js
+|   |       |   SmartNav.js
+|   |       |   TreeView.js
+|   |       |   WebForms.js
+|   |       |   WebParts.js
+|   |       |   WebUIValidation.js
+|   |       |   
+|   |       \---MSAjax
+|   |               MicrosoftAjax.js
+|   |               MicrosoftAjaxApplicationServices.js
+|   |               MicrosoftAjaxComponentModel.js
+|   |               MicrosoftAjaxCore.js
+|   |               MicrosoftAjaxGlobalization.js
+|   |               MicrosoftAjaxHistory.js
+|   |               MicrosoftAjaxNetwork.js
+|   |               MicrosoftAjaxSerialization.js
+|   |               MicrosoftAjaxTimer.js
+|   |               MicrosoftAjaxWebForms.js
+|   |               MicrosoftAjaxWebServices.js
+|   |               
+|   \---Services
+|           HackerNewsService.cs
+|           
 \---packages
     +---Antlr.3.5.0.2
     |   |   .signature.p7s
@@ -1649,8 +1611,8 @@ namespace MyWebForms
 
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\Content\Site.css
-SIZE: 0.44 KB
-MODIFIED: 02/17/2026 12:40:44
+SIZE: 1.67 KB
+MODIFIED: 02/17/2026 14:08:08
 ================================================================================
 
 /* Wrapping element */
@@ -1674,6 +1636,64 @@ textarea {
         padding: 0;
     }
 }
+
+/* ── Hacker News page ──────────────────────────────────────────────────── */
+
+/* Story row hover */
+.hn-story-row:hover {
+    background-color: #fffaf5;
+}
+
+/* Story title link colour — matches classic HN */
+.hn-title {
+    color: #000 !important;
+}
+
+    .hn-title:hover {
+        color: #ff6600 !important;
+    }
+
+/* Comment text inherits HN's HTML tags cleanly */
+.hn-comment-text p:last-child,
+.hn-story-text p:last-child {
+    margin-bottom: 0;
+}
+
+.hn-comment-text pre,
+.hn-story-text pre {
+    background: #f6f8fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 4px;
+    padding: .5rem;
+    font-size: .78rem;
+}
+
+/* Depth connector line */
+.hn-comment + .hn-comment {
+    border-top: 1px solid #f0f0f0;
+}
+
+/* User about HTML passthrough */
+.hn-user-about a {
+    color: #555;
+    word-break: break-all;
+}
+
+/* Smooth tab transitions */
+.nav-link {
+    transition: color .15s ease;
+}
+
+/* Poll option bar */
+.hn-poll-option {
+    padding: .4rem 0;
+    border-bottom: 1px solid #eee;
+    font-size: .85rem;
+}
+
+    .hn-poll-option:last-child {
+        border-bottom: none;
+    }
 
 
 
@@ -1785,6 +1805,939 @@ namespace MyWebForms
 
 
 ================================================================================
+FILE: :\DEV\personal\MyWebForms\MyWebForms\HackerNews.aspx
+SIZE: 8.02 KB
+MODIFIED: 02/17/2026 14:06:38
+================================================================================
+
+<%@ Page Title="Hacker News" Language="C#" MasterPageFile="~/Site.Master"
+    AutoEventWireup="true" CodeBehind="HackerNews.aspx.cs"
+    Inherits="MyWebForms.HackerNews" Async="true" %>
+
+<%@ Register Src="~/HnStoryRow.ascx"  TagPrefix="uc" TagName="StoryRow"  %>
+<%@ Register Src="~/HnComment.ascx"   TagPrefix="uc" TagName="Comment"   %>
+<%@ Register Src="~/HnUserCard.ascx"  TagPrefix="uc" TagName="UserCard"  %>
+
+<asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+
+<main class="container-fluid mt-3" style="max-width:960px;">
+
+    <%-- ═══════════════════════════════════════════════════════════
+         Page header
+    ════════════════════════════════════════════════════════════════ --%>
+    <div class="d-flex align-items-center mb-3">
+        <span class="hn-logo me-2" style="background:#ff6600;color:#fff;font-weight:bold;padding:2px 6px;font-family:monospace;">Y</span>
+        <h4 class="mb-0 fw-bold">Hacker News</h4>
+        <span class="ms-auto badge bg-success animate__animated animate__pulse animate__infinite"
+              style="font-size:.65rem;">LIVE</span>
+    </div>
+
+    <%-- ═══════════════════════════════════════════════════════════
+         Tab navigation
+    ════════════════════════════════════════════════════════════════ --%>
+    <ul class="nav nav-tabs mb-3" id="hnTabs">
+        <li class="nav-item">
+            <asp:LinkButton ID="btnTabTop"   runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="top">Top</asp:LinkButton>
+        </li>
+        <li class="nav-item">
+            <asp:LinkButton ID="btnTabNew"   runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="new">New</asp:LinkButton>
+        </li>
+        <li class="nav-item">
+            <asp:LinkButton ID="btnTabBest"  runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="best">Best</asp:LinkButton>
+        </li>
+        <li class="nav-item">
+            <asp:LinkButton ID="btnTabAsk"   runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="ask">Ask HN</asp:LinkButton>
+        </li>
+        <li class="nav-item">
+            <asp:LinkButton ID="btnTabShow"  runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="show">Show HN</asp:LinkButton>
+        </li>
+        <li class="nav-item">
+            <asp:LinkButton ID="btnTabJobs"  runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="jobs">Jobs</asp:LinkButton>
+        </li>
+    </ul>
+
+    <%-- ═══════════════════════════════════════════════════════════
+         Main two-column layout
+    ════════════════════════════════════════════════════════════════ --%>
+    <div class="row">
+
+        <%-- ── Left: story list ─────────────────────────────────── --%>
+        <div class="col-md-7">
+
+            <%-- Loading / error message --%>
+            <asp:Panel ID="pnlMessage" runat="server" Visible="false">
+                <div class="alert alert-info small">
+                    <asp:Literal ID="litMessage" runat="server" />
+                </div>
+            </asp:Panel>
+
+            <%-- Story rows injected here by code-behind --%>
+            <asp:PlaceHolder ID="phStories" runat="server" />
+
+            <%-- Pagination --%>
+            <asp:Panel ID="pnlPager" runat="server" CssClass="d-flex justify-content-between align-items-center mt-3">
+                <asp:LinkButton ID="btnPrev" runat="server" CssClass="btn btn-sm btn-outline-secondary"
+                    OnClick="btnPrev_Click">&#8592; Prev</asp:LinkButton>
+                <small class="text-muted">
+                    Page <asp:Literal ID="litPage" runat="server" />
+                    of <asp:Literal ID="litPageCount" runat="server" />
+                </small>
+                <asp:LinkButton ID="btnNext" runat="server" CssClass="btn btn-sm btn-outline-secondary"
+                    OnClick="btnNext_Click">Next &#8594;</asp:LinkButton>
+            </asp:Panel>
+
+        </div>
+
+        <%-- ── Right: detail / user panel ──────────────────────── --%>
+        <div class="col-md-5">
+
+            <%-- Story detail panel --%>
+            <asp:Panel ID="pnlStoryDetail" runat="server" Visible="false"
+                CssClass="card shadow-sm mb-3 animate__animated animate__fadeIn">
+                <div class="card-header bg-dark text-white d-flex justify-content-between">
+                    <span class="fw-semibold small">
+                        <asp:Literal ID="litDetailTitle" runat="server" />
+                    </span>
+                    <asp:LinkButton ID="btnCloseDetail" runat="server"
+                        CssClass="btn-close btn-close-white btn-sm"
+                        OnClick="btnCloseDetail_Click" />
+                </div>
+                <div class="card-body">
+                    <div class="small text-muted mb-2">
+                        <asp:Literal ID="litDetailMeta" runat="server" />
+                    </div>
+                    <%-- Self-text (Ask HN / polls) --%>
+                    <asp:Panel ID="pnlDetailText" runat="server" CssClass="hn-story-text small mb-3">
+                        <asp:Literal ID="litDetailText" runat="server" Mode="PassThrough" />
+                    </asp:Panel>
+                    <%-- Poll options --%>
+                    <asp:Panel ID="pnlPollOptions" runat="server">
+                        <asp:PlaceHolder ID="phPollOptions" runat="server" />
+                    </asp:Panel>
+                </div>
+                <div class="card-body border-top">
+                    <h6 class="text-muted small mb-2">
+                        Comments (<asp:Literal ID="litDetailCommentCount" runat="server" />)
+                    </h6>
+                    <asp:Panel ID="pnlCommentLoading" runat="server" CssClass="text-muted small">
+                        Loading comments&#8230;
+                    </asp:Panel>
+                    <asp:PlaceHolder ID="phComments" runat="server" />
+                </div>
+            </asp:Panel>
+
+            <%-- User profile panel --%>
+            <asp:Panel ID="pnlUserProfile" runat="server" Visible="false"
+                CssClass="animate__animated animate__fadeIn">
+                <div class="d-flex justify-content-end mb-1">
+                    <asp:LinkButton ID="btnCloseUser" runat="server"
+                        CssClass="btn btn-sm btn-outline-secondary"
+                        OnClick="btnCloseUser_Click">&#10005; Close</asp:LinkButton>
+                </div>
+                <uc:UserCard ID="ucUserCard" runat="server" />
+            </asp:Panel>
+
+        </div>
+    </div>
+
+</main>
+
+<style>
+    .hn-title { font-size: .95rem; }
+    .hn-rank  { font-size: .85rem; }
+    .hn-meta  { font-size: .78rem; }
+    .hn-comment-text pre,
+    .hn-comment-text code { white-space: pre-wrap; word-break: break-word; }
+    .hn-story-text  pre,
+    .hn-story-text  code { white-space: pre-wrap; word-break: break-word; }
+    .hn-user-about a { color: inherit; }
+    .hn-author-link, .hn-comments-link {
+        background: none; border: none; padding: 0;
+        color: inherit; text-decoration: underline dotted;
+        cursor: pointer;
+    }
+    .nav-link.active { color: #ff6600 !important; border-bottom-color: #ff6600 !important; }
+    .hn-poll-option   { padding: .4rem 0; border-bottom: 1px solid #eee; }
+</style>
+
+</asp:Content>
+
+
+
+================================================================================
+FILE: :\DEV\personal\MyWebForms\MyWebForms\HackerNews.aspx.cs
+SIZE: 14.92 KB
+MODIFIED: 02/17/2026 14:07:01
+================================================================================
+
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using MyWebForms.Models;
+using MyWebForms.Services;
+
+namespace MyWebForms
+{
+    /// <summary>
+    /// HackerNews.aspx code-behind.
+    ///
+    /// Page lifecycle summary
+    /// ----------------------
+    /// 1. Page_Load   — restores tab/page state from ViewState; calls
+    ///                  RegisterAsyncTask to queue the async data load.
+    /// 2. PreRenderComplete (raised after all async tasks finish) — binds
+    ///                  the story rows and detail panel to the loaded data.
+    ///
+    /// Why RegisterAsyncTask instead of async void Page_Load?
+    ///   RegisterAsyncTask is the correct Web Forms idiom for async work.
+    ///   It integrates with the page's async pipeline so the response is
+    ///   not flushed until all tasks complete. Requires Async="true" on
+    ///   the <%@ Page %> directive.
+    ///
+    /// Why not UpdatePanel?
+    ///   UpdatePanel would add MS Ajax partial rendering — valid, but this
+    ///   demo keeps the dependency surface small and lets LinkButton postbacks
+    ///   do a full-page render, which is simpler to reason about.
+    /// </summary>
+    public partial class HackerNews : Page
+    {
+        // ── Constants ────────────────────────────────────────────────────────
+
+        private const int PageSize = 20;
+        private const int MaxCommentDepth = 4;
+
+        // ── Service (injectable via property for testability) ────────────────
+
+        private HackerNewsService _service;
+
+        /// <summary>
+        /// Allows a test to substitute a fake service. The real service is
+        /// created lazily on first access if none has been assigned.
+        /// </summary>
+        public HackerNewsService Service
+        {
+            get { return _service ?? (_service = new HackerNewsService()); }
+            set { _service = value; }
+        }
+
+        // ── Data loaded by async tasks ───────────────────────────────────────
+
+        private List<HackerNewsItem> _storyPage;
+        private int _totalIds;
+        private HackerNewsItem _selectedStory;
+        private List<HackerNewsItem> _comments;
+        private List<HackerNewsItem> _pollOptions;
+        private HackerNewsUser _selectedUser;
+
+        // ── ViewState keys ───────────────────────────────────────────────────
+
+        private string ActiveTab
+        {
+            get { return ViewState["Tab"] as string ?? "top"; }
+            set { ViewState["Tab"] = value; }
+        }
+
+        private int CurrentPage
+        {
+            get { return (int)(ViewState["Page"] ?? 1); }
+            set { ViewState["Page"] = value; }
+        }
+
+        private int SelectedItemId
+        {
+            get { return (int)(ViewState["SelItem"] ?? 0); }
+            set { ViewState["SelItem"] = value; }
+        }
+
+        private string SelectedUsername
+        {
+            get { return ViewState["SelUser"] as string; }
+            set { ViewState["SelUser"] = value; }
+        }
+
+        // ── Page lifecycle ───────────────────────────────────────────────────
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack)
+            {
+                ActiveTab = "top";
+                CurrentPage = 1;
+            }
+
+            HighlightActiveTab();
+
+            // Queue async data fetching. PreRenderComplete fires after all
+            // registered tasks have completed.
+            RegisterAsyncTask(new PageAsyncTask(LoadDataAsync));
+        }
+
+        private async Task LoadDataAsync()
+        {
+            // ── Fetch the story list ─────────────────────────────────────────
+            var ids = await GetIdsForTabAsync(ActiveTab).ConfigureAwait(false);
+            _totalIds = ids.Count;
+            _storyPage = await Service.GetItemPageAsync(ids, CurrentPage, PageSize)
+                .ConfigureAwait(false);
+
+            // ── Fetch story detail if one is selected ────────────────────────
+            if (SelectedItemId > 0)
+            {
+                _selectedStory = await Service.GetItemAsync(SelectedItemId)
+                    .ConfigureAwait(false);
+
+                if (_selectedStory != null)
+                {
+                    _comments = await Service.GetCommentTreeAsync(
+                        _selectedStory, MaxCommentDepth).ConfigureAwait(false);
+
+                    if (_selectedStory.IsPoll && _selectedStory.Parts != null)
+                    {
+                        _pollOptions = new List<HackerNewsItem>();
+                        foreach (var partId in _selectedStory.Parts)
+                        {
+                            var opt = await Service.GetItemAsync(partId)
+                                .ConfigureAwait(false);
+                            if (opt != null) _pollOptions.Add(opt);
+                        }
+                    }
+                }
+            }
+
+            // ── Fetch user profile if one is selected ────────────────────────
+            if (!string.IsNullOrEmpty(SelectedUsername))
+            {
+                _selectedUser = await Service.GetUserAsync(SelectedUsername)
+                    .ConfigureAwait(false);
+            }
+        }
+
+        protected override void OnPreRenderComplete(EventArgs e)
+        {
+            base.OnPreRenderComplete(e);
+            BindStoryList();
+            BindDetailPanel();
+            BindUserPanel();
+            BindPager();
+        }
+
+        // ── Tab click ────────────────────────────────────────────────────────
+
+        protected void btnTab_Click(object sender, EventArgs e)
+        {
+            var btn = (LinkButton)sender;
+            ActiveTab = btn.CommandArgument;
+            CurrentPage = 1;
+            SelectedItemId = 0;
+            SelectedUsername = null;
+        }
+
+        // ── Pager clicks ─────────────────────────────────────────────────────
+
+        protected void btnPrev_Click(object sender, EventArgs e)
+        {
+            if (CurrentPage > 1) CurrentPage--;
+        }
+
+        protected void btnNext_Click(object sender, EventArgs e)
+        {
+            var pageCount = (int)Math.Ceiling((double)_totalIds / PageSize);
+            if (CurrentPage < pageCount) CurrentPage++;
+        }
+
+        // ── Detail panel close ───────────────────────────────────────────────
+
+        protected void btnCloseDetail_Click(object sender, EventArgs e)
+        {
+            SelectedItemId = 0;
+        }
+
+        protected void btnCloseUser_Click(object sender, EventArgs e)
+        {
+            SelectedUsername = null;
+        }
+
+        // ── Binding helpers ───────────────────────────────────────────────────
+
+        private void BindStoryList()
+        {
+            phStories.Controls.Clear();
+
+            if (_storyPage == null || _storyPage.Count == 0)
+            {
+                litMessage.Text = "No stories found. The API may be temporarily unavailable.";
+                pnlMessage.Visible = true;
+                return;
+            }
+
+            pnlMessage.Visible = false;
+            var offset = (CurrentPage - 1) * PageSize;
+
+            for (int i = 0; i < _storyPage.Count; i++)
+            {
+                var story = _storyPage[i];
+
+                var row = (HnStoryRow)LoadControl("~/HnStoryRow.ascx");
+                row.Item = story;
+                row.Rank = offset + i + 1;
+
+                // Wire bubble-up events so clicks update ViewState before the
+                // next LoadDataAsync call (triggered by the postback).
+                row.StorySelected += OnStorySelected;
+                row.AuthorSelected += OnAuthorSelected;
+
+                phStories.Controls.Add(row);
+            }
+        }
+
+        private void BindDetailPanel()
+        {
+            if (SelectedItemId == 0 || _selectedStory == null)
+            {
+                pnlStoryDetail.Visible = false;
+                return;
+            }
+
+            pnlStoryDetail.Visible = true;
+
+            litDetailTitle.Text = System.Web.HttpUtility.HtmlEncode(
+                _selectedStory.Title ?? "(untitled)");
+
+            litDetailMeta.Text = string.Format(
+                "{0} points &middot; by {1} &middot; {2}",
+                _selectedStory.Score,
+                System.Web.HttpUtility.HtmlEncode(_selectedStory.By ?? "unknown"),
+                _selectedStory.TimeAgo);
+
+            // Self-text (Ask HN, polls, jobs)
+            if (!string.IsNullOrEmpty(_selectedStory.Text))
+            {
+                pnlDetailText.Visible = true;
+                litDetailText.Text = _selectedStory.Text;
+            }
+            else
+            {
+                pnlDetailText.Visible = false;
+            }
+
+            // Poll options
+            if (_pollOptions != null && _pollOptions.Count > 0)
+            {
+                pnlPollOptions.Visible = true;
+                phPollOptions.Controls.Clear();
+                foreach (var opt in _pollOptions)
+                {
+                    var div = new HtmlGenericControl("div");
+                    div.Attributes["class"] = "hn-poll-option d-flex justify-content-between";
+                    div.InnerHtml = string.Format(
+                        "<span class=\"small\">{0}</span>" +
+                        "<span class=\"badge bg-secondary\">{1} votes</span>",
+                        System.Web.HttpUtility.HtmlEncode(opt.Text ?? string.Empty),
+                        opt.Score);
+                    phPollOptions.Controls.Add(div);
+                }
+            }
+            else
+            {
+                pnlPollOptions.Visible = false;
+            }
+
+            litDetailCommentCount.Text = _selectedStory.Descendants.ToString();
+            pnlCommentLoading.Visible = false;
+
+            // Render flat comment list with depth tracking
+            phComments.Controls.Clear();
+            if (_comments != null && _comments.Count > 0)
+            {
+                RenderCommentTree(_comments, _selectedStory.Id, 0);
+            }
+            else if (_selectedStory.Descendants > 0)
+            {
+                var noComments = new HtmlGenericControl("p");
+                noComments.Attributes["class"] = "text-muted small";
+                noComments.InnerText = "Comments could not be loaded.";
+                phComments.Controls.Add(noComments);
+            }
+        }
+
+        /// <summary>
+        /// Walks the flat comment list (pre-order, depth already encoded via
+        /// parent relationships) and creates HnComment controls at the
+        /// correct visual depth.
+        /// </summary>
+        private void RenderCommentTree(
+            List<HackerNewsItem> allComments, int parentId, int depth)
+        {
+            if (depth > MaxCommentDepth) return;
+
+            foreach (var comment in allComments)
+            {
+                if (comment.Parent != parentId) continue;
+
+                var ctrl = (HnComment)LoadControl("~/HnComment.ascx");
+                ctrl.Item = comment;
+                ctrl.Depth = depth;
+                ctrl.AuthorSelected += OnAuthorSelected;
+                phComments.Controls.Add(ctrl);
+
+                // Recurse for children
+                RenderCommentTree(allComments, comment.Id, depth + 1);
+            }
+        }
+
+        private void BindUserPanel()
+        {
+            if (string.IsNullOrEmpty(SelectedUsername) || _selectedUser == null)
+            {
+                pnlUserProfile.Visible = false;
+                return;
+            }
+
+            pnlUserProfile.Visible = true;
+            ucUserCard.User = _selectedUser;
+        }
+
+        private void BindPager()
+        {
+            var pageCount = _totalIds > 0
+                ? (int)Math.Ceiling((double)_totalIds / PageSize)
+                : 1;
+
+            litPage.Text = CurrentPage.ToString();
+            litPageCount.Text = pageCount.ToString();
+            btnPrev.Enabled = CurrentPage > 1;
+            btnNext.Enabled = CurrentPage < pageCount;
+            pnlPager.Visible = pageCount > 1;
+        }
+
+        private void HighlightActiveTab()
+        {
+            // Reset all tabs then activate the current one.
+            foreach (var btn in new[] { btnTabTop, btnTabNew, btnTabBest,
+                                        btnTabAsk, btnTabShow, btnTabJobs })
+            {
+                btn.CssClass = "nav-link";
+            }
+
+            switch (ActiveTab)
+            {
+                case "top": btnTabTop.CssClass = "nav-link active"; break;
+                case "new": btnTabNew.CssClass = "nav-link active"; break;
+                case "best": btnTabBest.CssClass = "nav-link active"; break;
+                case "ask": btnTabAsk.CssClass = "nav-link active"; break;
+                case "show": btnTabShow.CssClass = "nav-link active"; break;
+                case "jobs": btnTabJobs.CssClass = "nav-link active"; break;
+            }
+        }
+
+        // ── Event handlers from child controls ───────────────────────────────
+
+        private void OnStorySelected(object sender, StorySelectedEventArgs e)
+        {
+            SelectedItemId = e.ItemId;
+            SelectedUsername = null;        // close user panel when opening story
+        }
+
+        private void OnAuthorSelected(object sender, AuthorSelectedEventArgs e)
+        {
+            SelectedUsername = e.Username;
+            // Keep story detail open — user profile appears below it
+        }
+
+        // ── API tab → ID list routing ────────────────────────────────────────
+
+        private Task<List<int>> GetIdsForTabAsync(string tab)
+        {
+            switch (tab)
+            {
+                case "new": return Service.GetNewStoryIdsAsync();
+                case "best": return Service.GetBestStoryIdsAsync();
+                case "ask": return Service.GetAskStoryIdsAsync();
+                case "show": return Service.GetShowStoryIdsAsync();
+                case "jobs": return Service.GetJobStoryIdsAsync();
+                default: return Service.GetTopStoryIdsAsync();
+            }
+        }
+    }
+}
+
+
+
+================================================================================
+FILE: :\DEV\personal\MyWebForms\MyWebForms\HnComment.ascx
+SIZE: 1.29 KB
+MODIFIED: 02/17/2026 14:05:14
+================================================================================
+
+<%@ Control Language="C#" AutoEventWireup="true"
+    CodeBehind="HnComment.ascx.cs"
+    Inherits="MyWebForms.HnComment" %>
+
+<%--
+    HnComment.ascx
+    --------------
+    Renders a single comment with visual depth indentation.
+    The Depth property controls the left-margin indent level.
+    HTML from the API is rendered as-is (it is already escaped by HN).
+
+    The API returns comment text as HTML (with <p>, <pre>, <code>, <a> tags).
+    We render it with <%# %> eval inside a Literal so it is output verbatim â€”
+    this is intentional and safe because the source is the HN API, not
+    user-supplied input arriving at our server.
+--%>
+
+<div class="hn-comment" style="margin-left: <%= DepthPx %>px;">
+    <div class="card border-0 bg-light mb-2">
+        <div class="card-body py-2 px-3">
+            <div class="small text-muted mb-1">
+                <asp:LinkButton ID="lnkAuthor" runat="server"
+                    CssClass="fw-semibold text-secondary hn-author-link"
+                    OnClick="lnkAuthor_Click" />
+                &nbsp;&middot;&nbsp;
+                <asp:Literal ID="litTimeAgo" runat="server" />
+            </div>
+            <div class="hn-comment-text small">
+                <asp:Literal ID="litText" runat="server" Mode="PassThrough" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+================================================================================
+FILE: :\DEV\personal\MyWebForms\MyWebForms\HnComment.ascx.cs
+SIZE: 2.26 KB
+MODIFIED: 02/17/2026 14:05:31
+================================================================================
+
+using System;
+using MyWebForms.Models;
+
+namespace MyWebForms
+{
+    /// <summary>
+    /// Code-behind for HnComment.ascx.
+    /// Renders a single flat comment; the host page is responsible for
+    /// rendering the full tree by creating one control per comment and
+    /// setting the Depth property to control visual indentation.
+    /// </summary>
+    public partial class HnComment : System.Web.UI.UserControl
+    {
+        // ── Inputs ───────────────────────────────────────────────────────────
+
+        public HackerNewsItem Item { get; set; }
+
+        /// <summary>
+        /// Visual nesting depth (0 = top-level).
+        /// Each depth level adds 20 px of left margin.
+        /// </summary>
+        public int Depth { get; set; }
+
+        // ── Derived ──────────────────────────────────────────────────────────
+
+        protected int DepthPx { get { return Depth * 20; } }
+
+        // ── Bubbled events ───────────────────────────────────────────────────
+
+        public event EventHandler<AuthorSelectedEventArgs> AuthorSelected;
+
+        // ── Lifecycle ────────────────────────────────────────────────────────
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (Item == null)
+            {
+                Visible = false;
+                return;
+            }
+
+            lnkAuthor.Text = System.Web.HttpUtility.HtmlEncode(Item.By ?? "[deleted]");
+            litTimeAgo.Text = Item.TimeAgo;
+            // The API returns HTML — render verbatim.
+            litText.Text = string.IsNullOrEmpty(Item.Text) ? "<em>(empty)</em>" : Item.Text;
+        }
+
+        protected void lnkAuthor_Click(object sender, EventArgs e)
+        {
+            if (Item == null || string.IsNullOrEmpty(Item.By)) return;
+            AuthorSelected?.Invoke(this, new AuthorSelectedEventArgs(Item.By));
+        }
+    }
+}
+
+
+
+================================================================================
+FILE: :\DEV\personal\MyWebForms\MyWebForms\HnStoryRow.ascx
+SIZE: 2.04 KB
+MODIFIED: 02/17/2026 14:04:32
+================================================================================
+
+<%@ Control Language="C#" AutoEventWireup="true"
+    CodeBehind="HnStoryRow.ascx.cs"
+    Inherits="MyWebForms.HnStoryRow" %>
+
+<%--
+    HnStoryRow.ascx
+    ---------------
+    Renders a single Hacker News story in the classic orange-site list style.
+    The parent page supplies the Item and Rank properties before Page_Load runs.
+
+    LinkButton vs HyperLink:
+      - External story URL  â†’ plain <a> (HyperLink) â€” leaves the app entirely
+      - "N comments" link   â†’ LinkButton â€” triggers a postback so the parent
+        page can load the story detail panel server-side without a full redirect
+      - Author name link    â†’ LinkButton â€” same pattern for the user panel
+--%>
+
+<div class="hn-story-row d-flex align-items-start py-2 border-bottom border-light">
+
+    <%-- Rank number --%>
+    <span class="hn-rank text-muted me-2 pt-1" style="min-width:2rem; text-align:right;">
+        <asp:Literal ID="litRank" runat="server" />
+    </span>
+
+    <%-- Score badge --%>
+    <span class="hn-score badge bg-warning text-dark me-3 mt-1" style="min-width:3rem;">
+        <asp:Literal ID="litScore" runat="server" />â–²
+    </span>
+
+    <div class="flex-grow-1">
+        <%-- Story title â€” external URL opens in new tab --%>
+        <asp:HyperLink ID="lnkTitle" runat="server"
+            CssClass="hn-title fw-semibold text-decoration-none text-dark"
+            Target="_blank" />
+        <%-- Domain hint --%>
+        <small class="text-muted ms-1">
+            (<asp:Literal ID="litDomain" runat="server" />)
+        </small>
+
+        <%-- Metadata line --%>
+        <div class="hn-meta small text-muted mt-1">
+            <asp:Literal ID="litTimeAgo" runat="server" />
+            &nbsp;by&nbsp;
+            <asp:LinkButton ID="lnkAuthor" runat="server"
+                CssClass="text-muted hn-author-link"
+                OnClick="lnkAuthor_Click" />
+            &nbsp;|&nbsp;
+            <asp:LinkButton ID="lnkComments" runat="server"
+                CssClass="text-muted hn-comments-link"
+                OnClick="lnkComments_Click" />
+        </div>
+    </div>
+
+</div>
+
+
+
+================================================================================
+FILE: :\DEV\personal\MyWebForms\MyWebForms\HnStoryRow.ascx.cs
+SIZE: 3.19 KB
+MODIFIED: 02/17/2026 14:04:54
+================================================================================
+
+using System;
+using MyWebForms.Models;
+
+namespace MyWebForms
+{
+    /// <summary>
+    /// Code-behind for HnStoryRow.ascx.
+    ///
+    /// Events bubble up to the host page via standard EventHandler delegates.
+    /// The host page wires these up when it dynamically creates or databinds
+    /// the controls, then handles them to update the detail/user panels.
+    /// </summary>
+    public partial class HnStoryRow : System.Web.UI.UserControl
+    {
+        // ── Inputs ───────────────────────────────────────────────────────────
+
+        public HackerNewsItem Item { get; set; }
+        public int Rank { get; set; }
+
+        // ── Bubbled events ───────────────────────────────────────────────────
+
+        /// <summary>Fired when the user clicks the comment count link.</summary>
+        public event EventHandler<StorySelectedEventArgs> StorySelected;
+
+        /// <summary>Fired when the user clicks the author username link.</summary>
+        public event EventHandler<AuthorSelectedEventArgs> AuthorSelected;
+
+        // ── Lifecycle ────────────────────────────────────────────────────────
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (Item == null) return;
+
+            litRank.Text = Rank > 0 ? Rank.ToString() + "." : string.Empty;
+            litScore.Text = Item.Score.ToString();
+            litDomain.Text = string.IsNullOrEmpty(Item.Domain) ? "self" : Item.Domain;
+            litTimeAgo.Text = Item.TimeAgo;
+
+            lnkTitle.Text = System.Web.HttpUtility.HtmlEncode(Item.Title ?? "(untitled)");
+            lnkTitle.NavigateUrl = Item.DisplayUrl;
+
+            lnkAuthor.Text = System.Web.HttpUtility.HtmlEncode(Item.By ?? "unknown");
+
+            var commentCount = Item.Descendants;
+            lnkComments.Text = commentCount == 0
+                ? "discuss"
+                : commentCount + " comment" + (commentCount == 1 ? "" : "s");
+        }
+
+        protected void lnkComments_Click(object sender, EventArgs e)
+        {
+            if (Item == null) return;
+            StorySelected?.Invoke(this, new StorySelectedEventArgs(Item.Id));
+        }
+
+        protected void lnkAuthor_Click(object sender, EventArgs e)
+        {
+            if (Item == null) return;
+            AuthorSelected?.Invoke(this, new AuthorSelectedEventArgs(Item.By));
+        }
+    }
+
+    // ── Event argument types ─────────────────────────────────────────────────
+
+    public sealed class StorySelectedEventArgs : EventArgs
+    {
+        public int ItemId { get; private set; }
+        public StorySelectedEventArgs(int itemId) { ItemId = itemId; }
+    }
+
+    public sealed class AuthorSelectedEventArgs : EventArgs
+    {
+        public string Username { get; private set; }
+        public AuthorSelectedEventArgs(string username) { Username = username; }
+    }
+}
+
+
+
+================================================================================
+FILE: :\DEV\personal\MyWebForms\MyWebForms\HnUserCard.ascx
+SIZE: 1.6 KB
+MODIFIED: 02/17/2026 14:06:01
+================================================================================
+
+<%@ Control Language="C#" AutoEventWireup="true"
+    CodeBehind="HnUserCard.ascx.cs"
+    Inherits="MyWebForms.HnUserCard" %>
+
+<%--
+    HnUserCard.ascx
+    ---------------
+    Displays a Hacker News user profile card.
+    The User property must be set by the host page before Page_Load runs.
+--%>
+
+<div class="card shadow-sm">
+    <div class="card-header bg-warning text-dark d-flex align-items-center gap-2">
+        <strong>&#128100;</strong>
+        <span>
+            <asp:Literal ID="litUsername" runat="server" />
+        </span>
+        <span class="ms-auto badge bg-dark">
+            <asp:Literal ID="litKarma" runat="server" /> karma
+        </span>
+    </div>
+    <div class="card-body">
+        <dl class="row mb-0 small">
+            <dt class="col-sm-4">Member since</dt>
+            <dd class="col-sm-8">
+                <asp:Literal ID="litMemberSince" runat="server" />
+            </dd>
+
+            <dt class="col-sm-4">Submissions</dt>
+            <dd class="col-sm-8">
+                <asp:Literal ID="litSubmissionCount" runat="server" />
+            </dd>
+
+            <asp:Panel ID="pnlAbout" runat="server">
+                <dt class="col-sm-4">About</dt>
+                <dd class="col-sm-8 hn-user-about">
+                    <asp:Literal ID="litAbout" runat="server" Mode="PassThrough" />
+                </dd>
+            </asp:Panel>
+        </dl>
+    </div>
+    <div class="card-footer text-end">
+        <a href="https://news.ycombinator.com/user?id=<%= EncodedUsername %>"
+           class="btn btn-sm btn-outline-warning" target="_blank">
+            View on HN &#8599;
+        </a>
+    </div>
+</div>
+
+
+
+================================================================================
+FILE: :\DEV\personal\MyWebForms\MyWebForms\HnUserCard.ascx.cs
+SIZE: 1.76 KB
+MODIFIED: 02/17/2026 14:06:18
+================================================================================
+
+using System;
+using MyWebForms.Models;
+
+namespace MyWebForms
+{
+    public partial class HnUserCard : System.Web.UI.UserControl
+    {
+        // ── Inputs ───────────────────────────────────────────────────────────
+
+        public HackerNewsUser User { get; set; }
+
+        // ── Derived (used in markup via <%= %>) ──────────────────────────────
+
+        protected string EncodedUsername
+        {
+            get
+            {
+                return User != null
+                    ? System.Web.HttpUtility.UrlEncode(User.Id)
+                    : string.Empty;
+            }
+        }
+
+        // ── Lifecycle ────────────────────────────────────────────────────────
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (User == null)
+            {
+                Visible = false;
+                return;
+            }
+
+            litUsername.Text = System.Web.HttpUtility.HtmlEncode(User.Id);
+            litKarma.Text = User.Karma.ToString("N0");
+            litMemberSince.Text = User.MemberSince;
+            litSubmissionCount.Text = User.Submitted != null
+                ? User.Submitted.Count.ToString("N0")
+                : "0";
+
+            if (string.IsNullOrEmpty(User.About))
+            {
+                pnlAbout.Visible = false;
+            }
+            else
+            {
+                // About can contain HTML tags — render verbatim (source is HN API).
+                litAbout.Text = User.About;
+            }
+        }
+    }
+}
+
+
+
+================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\libman.json
 SIZE: 0.33 KB
 MODIFIED: 02/17/2026 13:08:14
@@ -1885,9 +2838,203 @@ namespace MyWebForms
 
 
 ================================================================================
+FILE: :\DEV\personal\MyWebForms\MyWebForms\Models\HackerNewsItem.cs
+SIZE: 4.3 KB
+MODIFIED: 02/17/2026 14:03:16
+================================================================================
+
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
+namespace MyWebForms.Models
+{
+    /// <summary>
+    /// Represents any HN item: story, comment, job, poll, or pollopt.
+    /// Property names match the HN Firebase API JSON keys via JsonProperty.
+    /// </summary>
+    public class HackerNewsItem
+    {
+        [JsonProperty("id")]
+        public int Id { get; set; }
+
+        [JsonProperty("deleted")]
+        public bool Deleted { get; set; }
+
+        /// <summary>
+        /// One of: "job", "story", "comment", "poll", "pollopt"
+        /// </summary>
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
+        [JsonProperty("by")]
+        public string By { get; set; }
+
+        /// <summary>Unix timestamp.</summary>
+        [JsonProperty("time")]
+        public long Time { get; set; }
+
+        /// <summary>HTML text for comments, polls, Ask HNs.</summary>
+        [JsonProperty("text")]
+        public string Text { get; set; }
+
+        [JsonProperty("dead")]
+        public bool Dead { get; set; }
+
+        [JsonProperty("parent")]
+        public int? Parent { get; set; }
+
+        [JsonProperty("poll")]
+        public int? Poll { get; set; }
+
+        /// <summary>Child comment IDs in ranked display order.</summary>
+        [JsonProperty("kids")]
+        public List<int> Kids { get; set; }
+
+        [JsonProperty("url")]
+        public string Url { get; set; }
+
+        [JsonProperty("score")]
+        public int Score { get; set; }
+
+        [JsonProperty("title")]
+        public string Title { get; set; }
+
+        /// <summary>Poll option IDs in display order.</summary>
+        [JsonProperty("parts")]
+        public List<int> Parts { get; set; }
+
+        /// <summary>Total comment count (stories and polls only).</summary>
+        [JsonProperty("descendants")]
+        public int Descendants { get; set; }
+
+        // ── Derived helpers (not from API) ───────────────────────────────────
+
+        /// <summary>
+        /// Returns the display URL — the story URL for link posts,
+        /// or the HN item page for text posts (Ask, etc.).
+        /// </summary>
+        public string DisplayUrl
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(Url)
+                    ? Url
+                    : string.Format("https://news.ycombinator.com/item?id={0}", Id);
+            }
+        }
+
+        /// <summary>
+        /// Extracts the bare hostname from the URL for the "(domain.com)" display,
+        /// stripping www. prefix.
+        /// </summary>
+        public string Domain
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Url)) return string.Empty;
+                try
+                {
+                    var uri = new System.Uri(Url);
+                    var host = uri.Host;
+                    if (host.StartsWith("www.", System.StringComparison.OrdinalIgnoreCase))
+                        host = host.Substring(4);
+                    return host;
+                }
+                catch
+                {
+                    return string.Empty;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Converts the Unix timestamp to a human-readable relative time string,
+        /// e.g. "3 hours ago", "2 days ago".
+        /// </summary>
+        public string TimeAgo
+        {
+            get
+            {
+                if (Time == 0) return string.Empty;
+                var dt = System.DateTimeOffset.FromUnixTimeSeconds(Time);
+                var diff = System.DateTimeOffset.UtcNow - dt;
+
+                if (diff.TotalMinutes < 1) return "just now";
+                if (diff.TotalMinutes < 60) return (int)diff.TotalMinutes + " minutes ago";
+                if (diff.TotalHours < 24) return (int)diff.TotalHours + " hours ago";
+                if (diff.TotalDays < 30) return (int)diff.TotalDays + " days ago";
+                if (diff.TotalDays < 365) return (int)(diff.TotalDays / 30) + " months ago";
+                return (int)(diff.TotalDays / 365) + " years ago";
+            }
+        }
+
+        public bool IsStory { get { return Type == "story"; } }
+        public bool IsComment { get { return Type == "comment"; } }
+        public bool IsJob { get { return Type == "job"; } }
+        public bool IsPoll { get { return Type == "poll"; } }
+    }
+}
+
+
+
+================================================================================
+FILE: :\DEV\personal\MyWebForms\MyWebForms\Models\HackerNewsUser.cs
+SIZE: 1.41 KB
+MODIFIED: 02/17/2026 14:03:43
+================================================================================
+
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
+namespace MyWebForms.Models
+{
+    /// <summary>
+    /// Represents a Hacker News user profile as returned by
+    /// /v0/user/{id}.json
+    /// </summary>
+    public class HackerNewsUser
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        /// <summary>Account creation date as Unix timestamp.</summary>
+        [JsonProperty("created")]
+        public long Created { get; set; }
+
+        [JsonProperty("karma")]
+        public int Karma { get; set; }
+
+        /// <summary>Optional self-description. May contain HTML.</summary>
+        [JsonProperty("about")]
+        public string About { get; set; }
+
+        /// <summary>IDs of all stories, polls and comments submitted.</summary>
+        [JsonProperty("submitted")]
+        public List<int> Submitted { get; set; }
+
+        // ── Derived helpers ──────────────────────────────────────────────────
+
+        /// <summary>
+        /// Returns the account creation date as a formatted date string.
+        /// </summary>
+        public string MemberSince
+        {
+            get
+            {
+                if (Created == 0) return string.Empty;
+                return System.DateTimeOffset.FromUnixTimeSeconds(Created)
+                    .ToString("MMMM yyyy");
+            }
+        }
+    }
+}
+
+
+
+================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\MyWebForms.csproj
-SIZE: 16.55 KB
-MODIFIED: 02/17/2026 13:45:24
+SIZE: 17.6 KB
+MODIFIED: 02/17/2026 14:10:02
 ================================================================================
 
 <?xml version="1.0" encoding="utf-8"?>
@@ -2013,6 +3160,10 @@ MODIFIED: 02/17/2026 13:45:24
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="HackerNews.aspx" />
+    <Content Include="HnComment.ascx" />
+    <Content Include="HnStoryRow.ascx" />
+    <Content Include="HnUserCard.ascx" />
     <Content Include="LibraryStatusWidget.ascx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -2088,6 +3239,25 @@ MODIFIED: 02/17/2026 13:45:24
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="HackerNews.aspx.cs">
+      <DependentUpon>HackerNews.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HackerNews.aspx.designer.cs">
+      <DependentUpon>HackerNews.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="HnComment.ascx.cs">
+      <DependentUpon>HnComment.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HnStoryRow.ascx.cs">
+      <DependentUpon>HnStoryRow.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HnUserCard.ascx.cs">
+      <DependentUpon>HnUserCard.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="LibraryStatusWidget.ascx.cs">
       <DependentUpon>LibraryStatusWidget.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2095,7 +3265,10 @@ MODIFIED: 02/17/2026 13:45:24
     <Compile Include="LibraryStatusWidget.ascx.designer.cs">
       <DependentUpon>LibraryStatusWidget.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Models\HackerNewsItem.cs" />
+    <Compile Include="Models\HackerNewsUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\HackerNewsService.cs" />
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2263,9 +3436,260 @@ using System.Runtime.InteropServices;
 
 
 ================================================================================
+FILE: :\DEV\personal\MyWebForms\MyWebForms\Services\HackerNewsService.cs
+SIZE: 9.29 KB
+MODIFIED: 02/17/2026 14:04:05
+================================================================================
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Caching;
+using MyWebForms.Models;
+using Newtonsoft.Json;
+
+namespace MyWebForms.Services
+{
+    /// <summary>
+    /// Fetches data from the public Hacker News Firebase REST API v0.
+    /// All public methods are virtual so they can be overridden in test fakes.
+    ///
+    /// Threading note: HttpClient is reused as a static instance — this is the
+    /// correct pattern for .NET Framework to avoid socket exhaustion.
+    ///
+    /// Caching note: results are stored in HttpRuntime.Cache (the built-in
+    /// ASP.NET object cache) to avoid hammering the API on every postback.
+    /// Cache durations are kept short (60 s for lists, 5 min for items)
+    /// so the "live" feel is preserved.
+    /// </summary>
+    public class HackerNewsService
+    {
+        private const string BaseUrl = "https://hacker-news.firebaseio.com/v0/";
+
+        // A single shared HttpClient for the lifetime of the AppDomain.
+        private static readonly HttpClient Http = CreateHttpClient();
+
+        private static HttpClient CreateHttpClient()
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add(
+                "User-Agent", "MyWebForms-HN-Demo/1.0");
+            client.Timeout = TimeSpan.FromSeconds(10);
+            return client;
+        }
+
+        // ── Story list endpoints ─────────────────────────────────────────────
+
+        public virtual Task<List<int>> GetTopStoryIdsAsync()
+            => GetIdListAsync("topstories.json", "hn_top");
+
+        public virtual Task<List<int>> GetNewStoryIdsAsync()
+            => GetIdListAsync("newstories.json", "hn_new");
+
+        public virtual Task<List<int>> GetBestStoryIdsAsync()
+            => GetIdListAsync("beststories.json", "hn_best");
+
+        public virtual Task<List<int>> GetAskStoryIdsAsync()
+            => GetIdListAsync("askstories.json", "hn_ask");
+
+        public virtual Task<List<int>> GetShowStoryIdsAsync()
+            => GetIdListAsync("showstories.json", "hn_show");
+
+        public virtual Task<List<int>> GetJobStoryIdsAsync()
+            => GetIdListAsync("jobstories.json", "hn_jobs");
+
+        // ── Item and user fetching ───────────────────────────────────────────
+
+        /// <summary>
+        /// Fetches a single item by ID. Results are cached for 5 minutes.
+        /// Returns null if the item cannot be fetched (deleted, network error, etc.).
+        /// </summary>
+        public virtual async Task<HackerNewsItem> GetItemAsync(int id)
+        {
+            var cacheKey = "hn_item_" + id;
+            var cached = HttpRuntime.Cache[cacheKey] as HackerNewsItem;
+            if (cached != null) return cached;
+
+            try
+            {
+                var url = BaseUrl + "item/" + id + ".json";
+                var json = await Http.GetStringAsync(url).ConfigureAwait(false);
+                var item = JsonConvert.DeserializeObject<HackerNewsItem>(json);
+                if (item != null)
+                {
+                    HttpRuntime.Cache.Insert(cacheKey, item, null,
+                        DateTime.UtcNow.AddMinutes(5), Cache.NoSlidingExpiration);
+                }
+                return item;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Fetches a user profile by username.
+        /// Returns null if the user is not found or there is a network error.
+        /// </summary>
+        public virtual async Task<HackerNewsUser> GetUserAsync(string username)
+        {
+            if (string.IsNullOrEmpty(username)) return null;
+
+            var cacheKey = "hn_user_" + username;
+            var cached = HttpRuntime.Cache[cacheKey] as HackerNewsUser;
+            if (cached != null) return cached;
+
+            try
+            {
+                var url = BaseUrl + "user/" + HttpUtility.UrlEncode(username) + ".json";
+                var json = await Http.GetStringAsync(url).ConfigureAwait(false);
+                var user = JsonConvert.DeserializeObject<HackerNewsUser>(json);
+                if (user != null)
+                {
+                    HttpRuntime.Cache.Insert(cacheKey, user, null,
+                        DateTime.UtcNow.AddMinutes(10), Cache.NoSlidingExpiration);
+                }
+                return user;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Fetches the current maximum item ID.
+        /// </summary>
+        public virtual async Task<int> GetMaxItemIdAsync()
+        {
+            const string cacheKey = "hn_maxitem";
+            var cached = HttpRuntime.Cache[cacheKey];
+            if (cached != null) return (int)cached;
+
+            try
+            {
+                var json = await Http.GetStringAsync(BaseUrl + "maxitem.json")
+                    .ConfigureAwait(false);
+                var id = JsonConvert.DeserializeObject<int>(json);
+                HttpRuntime.Cache.Insert(cacheKey, id, null,
+                    DateTime.UtcNow.AddSeconds(30), Cache.NoSlidingExpiration);
+                return id;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Fetches a page of story items from a list of IDs.
+        /// Items that fail to load (deleted, network error) are silently skipped.
+        /// </summary>
+        /// <param name="ids">Full ordered list of story IDs.</param>
+        /// <param name="page">1-based page number.</param>
+        /// <param name="pageSize">Number of items per page.</param>
+        public virtual async Task<List<HackerNewsItem>> GetItemPageAsync(
+            List<int> ids, int page, int pageSize)
+        {
+            if (ids == null || ids.Count == 0) return new List<HackerNewsItem>();
+
+            page = Math.Max(1, page);
+            var slice = ids
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            // Fetch concurrently — Task.WhenAll is safe here because
+            // individual failures are caught inside GetItemAsync.
+            var tasks = slice.Select(id => GetItemAsync(id));
+            var results = await Task.WhenAll(tasks).ConfigureAwait(false);
+
+            return results
+                .Where(item => item != null && !item.Deleted && !item.Dead)
+                .ToList();
+        }
+
+        /// <summary>
+        /// Recursively fetches the comment tree for an item up to a given depth.
+        /// Depth 0 = top-level comments only. Each comment's Kids are loaded
+        /// one level deeper up to maxDepth.
+        /// </summary>
+        public virtual async Task<List<HackerNewsItem>> GetCommentTreeAsync(
+            HackerNewsItem parent, int maxDepth = 3)
+        {
+            if (parent == null || parent.Kids == null || parent.Kids.Count == 0)
+                return new List<HackerNewsItem>();
+
+            return await FetchCommentsAsync(parent.Kids, 0, maxDepth)
+                .ConfigureAwait(false);
+        }
+
+        // ── Private helpers ──────────────────────────────────────────────────
+
+        private async Task<List<int>> GetIdListAsync(string endpoint, string cacheKey)
+        {
+            var cached = HttpRuntime.Cache[cacheKey] as List<int>;
+            if (cached != null) return cached;
+
+            try
+            {
+                var json = await Http.GetStringAsync(BaseUrl + endpoint)
+                    .ConfigureAwait(false);
+                var ids = JsonConvert.DeserializeObject<List<int>>(json)
+                          ?? new List<int>();
+
+                HttpRuntime.Cache.Insert(cacheKey, ids, null,
+                    DateTime.UtcNow.AddSeconds(60), Cache.NoSlidingExpiration);
+                return ids;
+            }
+            catch
+            {
+                return new List<int>();
+            }
+        }
+
+        private async Task<List<HackerNewsItem>> FetchCommentsAsync(
+            List<int> kidIds, int currentDepth, int maxDepth)
+        {
+            var comments = new List<HackerNewsItem>();
+
+            var tasks = kidIds.Select(id => GetItemAsync(id));
+            var items = await Task.WhenAll(tasks).ConfigureAwait(false);
+
+            foreach (var comment in items)
+            {
+                if (comment == null || comment.Deleted || comment.Dead) continue;
+                comments.Add(comment);
+
+                if (currentDepth < maxDepth
+                    && comment.Kids != null
+                    && comment.Kids.Count > 0)
+                {
+                    comment.Kids = comment.Kids.Take(10).ToList(); // limit breadth
+                    var children = await FetchCommentsAsync(
+                        comment.Kids, currentDepth + 1, maxDepth)
+                        .ConfigureAwait(false);
+                    // Attach children as a separate flat list associated via Parent.
+                    // The HnCommentTree control handles nesting visually.
+                    comments.AddRange(children);
+                }
+            }
+
+            return comments;
+        }
+    }
+}
+
+
+
+================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\Site.Master
-SIZE: 3.83 KB
-MODIFIED: 02/17/2026 13:04:08
+SIZE: 3.95 KB
+MODIFIED: 02/17/2026 14:07:32
 ================================================================================
 
 <%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="MyWebForms.SiteMaster" %>
@@ -2320,6 +3744,7 @@ MODIFIED: 02/17/2026 13:04:08
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/">Home</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/About">About</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Contact">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/HackerNews">Hacker News</a></li>
                     </ul>
                 </div>
             </div>
@@ -2561,7 +3986,7 @@ MODIFIED: 02/17/2026 12:40:45
 
 
 ===============================================================================
-EXPORT COMPLETED: 02/17/2026 14:01:51
-Total Files Exported: 28
+EXPORT COMPLETED: 02/17/2026 14:11:11
+Total Files Exported: 39
 Output File: .\docs\llm\dump.txt
 ===============================================================================
