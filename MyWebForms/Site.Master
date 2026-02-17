@@ -26,7 +26,7 @@
 
         <%-- ═══════════════════════════════════════════════════════════════════
              ScriptManager — owns all MS Ajax and framework script delivery.
-             
+
              Each Name="..." attribute is resolved via ScriptResourceMapping
              (registered in BundleConfig.RegisterScriptManagerMappings).
              Without those mappings ScriptManager falls back to the embedded
@@ -56,6 +56,12 @@
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/About">About</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Contact">Contact</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/HackerNews">Hacker News</a></li>
+                        <%-- HN Live: pure client-side streaming feed — no postbacks --%>
+                        <li class="nav-item">
+                            <a class="nav-link" runat="server" href="~/HnLive">
+                                HN Live <span class="badge bg-success ms-1" style="font-size:.6rem;vertical-align:middle;">●</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -73,10 +79,11 @@
     </form>
 
     <%-- Bootstrap and Chart.js are loaded after </form> so they don't
-         interfere with ScriptManager's script registration above. --%>
-    <asp:PlaceHolder runat="server">
-        <%: Scripts.Render("~/Scripts/bootstrap.js") %>
-        <script src='<%= ResolveUrl("~/Scripts/lib/chartjs/chart.umd.js") %>'></script>
-    </asp:PlaceHolder>
+         interfere with ScriptManager's script registration above.
+         Bootstrap's JS bundle (bootstrap.bundle.min.js) includes Popper —
+         no separate Popper import is needed. --%>
+    <script src="<%: ResolveUrl("~/Content/bootstrap/js/bootstrap.bundle.min.js") %>"></script>
+    <script src="<%: ResolveUrl("~/Scripts/lib/chartjs/chart.umd.js") %>"></script>
+
 </body>
 </html>
