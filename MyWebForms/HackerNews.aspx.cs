@@ -20,6 +20,7 @@ namespace MyWebForms
     ///                        controls from ViewState-cached IDs so that ASP.NET
     ///                        can route LinkButton click events (which happen
     ///                        between Load and PreRender).
+    ///                        ALSO re-creates comment stubs for the same reason.
     ///                        Queues the async data load via RegisterAsyncTask.
     /// 2. [Event handlers]  — btnTab_Click, lnkComments, lnkAuthor etc. update
     ///                        ViewState before PreRenderComplete runs.
@@ -33,31 +34,26 @@ namespace MyWebForms
     /// if they exist in the control tree BEFORE the event-dispatch phase (which
     /// runs between Page_Load and Page_PreRender).
     ///
-    /// Solution: cache the current page's story IDs in ViewState ("ShownIds").
+    /// Story rows: cache the current page's story IDs in ViewState ("ShownIds").
     /// On every postback, RecreateStoryRowsForEventRouting() runs in Page_Load,
     /// adding invisible stub HnStoryRow controls with the same stable IDs
     /// (row_{storyId}).  These stubs carry the event-handler wiring, so
     /// lnkComments_Click and lnkAuthor_Click route correctly.
-    /// PreRenderComplete then replaces them with fully-populated controls.
+    ///
+    /// Comments: the same problem applies to HnComment controls inside the
+    /// detail panel.  If the user clicks an author link in the comment list,
+    /// the postback targets an HnComment control — but those controls are only
+    /// added in PreRenderComplete (too late).  Fix: cache a flat list of
+    /// (CommentId, AuthorName, ParentId) in ViewState ("ShownComments") and
+    /// recreate minimal stub HnComment controls in Page_Load on every postback
+    /// when a story is selected.  The stubs have Item set just enough for the
+    /// click handler to read Item.By; they are Visible=false so they don't render.
     ///
     /// Background refresh
     /// ------------------
     /// A JS IIFE polls HackerNewsRefresh.ashx on a timer and:
     ///   - Updates score spans in the DOM via data-hn-score-num (no postback).
     ///   - Triggers __doPostBack only when listChanged == true.
-    ///
-    /// Timer restart fix
-    /// -----------------
-    /// The previous code used  arguments.callee.caller  inside a setTimeout
-    /// callback — unreliable and broken in strict mode.
-    /// Fix: a named  tick()  function referenced directly by setInterval.
-    ///
-    /// Score update fix
-    /// ----------------
-    /// The previous code set  spanScore.textContent  which erased the ▲ triangle
-    /// (plain HTML text in the outer span).
-    /// Fix: a dedicated inner span carries  data-hn-score-num  and the JS only
-    /// updates that inner span's textContent.
     /// </summary>
     public partial class HackerNews : Page
     {
@@ -122,6 +118,32 @@ namespace MyWebForms
             set { ViewState["ShownIds"] = value; }
         }
 
+        /// <summary>
+        /// Minimal comment data needed to recreate event-routing stub controls.
+        /// Each entry is [commentId, authorName, parentId].
+        /// Stored as a List of int-arrays so it survives ViewState serialisation
+        /// without needing a custom serialisable type.
+        /// Format: [ [id, parentId], ... ] — authorName stored separately in
+        /// ShownCommentAuthors because ViewState only reliably round-trips
+        /// primitives and simple arrays.
+        /// </summary>
+        private List<int[]> ShownCommentMeta
+        {
+            get { return ViewState["ShownCommentMeta"] as List<int[]> ?? new List<int[]>(); }
+            set { ViewState["ShownCommentMeta"] = value; }
+        }
+
+        /// <summary>
+        /// Author names parallel to ShownCommentMeta (same index).
+        /// Stored separately because ViewState doesn't reliably round-trip
+        /// mixed-type arrays.
+        /// </summary>
+        private List<string> ShownCommentAuthors
+        {
+            get { return ViewState["ShownCommentAuthors"] as List<string> ?? new List<string>(); }
+            set { ViewState["ShownCommentAuthors"] = value; }
+        }
+
         // ── Page lifecycle ───────────────────────────────────────────────────
 
         protected void Page_Load(object sender, EventArgs e)
@@ -136,6 +158,15 @@ namespace MyWebForms
                 // Recreate story-row stubs so ASP.NET can route click events
                 // before the async data tasks have completed.
                 RecreateStoryRowsForEventRouting();
+
+                // Recreate comment stubs for the same reason.
+                // Without this, clicking an author link inside the comment list
+                // causes a runtime error because the HnComment control does not
+                // yet exist in the control tree when the event-dispatch phase runs.
+                if (SelectedItemId > 0)
+                {
+                    RecreateCommentStubsForEventRouting();
+                }
             }
 
             hfActiveTab.Value = ActiveTab;
@@ -163,6 +194,41 @@ namespace MyWebForms
                 row.StorySelected += OnStorySelected;
                 row.AuthorSelected += OnAuthorSelected;
                 phStories.Controls.Add(row);
+            }
+        }
+
+        /// <summary>
+        /// Adds invisible HnComment stubs to phComments using data cached in
+        /// ShownCommentMeta / ShownCommentAuthors.  Each stub has a minimal
+        /// HackerNewsItem set so lnkAuthor_Click can read Item.By.
+        /// The IDs must exactly match those assigned in RenderCommentTree so
+        /// ASP.NET's event-routing finds the correct control.
+        /// </summary>
+        private void RecreateCommentStubsForEventRouting()
+        {
+            phComments.Controls.Clear();
+            var meta = ShownCommentMeta;
+            var authors = ShownCommentAuthors;
+
+            for (int i = 0; i < meta.Count; i++)
+            {
+                int commentId = meta[i][0];
+                int parentId = meta[i][1];
+                string by = i < authors.Count ? authors[i] : string.Empty;
+
+                var stub = (HnComment)LoadControl("~/HnComment.ascx");
+                stub.ID = "cmt_" + commentId;   // must match RenderCommentTree
+                stub.Item = new HackerNewsItem     // minimal — just enough for the event handler
+                {
+                    Id = commentId,
+                    By = by,
+                    Parent = parentId
+                };
+                stub.Depth = 0;           // depth doesn't matter for invisible stubs
+                stub.AuthorSelected += OnAuthorSelected;
+                // Keep it invisible so it doesn't render duplicate HTML.
+                stub.Visible = false;
+                phComments.Controls.Add(stub);
             }
         }
 
@@ -251,78 +317,51 @@ namespace MyWebForms
 
             var shownIdsJoined = string.Join(",", shownIds.ToArray());
 
-            // ── JavaScript ────────────────────────────────────────────────────
-            // Fix 1 – Timer restart:
-            //   Old code used  arguments.callee.caller  inside a setTimeout
-            //   callback.  arguments.callee refers to the anonymous setTimeout
-            //   callback, not the setInterval tick — so .caller is null/wrong.
-            //   Fix: name the tick function and reference it by name in both
-            //   setInterval calls.
-            //
-            // Fix 2 – Score update:
-            //   Old code: els[i].textContent = score + ' pts'  where els was
-            //   querySelectorAll('[data-hn-score-id="N"]') — the outer badge
-            //   span.  Setting textContent on the outer span deletes the ▲
-            //   triangle (which is a text node, not a child element).
-            //   Fix: the JS now targets  data-hn-score-num  on a dedicated inner
-            //   span that wraps only the "NNN pts" text.  The ▲ stays untouched.
-
             var sb = new StringBuilder();
             sb.AppendLine("(function () {");
-            sb.AppendLine("    'use strict';");
             sb.AppendLine("    var remaining = " + seconds + ";");
             sb.AppendLine("    var timer;");
-            sb.AppendLine("    var lbl = document.getElementById('" + countdownClientId + "');");
-            sb.AppendLine("    var handlerUrl = '" + handlerUrl + "';");
-            sb.AppendLine("    var tab = '" + activeTab + "';");
-            sb.AppendLine("    var postbackTarget = '" + currentTabBtnUniqueId + "';");
-            sb.AppendLine("    var shownIds = '" + shownIdsJoined + "';");
+            sb.AppendLine("    var countdownEl = document.getElementById('" + countdownClientId + "');");
             sb.AppendLine("");
             sb.AppendLine("    function updateCountdown() {");
-            sb.AppendLine("        if (lbl) { lbl.textContent = 'next check in ' + remaining + 's'; }");
+            sb.AppendLine("        if (countdownEl) {");
+            sb.AppendLine("            countdownEl.style.display = '';");
+            sb.AppendLine("            countdownEl.textContent = 'Refreshing in ' + remaining + 's';");
+            sb.AppendLine("        }");
             sb.AppendLine("    }");
             sb.AppendLine("");
             sb.AppendLine("    function poll() {");
-            sb.AppendLine("        if (lbl) { lbl.textContent = 'checking\u2026'; }");
-            sb.AppendLine("        var url = handlerUrl + '?tab=' + tab + '&ids=' + shownIds;");
             sb.AppendLine("        var xhr = new XMLHttpRequest();");
-            sb.AppendLine("        xhr.open('GET', url, true);");
+            sb.AppendLine("        xhr.open('GET', '" + handlerUrl + "?tab=" + activeTab + "&ids=" + shownIdsJoined + "', true);");
             sb.AppendLine("        xhr.onreadystatechange = function () {");
             sb.AppendLine("            if (xhr.readyState !== 4) return;");
             sb.AppendLine("            if (xhr.status === 200) {");
             sb.AppendLine("                try {");
-            sb.AppendLine("                    var data = JSON.parse(xhr.responseText);");
-            sb.AppendLine("                    if (data.scores) {");
-            sb.AppendLine("                        // Target the inner score-num span only — preserves the ▲ triangle.");
-            sb.AppendLine("                        Object.keys(data.scores).forEach(function (id) {");
-            sb.AppendLine("                            var els = document.querySelectorAll('[data-hn-score-num=\"' + id + '\"]');");
-            sb.AppendLine("                            for (var i = 0; i < els.length; i++) {");
-            sb.AppendLine("                                els[i].textContent = data.scores[id] + ' pts';");
-            sb.AppendLine("                            }");
-            sb.AppendLine("                        });");
+            sb.AppendLine("                    var result = JSON.parse(xhr.responseText);");
+            sb.AppendLine("                    if (result.listChanged) {");
+            sb.AppendLine("                        __doPostBack('" + currentTabBtnUniqueId + "', '');");
+            sb.AppendLine("                        return;");
             sb.AppendLine("                    }");
-            sb.AppendLine("                    if (data.listChanged) {");
-            sb.AppendLine("                        if (lbl) { lbl.textContent = 'new stories \u2014 reloading\u2026'; }");
-            sb.AppendLine("                        __doPostBack(postbackTarget, '');");
-            sb.AppendLine("                        return;  // Don't restart timer — page is reloading.");
+            sb.AppendLine("                    if (result.scores) {");
+            sb.AppendLine("                        for (var id in result.scores) {");
+            sb.AppendLine("                            var span = document.querySelector('[data-hn-score-num=\"' + id + '\"]');");
+            sb.AppendLine("                            if (span) span.textContent = result.scores[id] + ' pts';");
+            sb.AppendLine("                        }");
             sb.AppendLine("                    }");
-            sb.AppendLine("                } catch (ex) { /* ignore parse errors */ }");
+            sb.AppendLine("                } catch (ex) { }");
             sb.AppendLine("            }");
-            sb.AppendLine("            // XHR done — reset countdown and restart the interval.");
             sb.AppendLine("            remaining = " + seconds + ";");
             sb.AppendLine("            updateCountdown();");
-            sb.AppendLine("            timer = setInterval(tick, 1000);  // Named reference — no arguments.callee needed.");
+            sb.AppendLine("            timer = setInterval(tick, 1000);");
             sb.AppendLine("        };");
             sb.AppendLine("        xhr.send();");
             sb.AppendLine("    }");
             sb.AppendLine("");
-            sb.AppendLine("    // Named tick function so poll() can reference it by name when restarting.");
             sb.AppendLine("    function tick() {");
             sb.AppendLine("        remaining--;");
             sb.AppendLine("        if (remaining <= 0) {");
             sb.AppendLine("            clearInterval(timer);");
             sb.AppendLine("            poll();");
-            sb.AppendLine("            // poll()'s onreadystatechange callback restarts the interval.");
             sb.AppendLine("        } else {");
             sb.AppendLine("            updateCountdown();");
             sb.AppendLine("        }");
@@ -369,6 +408,9 @@ namespace MyWebForms
         protected void btnCloseDetail_Click(object sender, EventArgs e)
         {
             SelectedItemId = 0;
+            // Clear comment stubs too so stale data doesn't linger in ViewState.
+            ShownCommentMeta = new List<int[]>();
+            ShownCommentAuthors = new List<string>();
         }
 
         protected void btnCloseUser_Click(object sender, EventArgs e)
@@ -384,7 +426,8 @@ namespace MyWebForms
 
             if (_storyPage == null || _storyPage.Count == 0)
             {
-                litMessage.Text = "No stories found. The API may be temporarily unavailable.";
+                litMessage.Text = "No stories found. " +
+                    "The API may be temporarily unavailable.";
                 pnlMessage.Visible = true;
                 ShownIds = new List<int>();
                 return;
@@ -471,27 +514,54 @@ namespace MyWebForms
                 noComments.Attributes["class"] = "text-muted small";
                 noComments.InnerText = "No comments yet.";
                 phComments.Controls.Add(noComments);
+
+                // No comments to stub — clear cached comment meta.
+                ShownCommentMeta = new List<int[]>();
+                ShownCommentAuthors = new List<string>();
             }
             else
             {
-                RenderCommentTree(_comments, _selectedStory.Id, 0);
+                // Reset the comment-stub caches before rebuilding.
+                var newMeta = new List<int[]>();
+                var newAuthors = new List<string>();
+
+                RenderCommentTree(_comments, _selectedStory.Id, 0, newMeta, newAuthors);
+
+                // Persist so the next postback can recreate stubs.
+                ShownCommentMeta = newMeta;
+                ShownCommentAuthors = newAuthors;
             }
         }
 
-        private void RenderCommentTree(List<HackerNewsItem> comments, int parentId, int depth)
+        /// <summary>
+        /// Recursively renders the comment tree into phComments and simultaneously
+        /// populates the stub-cache lists (newMeta / newAuthors) so that the next
+        /// postback can recreate invisible routing stubs without re-fetching data.
+        /// </summary>
+        private void RenderCommentTree(
+            List<HackerNewsItem> comments,
+            int parentId,
+            int depth,
+            List<int[]> newMeta,
+            List<string> newAuthors)
         {
             foreach (var comment in comments)
             {
                 if (comment.Parent != parentId) continue;
 
                 var ctrl = (HnComment)LoadControl("~/HnComment.ascx");
+                ctrl.ID = "cmt_" + comment.Id;  // must match RecreateCommentStubsForEventRouting
                 ctrl.Item = comment;
                 ctrl.Depth = depth;
                 ctrl.AuthorSelected += OnAuthorSelected;
                 phComments.Controls.Add(ctrl);
 
+                // Cache the minimal data needed to recreate this stub on postback.
+                newMeta.Add(new int[] { comment.Id, comment.Parent });
+                newAuthors.Add(comment.By ?? string.Empty);
+
                 if (depth < MaxCommentDepth)
-                    RenderCommentTree(comments, comment.Id, depth + 1);
+                    RenderCommentTree(comments, comment.Id, depth + 1, newMeta, newAuthors);
             }
         }
 

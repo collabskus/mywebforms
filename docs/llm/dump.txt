@@ -1,7 +1,7 @@
 ===============================================================================
 ASP.NET PROJECT EXPORT
-Generated: 02/17/2026 16:22:16
-Project Path: D:\DEV\personal\MyWebForms
+Generated: 02/17/2026 17:38:06
+Project Path: D:\DEV\personal\MyWebForms\MyWebForms
 ===============================================================================
 
 DIRECTORY STRUCTURE:
@@ -9,2240 +9,427 @@ DIRECTORY STRUCTURE:
 
 Folder PATH listing
 Volume serial number is 2A9E-9DAE
-D:\DEV\PERSONAL\MYWEBFORMS
-|   .gitattributes
-|   .gitignore
-|   Export.ps1
-|   LICENSE.txt
-|   MyWebForms.slnx
-|   README.md
-|   
-+---docs
-|   \---llm
-|           dump.txt
-|           instructions.md
-|           
-+---MyWebForms
-|   |   About.aspx
-|   |   About.aspx.cs
-|   |   About.aspx.designer.cs
-|   |   Bundle.config
-|   |   ChartWidget.ascx
-|   |   ChartWidget.ascx.cs
-|   |   ChartWidget.ascx.designer.cs
-|   |   Contact.aspx
-|   |   Contact.aspx.cs
-|   |   Contact.aspx.designer.cs
-|   |   Default.aspx
-|   |   Default.aspx.cs
-|   |   Default.aspx.designer.cs
-|   |   favicon.ico
-|   |   Global.asax
-|   |   Global.asax.cs
-|   |   HackerNews.aspx
-|   |   HackerNews.aspx.cs
-|   |   HackerNews.aspx.designer.cs
-|   |   HackerNewsEventArgs.cs
-|   |   HackerNewsRefresh.ashx
-|   |   HackerNewsRefresh.ashx.cs
-|   |   HnComment.ascx
-|   |   HnComment.ascx.cs
-|   |   HnComment.ascx.designer.cs
-|   |   HnStoryRow.ascx
-|   |   HnStoryRow.ascx.cs
-|   |   HnStoryRow.ascx.designer.cs
-|   |   HnUserCard.ascx
-|   |   HnUserCard.ascx.cs
-|   |   HnUserCard.ascx.designer.cs
-|   |   libman.json
-|   |   LibraryStatusWidget.ascx
-|   |   LibraryStatusWidget.ascx.cs
-|   |   LibraryStatusWidget.ascx.designer.cs
-|   |   MyWebForms.csproj
-|   |   MyWebForms.csproj.user
-|   |   packages.config
-|   |   Site.Master
-|   |   Site.Master.cs
-|   |   Site.Master.designer.cs
-|   |   ViewSwitcher.ascx
-|   |   ViewSwitcher.ascx.cs
-|   |   ViewSwitcher.ascx.designer.cs
-|   |   Web.config
-|   |   Web.Debug.config
-|   |   Web.Release.config
-|   |   
-|   +---App_Data
-|   +---App_Start
-|   |       BundleConfig.cs
-|   |       RouteConfig.cs
-|   |       
-|   +---bin
-|   |   |   Antlr3.Runtime.dll
-|   |   |   Antlr3.Runtime.pdb
-|   |   |   Microsoft.AspNet.FriendlyUrls.dll
-|   |   |   Microsoft.AspNet.FriendlyUrls.xml
-|   |   |   Microsoft.AspNet.Web.Optimization.WebForms.dll
-|   |   |   Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
-|   |   |   Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-|   |   |   Microsoft.ScriptManager.MSAjax.dll
-|   |   |   Microsoft.ScriptManager.WebForms.dll
-|   |   |   Microsoft.Web.Infrastructure.dll
-|   |   |   MyWebForms.dll
-|   |   |   MyWebForms.dll.config
-|   |   |   MyWebForms.pdb
-|   |   |   Newtonsoft.Json.dll
-|   |   |   Newtonsoft.Json.xml
-|   |   |   System.IO.dll
-|   |   |   System.Net.Http.dll
-|   |   |   System.Runtime.dll
-|   |   |   System.Security.Cryptography.Algorithms.dll
-|   |   |   System.Security.Cryptography.Encoding.dll
-|   |   |   System.Security.Cryptography.Primitives.dll
-|   |   |   System.Security.Cryptography.X509Certificates.dll
-|   |   |   System.Web.Optimization.dll
-|   |   |   System.Web.Optimization.xml
-|   |   |   WebGrease.dll
-|   |   |   
-|   |   \---roslyn
-|   |           csc.exe
-|   |           csc.exe.config
-|   |           csc.rsp
-|   |           csi.exe
-|   |           csi.exe.config
-|   |           csi.rsp
-|   |           Microsoft.Build.Tasks.CodeAnalysis.dll
-|   |           Microsoft.CodeAnalysis.CSharp.dll
-|   |           Microsoft.CodeAnalysis.CSharp.Scripting.dll
-|   |           Microsoft.CodeAnalysis.dll
-|   |           Microsoft.CodeAnalysis.Scripting.dll
-|   |           Microsoft.CodeAnalysis.VisualBasic.dll
-|   |           Microsoft.CSharp.Core.targets
-|   |           Microsoft.DiaSymReader.Native.amd64.dll
-|   |           Microsoft.DiaSymReader.Native.x86.dll
-|   |           Microsoft.Managed.Core.CurrentVersions.targets
-|   |           Microsoft.Managed.Core.targets
-|   |           Microsoft.VisualBasic.Core.targets
-|   |           System.Buffers.dll
-|   |           System.Collections.Immutable.dll
-|   |           System.Memory.dll
-|   |           System.Numerics.Vectors.dll
-|   |           System.Reflection.Metadata.dll
-|   |           System.Runtime.CompilerServices.Unsafe.dll
-|   |           System.Text.Encoding.CodePages.dll
-|   |           System.Threading.Tasks.Extensions.dll
-|   |           vbc.exe
-|   |           vbc.exe.config
-|   |           vbc.rsp
-|   |           VBCSCompiler.exe
-|   |           VBCSCompiler.exe.config
-|   |           
-|   +---Content
-|   |   |   bootstrap-grid.css
-|   |   |   bootstrap-grid.css.map
-|   |   |   bootstrap-grid.min.css
-|   |   |   bootstrap-grid.min.css.map
-|   |   |   bootstrap-grid.rtl.css
-|   |   |   bootstrap-grid.rtl.css.map
-|   |   |   bootstrap-grid.rtl.min.css
-|   |   |   bootstrap-grid.rtl.min.css.map
-|   |   |   bootstrap-reboot.css
-|   |   |   bootstrap-reboot.css.map
-|   |   |   bootstrap-reboot.min.css
-|   |   |   bootstrap-reboot.min.css.map
-|   |   |   bootstrap-reboot.rtl.css
-|   |   |   bootstrap-reboot.rtl.css.map
-|   |   |   bootstrap-reboot.rtl.min.css
-|   |   |   bootstrap-reboot.rtl.min.css.map
-|   |   |   bootstrap-utilities.css
-|   |   |   bootstrap-utilities.css.map
-|   |   |   bootstrap-utilities.min.css
-|   |   |   bootstrap-utilities.min.css.map
-|   |   |   bootstrap-utilities.rtl.css
-|   |   |   bootstrap-utilities.rtl.css.map
-|   |   |   bootstrap-utilities.rtl.min.css
-|   |   |   bootstrap-utilities.rtl.min.css.map
-|   |   |   bootstrap.css
-|   |   |   bootstrap.css.map
-|   |   |   bootstrap.min.css
-|   |   |   bootstrap.min.css.map
-|   |   |   bootstrap.rtl.css
-|   |   |   bootstrap.rtl.css.map
-|   |   |   bootstrap.rtl.min.css
-|   |   |   bootstrap.rtl.min.css.map
-|   |   |   Site.css
-|   |   |   
-|   |   \---animate.css
-|   |           animate.min.css
-|   |           
-|   +---Models
-|   |       HackerNewsItem.cs
-|   |       HackerNewsUser.cs
-|   |       
-|   +---obj
-|   |   +---Debug
-|   |   |   |   .NETFramework,Version=v4.8.1.AssemblyAttributes.cs
-|   |   |   |   DesignTimeResolveAssemblyReferences.cache
-|   |   |   |   DesignTimeResolveAssemblyReferencesInput.cache
-|   |   |   |   MyWebForms.csproj.AssemblyReference.cache
-|   |   |   |   MyWebForms.csproj.CoreCompileInputs.cache
-|   |   |   |   MyWebForms.csproj.FileListAbsolute.txt
-|   |   |   |   MyWebForms.csproj.Up2Date
-|   |   |   |   MyWebForms.dll
-|   |   |   |   MyWebForms.pdb
-|   |   |   |   
-|   |   |   \---TempPE
-|   |   \---Release
-|   |       |   .NETFramework,Version=v4.8.1.AssemblyAttributes.cs
-|   |       |   CSAutoParameterize.parameters.xml
-|   |       |   DesignTimeResolveAssemblyReferencesInput.cache
-|   |       |   MyWebForms.csproj.AssemblyReference.cache
-|   |       |   MyWebForms.csproj.CoreCompileInputs.cache
-|   |       |   MyWebForms.csproj.FileListAbsolute.txt
-|   |       |   MyWebForms.dll
-|   |       |   MyWebForms.pdb
-|   |       |   _WPPLastBuildInfo.txt
-|   |       |   
-|   |       +---CSAutoParameterize
-|   |       |   +---original
-|   |       |   |       Web.config
-|   |       |   |       
-|   |       |   \---transformed
-|   |       |           Web.config
-|   |       |           
-|   |       +---Package
-|   |       |   |   MyWebForms.SourceManifest.xml
-|   |       |   |   
-|   |       |   \---PackageTmp
-|   |       |       |   About.aspx
-|   |       |       |   Bundle.config
-|   |       |       |   ChartWidget.ascx
-|   |       |       |   Contact.aspx
-|   |       |       |   Default.aspx
-|   |       |       |   favicon.ico
-|   |       |       |   Global.asax
-|   |       |       |   HackerNews.aspx
-|   |       |       |   HackerNewsRefresh.ashx
-|   |       |       |   HnComment.ascx
-|   |       |       |   HnStoryRow.ascx
-|   |       |       |   HnUserCard.ascx
-|   |       |       |   libman.json
-|   |       |       |   LibraryStatusWidget.ascx
-|   |       |       |   Site.Master
-|   |       |       |   ViewSwitcher.ascx
-|   |       |       |   Web.config
-|   |       |       |   
-|   |       |       +---bin
-|   |       |       |   |   Antlr3.Runtime.dll
-|   |       |       |   |   Antlr3.Runtime.pdb
-|   |       |       |   |   Microsoft.AspNet.FriendlyUrls.dll
-|   |       |       |   |   Microsoft.AspNet.Web.Optimization.WebForms.dll
-|   |       |       |   |   Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
-|   |       |       |   |   Microsoft.ScriptManager.MSAjax.dll
-|   |       |       |   |   Microsoft.ScriptManager.WebForms.dll
-|   |       |       |   |   Microsoft.Web.Infrastructure.dll
-|   |       |       |   |   MyWebForms.dll
-|   |       |       |   |   MyWebForms.pdb
-|   |       |       |   |   Newtonsoft.Json.dll
-|   |       |       |   |   System.Web.Optimization.dll
-|   |       |       |   |   WebGrease.dll
-|   |       |       |   |   
-|   |       |       |   \---roslyn
-|   |       |       |           csc.exe
-|   |       |       |           csc.exe.config
-|   |       |       |           csc.rsp
-|   |       |       |           csi.exe
-|   |       |       |           csi.exe.config
-|   |       |       |           csi.rsp
-|   |       |       |           Microsoft.Build.Tasks.CodeAnalysis.dll
-|   |       |       |           Microsoft.CodeAnalysis.CSharp.dll
-|   |       |       |           Microsoft.CodeAnalysis.CSharp.Scripting.dll
-|   |       |       |           Microsoft.CodeAnalysis.dll
-|   |       |       |           Microsoft.CodeAnalysis.Scripting.dll
-|   |       |       |           Microsoft.CodeAnalysis.VisualBasic.dll
-|   |       |       |           Microsoft.CSharp.Core.targets
-|   |       |       |           Microsoft.DiaSymReader.Native.amd64.dll
-|   |       |       |           Microsoft.DiaSymReader.Native.x86.dll
-|   |       |       |           Microsoft.Managed.Core.CurrentVersions.targets
-|   |       |       |           Microsoft.Managed.Core.targets
-|   |       |       |           Microsoft.VisualBasic.Core.targets
-|   |       |       |           System.Buffers.dll
-|   |       |       |           System.Collections.Immutable.dll
-|   |       |       |           System.Memory.dll
-|   |       |       |           System.Numerics.Vectors.dll
-|   |       |       |           System.Reflection.Metadata.dll
-|   |       |       |           System.Runtime.CompilerServices.Unsafe.dll
-|   |       |       |           System.Text.Encoding.CodePages.dll
-|   |       |       |           System.Threading.Tasks.Extensions.dll
-|   |       |       |           vbc.exe
-|   |       |       |           vbc.exe.config
-|   |       |       |           vbc.rsp
-|   |       |       |           VBCSCompiler.exe
-|   |       |       |           VBCSCompiler.exe.config
-|   |       |       |           
-|   |       |       +---Content
-|   |       |       |   |   bootstrap-grid.css
-|   |       |       |   |   bootstrap-grid.css.map
-|   |       |       |   |   bootstrap-grid.min.css
-|   |       |       |   |   bootstrap-grid.min.css.map
-|   |       |       |   |   bootstrap-grid.rtl.css
-|   |       |       |   |   bootstrap-grid.rtl.css.map
-|   |       |       |   |   bootstrap-grid.rtl.min.css
-|   |       |       |   |   bootstrap-grid.rtl.min.css.map
-|   |       |       |   |   bootstrap-reboot.css
-|   |       |       |   |   bootstrap-reboot.css.map
-|   |       |       |   |   bootstrap-reboot.min.css
-|   |       |       |   |   bootstrap-reboot.min.css.map
-|   |       |       |   |   bootstrap-reboot.rtl.css
-|   |       |       |   |   bootstrap-reboot.rtl.css.map
-|   |       |       |   |   bootstrap-reboot.rtl.min.css
-|   |       |       |   |   bootstrap-reboot.rtl.min.css.map
-|   |       |       |   |   bootstrap-utilities.css
-|   |       |       |   |   bootstrap-utilities.css.map
-|   |       |       |   |   bootstrap-utilities.min.css
-|   |       |       |   |   bootstrap-utilities.min.css.map
-|   |       |       |   |   bootstrap-utilities.rtl.css
-|   |       |       |   |   bootstrap-utilities.rtl.css.map
-|   |       |       |   |   bootstrap-utilities.rtl.min.css
-|   |       |       |   |   bootstrap-utilities.rtl.min.css.map
-|   |       |       |   |   bootstrap.css
-|   |       |       |   |   bootstrap.css.map
-|   |       |       |   |   bootstrap.min.css
-|   |       |       |   |   bootstrap.min.css.map
-|   |       |       |   |   bootstrap.rtl.css
-|   |       |       |   |   bootstrap.rtl.css.map
-|   |       |       |   |   bootstrap.rtl.min.css
-|   |       |       |   |   bootstrap.rtl.min.css.map
-|   |       |       |   |   Site.css
-|   |       |       |   |   
-|   |       |       |   \---animate.css
-|   |       |       |           animate.min.css
-|   |       |       |           
-|   |       |       \---Scripts
-|   |       |           |   bootstrap.bundle.js
-|   |       |           |   bootstrap.bundle.js.map
-|   |       |           |   bootstrap.bundle.min.js
-|   |       |           |   bootstrap.bundle.min.js.map
-|   |       |           |   bootstrap.esm.js
-|   |       |           |   bootstrap.esm.js.map
-|   |       |           |   bootstrap.esm.min.js
-|   |       |           |   bootstrap.esm.min.js.map
-|   |       |           |   bootstrap.js
-|   |       |           |   bootstrap.js.map
-|   |       |           |   bootstrap.min.js
-|   |       |           |   bootstrap.min.js.map
-|   |       |           |   jquery-3.7.1.js
-|   |       |           |   jquery-3.7.1.min.js
-|   |       |           |   jquery-3.7.1.min.map
-|   |       |           |   jquery-3.7.1.slim.js
-|   |       |           |   jquery-3.7.1.slim.min.js
-|   |       |           |   jquery-3.7.1.slim.min.map
-|   |       |           |   modernizr-2.8.3.js
-|   |       |           |   
-|   |       |           +---lib
-|   |       |           |   \---chartjs
-|   |       |           |           chart.umd.js
-|   |       |           |           
-|   |       |           \---WebForms
-|   |       |               |   DetailsView.js
-|   |       |               |   Focus.js
-|   |       |               |   GridView.js
-|   |       |               |   Menu.js
-|   |       |               |   MenuStandards.js
-|   |       |               |   SmartNav.js
-|   |       |               |   TreeView.js
-|   |       |               |   WebForms.js
-|   |       |               |   WebParts.js
-|   |       |               |   WebUIValidation.js
-|   |       |               |   
-|   |       |               \---MSAjax
-|   |       |                       MicrosoftAjax.js
-|   |       |                       MicrosoftAjaxApplicationServices.js
-|   |       |                       MicrosoftAjaxComponentModel.js
-|   |       |                       MicrosoftAjaxCore.js
-|   |       |                       MicrosoftAjaxGlobalization.js
-|   |       |                       MicrosoftAjaxHistory.js
-|   |       |                       MicrosoftAjaxNetwork.js
-|   |       |                       MicrosoftAjaxSerialization.js
-|   |       |                       MicrosoftAjaxTimer.js
-|   |       |                       MicrosoftAjaxWebForms.js
-|   |       |                       MicrosoftAjaxWebServices.js
-|   |       |                       
-|   |       +---ProfileTransformWebConfig
-|   |       |   \---transformed
-|   |       +---TempPE
-|   |       \---TransformWebConfig
-|   |           +---assist
-|   |           |       Web.config
-|   |           |       
-|   |           +---original
-|   |           |       Web.config
-|   |           |       
-|   |           \---transformed
-|   |                   Web.config
-|   |                   
-|   +---Properties
-|   |   |   AssemblyInfo.cs
-|   |   |   
-|   |   \---PublishProfiles
-|   |           site55560-WebDeploy.pubxml
-|   |           site55560-WebDeploy.pubxml.user
-|   |           
-|   +---Scripts
-|   |   |   bootstrap.bundle.js
-|   |   |   bootstrap.bundle.js.map
-|   |   |   bootstrap.bundle.min.js
-|   |   |   bootstrap.bundle.min.js.map
-|   |   |   bootstrap.esm.js
-|   |   |   bootstrap.esm.js.map
-|   |   |   bootstrap.esm.min.js
-|   |   |   bootstrap.esm.min.js.map
-|   |   |   bootstrap.js
-|   |   |   bootstrap.js.map
-|   |   |   bootstrap.min.js
-|   |   |   bootstrap.min.js.map
-|   |   |   jquery-3.7.1.intellisense.js
-|   |   |   jquery-3.7.1.js
-|   |   |   jquery-3.7.1.min.js
-|   |   |   jquery-3.7.1.min.map
-|   |   |   jquery-3.7.1.slim.js
-|   |   |   jquery-3.7.1.slim.min.js
-|   |   |   jquery-3.7.1.slim.min.map
-|   |   |   modernizr-2.8.3.js
-|   |   |   
-|   |   +---lib
-|   |   |   \---chartjs
-|   |   |           chart.umd.js
-|   |   |           
-|   |   \---WebForms
-|   |       |   DetailsView.js
-|   |       |   Focus.js
-|   |       |   GridView.js
-|   |       |   Menu.js
-|   |       |   MenuStandards.js
-|   |       |   SmartNav.js
-|   |       |   TreeView.js
-|   |       |   WebForms.js
-|   |       |   WebParts.js
-|   |       |   WebUIValidation.js
-|   |       |   
-|   |       \---MSAjax
-|   |               MicrosoftAjax.js
-|   |               MicrosoftAjaxApplicationServices.js
-|   |               MicrosoftAjaxComponentModel.js
-|   |               MicrosoftAjaxCore.js
-|   |               MicrosoftAjaxGlobalization.js
-|   |               MicrosoftAjaxHistory.js
-|   |               MicrosoftAjaxNetwork.js
-|   |               MicrosoftAjaxSerialization.js
-|   |               MicrosoftAjaxTimer.js
-|   |               MicrosoftAjaxWebForms.js
-|   |               MicrosoftAjaxWebServices.js
-|   |               
-|   \---Services
-|           HackerNewsService.cs
-|           
-\---packages
-    +---Antlr.3.5.0.2
-    |   |   .signature.p7s
-    |   |   Antlr.3.5.0.2.nupkg
-    |   |   
-    |   \---lib
-    |           Antlr3.Runtime.dll
-    |           Antlr3.Runtime.pdb
-    |           
-    +---bootstrap.5.3.8
-    |   |   .signature.p7s
-    |   |   bootstrap.5.3.8.nupkg
-    |   |   bootstrap.png
-    |   |   
-    |   +---content
-    |   |   +---Content
-    |   |   |       bootstrap-grid.css
-    |   |   |       bootstrap-grid.css.map
-    |   |   |       bootstrap-grid.min.css
-    |   |   |       bootstrap-grid.min.css.map
-    |   |   |       bootstrap-grid.rtl.css
-    |   |   |       bootstrap-grid.rtl.css.map
-    |   |   |       bootstrap-grid.rtl.min.css
-    |   |   |       bootstrap-grid.rtl.min.css.map
-    |   |   |       bootstrap-reboot.css
-    |   |   |       bootstrap-reboot.css.map
-    |   |   |       bootstrap-reboot.min.css
-    |   |   |       bootstrap-reboot.min.css.map
-    |   |   |       bootstrap-reboot.rtl.css
-    |   |   |       bootstrap-reboot.rtl.css.map
-    |   |   |       bootstrap-reboot.rtl.min.css
-    |   |   |       bootstrap-reboot.rtl.min.css.map
-    |   |   |       bootstrap-utilities.css
-    |   |   |       bootstrap-utilities.css.map
-    |   |   |       bootstrap-utilities.min.css
-    |   |   |       bootstrap-utilities.min.css.map
-    |   |   |       bootstrap-utilities.rtl.css
-    |   |   |       bootstrap-utilities.rtl.css.map
-    |   |   |       bootstrap-utilities.rtl.min.css
-    |   |   |       bootstrap-utilities.rtl.min.css.map
-    |   |   |       bootstrap.css
-    |   |   |       bootstrap.css.map
-    |   |   |       bootstrap.min.css
-    |   |   |       bootstrap.min.css.map
-    |   |   |       bootstrap.rtl.css
-    |   |   |       bootstrap.rtl.css.map
-    |   |   |       bootstrap.rtl.min.css
-    |   |   |       bootstrap.rtl.min.css.map
-    |   |   |       
-    |   |   \---Scripts
-    |   |           bootstrap.bundle.js
-    |   |           bootstrap.bundle.js.map
-    |   |           bootstrap.bundle.min.js
-    |   |           bootstrap.bundle.min.js.map
-    |   |           bootstrap.esm.js
-    |   |           bootstrap.esm.js.map
-    |   |           bootstrap.esm.min.js
-    |   |           bootstrap.esm.min.js.map
-    |   |           bootstrap.js
-    |   |           bootstrap.js.map
-    |   |           bootstrap.min.js
-    |   |           bootstrap.min.js.map
-    |   |           
-    |   \---contentFiles
-    |       \---any
-    |           \---any
-    |               \---wwwroot
-    |                   +---css
-    |                   |       bootstrap-grid.css
-    |                   |       bootstrap-grid.css.map
-    |                   |       bootstrap-grid.min.css
-    |                   |       bootstrap-grid.min.css.map
-    |                   |       bootstrap-grid.rtl.css
-    |                   |       bootstrap-grid.rtl.css.map
-    |                   |       bootstrap-grid.rtl.min.css
-    |                   |       bootstrap-grid.rtl.min.css.map
-    |                   |       bootstrap-reboot.css
-    |                   |       bootstrap-reboot.css.map
-    |                   |       bootstrap-reboot.min.css
-    |                   |       bootstrap-reboot.min.css.map
-    |                   |       bootstrap-reboot.rtl.css
-    |                   |       bootstrap-reboot.rtl.css.map
-    |                   |       bootstrap-reboot.rtl.min.css
-    |                   |       bootstrap-reboot.rtl.min.css.map
-    |                   |       bootstrap-utilities.css
-    |                   |       bootstrap-utilities.css.map
-    |                   |       bootstrap-utilities.min.css
-    |                   |       bootstrap-utilities.min.css.map
-    |                   |       bootstrap-utilities.rtl.css
-    |                   |       bootstrap-utilities.rtl.css.map
-    |                   |       bootstrap-utilities.rtl.min.css
-    |                   |       bootstrap-utilities.rtl.min.css.map
-    |                   |       bootstrap.css
-    |                   |       bootstrap.css.map
-    |                   |       bootstrap.min.css
-    |                   |       bootstrap.min.css.map
-    |                   |       bootstrap.rtl.css
-    |                   |       bootstrap.rtl.css.map
-    |                   |       bootstrap.rtl.min.css
-    |                   |       bootstrap.rtl.min.css.map
-    |                   |       
-    |                   \---js
-    |                           bootstrap.bundle.js
-    |                           bootstrap.bundle.js.map
-    |                           bootstrap.bundle.min.js
-    |                           bootstrap.bundle.min.js.map
-    |                           bootstrap.esm.js
-    |                           bootstrap.esm.js.map
-    |                           bootstrap.esm.min.js
-    |                           bootstrap.esm.min.js.map
-    |                           bootstrap.js
-    |                           bootstrap.js.map
-    |                           bootstrap.min.js
-    |                           bootstrap.min.js.map
-    |                           
-    +---jQuery.3.7.1
-    |   |   .signature.p7s
-    |   |   jQuery.3.7.1.nupkg
-    |   |   
-    |   +---Content
-    |   |   \---Scripts
-    |   |           jquery-3.7.1-vsdoc.js
-    |   |           jquery-3.7.1.js
-    |   |           jquery-3.7.1.min.js
-    |   |           jquery-3.7.1.min.map
-    |   |           jquery-3.7.1.slim.js
-    |   |           jquery-3.7.1.slim.min.js
-    |   |           jquery-3.7.1.slim.min.map
-    |   |           
-    |   \---Tools
-    |           common.ps1
-    |           install.ps1
-    |           jquery-3.7.1.intellisense.js
-    |           uninstall.ps1
-    |           
-    +---Microsoft.AspNet.FriendlyUrls.1.0.2
-    |   |   .signature.p7s
-    |   |   Microsoft.AspNet.FriendlyUrls.1.0.2.nupkg
-    |   |   readme.txt
-    |   |   
-    |   \---Content
-    |       |   Site.Mobile.Master.cs.pp
-    |       |   Site.Mobile.Master.designer.cs.pp
-    |       |   Site.Mobile.Master.pp
-    |       |   ViewSwitcher.ascx.cs.pp
-    |       |   ViewSwitcher.ascx.designer.cs.pp
-    |       |   ViewSwitcher.ascx.pp
-    |       |   
-    |       \---App_Start
-    |               RouteConfig.cs.pp
-    |               
-    +---Microsoft.AspNet.FriendlyUrls.Core.1.0.2
-    |   |   .signature.p7s
-    |   |   Microsoft.AspNet.FriendlyUrls.Core.1.0.2.nupkg
-    |   |   
-    |   \---lib
-    |       +---net40
-    |       |       Microsoft.AspNet.FriendlyUrls.dll
-    |       |       Microsoft.AspNet.FriendlyUrls.xml
-    |       |       
-    |       \---net45
-    |               Microsoft.AspNet.FriendlyUrls.dll
-    |               Microsoft.AspNet.FriendlyUrls.xml
-    |               
-    +---Microsoft.AspNet.ScriptManager.MSAjax.5.0.0
-    |   |   .signature.p7s
-    |   |   Microsoft.AspNet.ScriptManager.MSAjax.5.0.0.nupkg
-    |   |   
-    |   +---content
-    |   |   \---Scripts
-    |   |       \---WebForms
-    |   |           \---MSAjax
-    |   |                   MicrosoftAjax.js
-    |   |                   MicrosoftAjaxApplicationServices.js
-    |   |                   MicrosoftAjaxComponentModel.js
-    |   |                   MicrosoftAjaxCore.js
-    |   |                   MicrosoftAjaxGlobalization.js
-    |   |                   MicrosoftAjaxHistory.js
-    |   |                   MicrosoftAjaxNetwork.js
-    |   |                   MicrosoftAjaxSerialization.js
-    |   |                   MicrosoftAjaxTimer.js
-    |   |                   MicrosoftAjaxWebForms.js
-    |   |                   MicrosoftAjaxWebServices.js
-    |   |                   
-    |   \---lib
-    |       \---net45
-    |               Microsoft.ScriptManager.MSAjax.dll
-    |               
-    +---Microsoft.AspNet.ScriptManager.WebForms.5.0.0
-    |   |   .signature.p7s
-    |   |   Microsoft.AspNet.ScriptManager.WebForms.5.0.0.nupkg
-    |   |   
-    |   +---content
-    |   |   \---Scripts
-    |   |       \---WebForms
-    |   |               DetailsView.js
-    |   |               Focus.js
-    |   |               GridView.js
-    |   |               Menu.js
-    |   |               MenuStandards.js
-    |   |               SmartNav.js
-    |   |               TreeView.js
-    |   |               WebForms.js
-    |   |               WebParts.js
-    |   |               WebUIValidation.js
-    |   |               
-    |   \---lib
-    |       \---net45
-    |               Microsoft.ScriptManager.WebForms.dll
-    |               
-    +---Microsoft.AspNet.Web.Optimization.1.1.3
-    |   |   .signature.p7s
-    |   |   Microsoft.AspNet.Web.Optimization.1.1.3.nupkg
-    |   |   
-    |   \---lib
-    |       \---net40
-    |               System.Web.Optimization.dll
-    |               system.web.optimization.xml
-    |               
-    +---Microsoft.AspNet.Web.Optimization.WebForms.1.1.3
-    |   |   .signature.p7s
-    |   |   Microsoft.AspNet.Web.Optimization.WebForms.1.1.3.nupkg
-    |   |   
-    |   +---content
-    |   |       web.config.transform
-    |   |       
-    |   \---lib
-    |       \---net45
-    |               Microsoft.AspNet.Web.Optimization.WebForms.dll
-    |               
-    +---Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0
-    |   |   .signature.p7s
-    |   |   Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0.nupkg
-    |   |   
-    |   +---build
-    |   |   \---net472
-    |   |           Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets
-    |   |           
-    |   +---icons
-    |   |       dotnet.png
-    |   |       
-    |   +---lib
-    |   |   \---net472
-    |   |           Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
-    |   |           Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-    |   |           
-    |   +---tasks
-    |   |       DotNetCompilerPlatformTasks.dll
-    |   |       System.Management.dll
-    |   |       
-    |   \---tools
-    |       \---Roslyn-4.1.0
-    |               csc.exe
-    |               csc.exe.config
-    |               csc.rsp
-    |               csi.exe
-    |               csi.exe.config
-    |               csi.rsp
-    |               Microsoft.Build.Tasks.CodeAnalysis.dll
-    |               Microsoft.CodeAnalysis.CSharp.dll
-    |               Microsoft.CodeAnalysis.CSharp.Scripting.dll
-    |               Microsoft.CodeAnalysis.dll
-    |               Microsoft.CodeAnalysis.Scripting.dll
-    |               Microsoft.CodeAnalysis.VisualBasic.dll
-    |               Microsoft.CSharp.Core.targets
-    |               Microsoft.DiaSymReader.Native.amd64.dll
-    |               Microsoft.DiaSymReader.Native.x86.dll
-    |               Microsoft.Managed.Core.CurrentVersions.targets
-    |               Microsoft.Managed.Core.targets
-    |               Microsoft.VisualBasic.Core.targets
-    |               System.Buffers.dll
-    |               System.Collections.Immutable.dll
-    |               System.Memory.dll
-    |               System.Numerics.Vectors.dll
-    |               System.Reflection.Metadata.dll
-    |               System.Runtime.CompilerServices.Unsafe.dll
-    |               System.Text.Encoding.CodePages.dll
-    |               System.Threading.Tasks.Extensions.dll
-    |               vbc.exe
-    |               vbc.exe.config
-    |               vbc.rsp
-    |               VBCSCompiler.exe
-    |               VBCSCompiler.exe.config
-    |               
-    +---Microsoft.Web.Infrastructure.2.0.0
-    |   |   .signature.p7s
-    |   |   Microsoft.Web.Infrastructure.2.0.0.nupkg
-    |   |   NET.icon.png
-    |   |   NET_Library_EULA_ENU.txt
-    |   |   
-    |   \---lib
-    |       \---net40
-    |               Microsoft.Web.Infrastructure.dll
-    |               
-    +---Microsoft.Web.LibraryManager.Build.3.0.71
-    |   |   .signature.p7s
-    |   |   License.txt
-    |   |   Microsoft.Web.LibraryManager.Build.3.0.71.nupkg
-    |   |   PackageIcon.png
-    |   |   Third-party-notice.txt
-    |   |   
-    |   +---build
-    |   |       Microsoft.Web.LibraryManager.Build.props
-    |   |       Microsoft.Web.LibraryManager.Build.targets
-    |   |       
-    |   \---tools
-    |       +---net481
-    |       |   |   Microsoft.Web.LibraryManager.Build.dll
-    |       |   |   Microsoft.Web.LibraryManager.Contracts.dll
-    |       |   |   Microsoft.Web.LibraryManager.dll
-    |       |   |   Newtonsoft.Json.dll
-    |       |   |   
-    |       |   +---cs
-    |       |   |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |       |   |       Microsoft.Web.LibraryManager.resources.dll
-    |       |   |       
-    |       |   +---de
-    |       |   |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |       |   |       Microsoft.Web.LibraryManager.resources.dll
-    |       |   |       
-    |       |   +---es
-    |       |   |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |       |   |       Microsoft.Web.LibraryManager.resources.dll
-    |       |   |       
-    |       |   +---fr
-    |       |   |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |       |   |       Microsoft.Web.LibraryManager.resources.dll
-    |       |   |       
-    |       |   +---it
-    |       |   |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |       |   |       Microsoft.Web.LibraryManager.resources.dll
-    |       |   |       
-    |       |   +---ja
-    |       |   |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |       |   |       Microsoft.Web.LibraryManager.resources.dll
-    |       |   |       
-    |       |   +---ko
-    |       |   |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |       |   |       Microsoft.Web.LibraryManager.resources.dll
-    |       |   |       
-    |       |   +---pl
-    |       |   |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |       |   |       Microsoft.Web.LibraryManager.resources.dll
-    |       |   |       
-    |       |   +---pt-BR
-    |       |   |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |       |   |       Microsoft.Web.LibraryManager.resources.dll
-    |       |   |       
-    |       |   +---ru
-    |       |   |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |       |   |       Microsoft.Web.LibraryManager.resources.dll
-    |       |   |       
-    |       |   +---tr
-    |       |   |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |       |   |       Microsoft.Web.LibraryManager.resources.dll
-    |       |   |       
-    |       |   +---zh-Hans
-    |       |   |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |       |   |       Microsoft.Web.LibraryManager.resources.dll
-    |       |   |       
-    |       |   \---zh-Hant
-    |       |           Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |       |           Microsoft.Web.LibraryManager.resources.dll
-    |       |           
-    |       \---net8.0
-    |           |   Microsoft.Web.LibraryManager.Build.dll
-    |           |   Microsoft.Web.LibraryManager.Contracts.dll
-    |           |   Microsoft.Web.LibraryManager.dll
-    |           |   Newtonsoft.Json.dll
-    |           |   
-    |           +---cs
-    |           |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |           |       Microsoft.Web.LibraryManager.resources.dll
-    |           |       
-    |           +---de
-    |           |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |           |       Microsoft.Web.LibraryManager.resources.dll
-    |           |       
-    |           +---es
-    |           |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |           |       Microsoft.Web.LibraryManager.resources.dll
-    |           |       
-    |           +---fr
-    |           |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |           |       Microsoft.Web.LibraryManager.resources.dll
-    |           |       
-    |           +---it
-    |           |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |           |       Microsoft.Web.LibraryManager.resources.dll
-    |           |       
-    |           +---ja
-    |           |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |           |       Microsoft.Web.LibraryManager.resources.dll
-    |           |       
-    |           +---ko
-    |           |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |           |       Microsoft.Web.LibraryManager.resources.dll
-    |           |       
-    |           +---pl
-    |           |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |           |       Microsoft.Web.LibraryManager.resources.dll
-    |           |       
-    |           +---pt-BR
-    |           |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |           |       Microsoft.Web.LibraryManager.resources.dll
-    |           |       
-    |           +---ru
-    |           |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |           |       Microsoft.Web.LibraryManager.resources.dll
-    |           |       
-    |           +---tr
-    |           |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |           |       Microsoft.Web.LibraryManager.resources.dll
-    |           |       
-    |           +---zh-Hans
-    |           |       Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |           |       Microsoft.Web.LibraryManager.resources.dll
-    |           |       
-    |           \---zh-Hant
-    |                   Microsoft.Web.LibraryManager.Contracts.resources.dll
-    |                   Microsoft.Web.LibraryManager.resources.dll
-    |                   
-    +---Modernizr.2.8.3
-    |   |   .signature.p7s
-    |   |   Modernizr.2.8.3.nupkg
-    |   |   
-    |   +---Content
-    |   |   \---Scripts
-    |   |           modernizr-2.8.3.js
-    |   |           
-    |   \---Tools
-    |           common.ps1
-    |           install.ps1
-    |           uninstall.ps1
-    |           
-    +---Newtonsoft.Json.13.0.4
-    |   |   .signature.p7s
-    |   |   LICENSE.md
-    |   |   Newtonsoft.Json.13.0.4.nupkg
-    |   |   packageIcon.png
-    |   |   README.md
-    |   |   
-    |   \---lib
-    |       +---net20
-    |       |       Newtonsoft.Json.dll
-    |       |       Newtonsoft.Json.xml
-    |       |       
-    |       +---net35
-    |       |       Newtonsoft.Json.dll
-    |       |       Newtonsoft.Json.xml
-    |       |       
-    |       +---net40
-    |       |       Newtonsoft.Json.dll
-    |       |       Newtonsoft.Json.xml
-    |       |       
-    |       +---net45
-    |       |       Newtonsoft.Json.dll
-    |       |       Newtonsoft.Json.xml
-    |       |       
-    |       +---net6.0
-    |       |       Newtonsoft.Json.dll
-    |       |       Newtonsoft.Json.xml
-    |       |       
-    |       +---netstandard1.0
-    |       |       Newtonsoft.Json.dll
-    |       |       Newtonsoft.Json.xml
-    |       |       
-    |       +---netstandard1.3
-    |       |       Newtonsoft.Json.dll
-    |       |       Newtonsoft.Json.xml
-    |       |       
-    |       \---netstandard2.0
-    |               Newtonsoft.Json.dll
-    |               Newtonsoft.Json.xml
-    |               
-    +---System.IO.4.3.0
-    |   |   .signature.p7s
-    |   |   dotnet_library_license.txt
-    |   |   System.IO.4.3.0.nupkg
-    |   |   ThirdPartyNotices.txt
-    |   |   
-    |   +---lib
-    |   |   +---MonoAndroid10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---MonoTouch10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---net45
-    |   |   |       _._
-    |   |   |       
-    |   |   +---net462
-    |   |   |       System.IO.dll
-    |   |   |       
-    |   |   +---portable-net45+win8+wp8+wpa81
-    |   |   |       _._
-    |   |   |       
-    |   |   +---win8
-    |   |   |       _._
-    |   |   |       
-    |   |   +---wp80
-    |   |   |       _._
-    |   |   |       
-    |   |   +---wpa81
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarinios10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarinmac20
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarintvos10
-    |   |   |       _._
-    |   |   |       
-    |   |   \---xamarinwatchos10
-    |   |           _._
-    |   |           
-    |   \---ref
-    |       +---MonoAndroid10
-    |       |       _._
-    |       |       
-    |       +---MonoTouch10
-    |       |       _._
-    |       |       
-    |       +---net45
-    |       |       _._
-    |       |       
-    |       +---net462
-    |       |       System.IO.dll
-    |       |       
-    |       +---netcore50
-    |       |   |   System.IO.dll
-    |       |   |   System.IO.xml
-    |       |   |   
-    |       |   +---de
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---es
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---fr
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---it
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---ja
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---ko
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---ru
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---zh-hans
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   \---zh-hant
-    |       |           System.IO.xml
-    |       |           
-    |       +---netstandard1.0
-    |       |   |   System.IO.dll
-    |       |   |   System.IO.xml
-    |       |   |   
-    |       |   +---de
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---es
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---fr
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---it
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---ja
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---ko
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---ru
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---zh-hans
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   \---zh-hant
-    |       |           System.IO.xml
-    |       |           
-    |       +---netstandard1.3
-    |       |   |   System.IO.dll
-    |       |   |   System.IO.xml
-    |       |   |   
-    |       |   +---de
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---es
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---fr
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---it
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---ja
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---ko
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---ru
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---zh-hans
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   \---zh-hant
-    |       |           System.IO.xml
-    |       |           
-    |       +---netstandard1.5
-    |       |   |   System.IO.dll
-    |       |   |   System.IO.xml
-    |       |   |   
-    |       |   +---de
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---es
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---fr
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---it
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---ja
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---ko
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---ru
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   +---zh-hans
-    |       |   |       System.IO.xml
-    |       |   |       
-    |       |   \---zh-hant
-    |       |           System.IO.xml
-    |       |           
-    |       +---portable-net45+win8+wp8+wpa81
-    |       |       _._
-    |       |       
-    |       +---win8
-    |       |       _._
-    |       |       
-    |       +---wp80
-    |       |       _._
-    |       |       
-    |       +---wpa81
-    |       |       _._
-    |       |       
-    |       +---xamarinios10
-    |       |       _._
-    |       |       
-    |       +---xamarinmac20
-    |       |       _._
-    |       |       
-    |       +---xamarintvos10
-    |       |       _._
-    |       |       
-    |       \---xamarinwatchos10
-    |               _._
-    |               
-    +---System.Net.Http.4.3.4
-    |   |   .signature.p7s
-    |   |   dotnet_library_license.txt
-    |   |   System.Net.Http.4.3.4.nupkg
-    |   |   ThirdPartyNotices.txt
-    |   |   
-    |   +---lib
-    |   |   +---monoandroid10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---monotouch10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---net45
-    |   |   |       _._
-    |   |   |       
-    |   |   +---net46
-    |   |   |       System.Net.Http.dll
-    |   |   |       
-    |   |   +---portable-net45+win8+wpa81
-    |   |   |       _._
-    |   |   |       
-    |   |   +---win8
-    |   |   |       _._
-    |   |   |       
-    |   |   +---wpa81
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarinios10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---Xamarinmac20
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarintvos10
-    |   |   |       _._
-    |   |   |       
-    |   |   \---xamarinwatchos10
-    |   |           _._
-    |   |           
-    |   +---ref
-    |   |   +---monoandroid10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---monotouch10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---net45
-    |   |   |       _._
-    |   |   |       
-    |   |   +---net46
-    |   |   |       System.Net.Http.dll
-    |   |   |       
-    |   |   +---netcore50
-    |   |   |       System.Net.Http.dll
-    |   |   |       
-    |   |   +---netstandard1.1
-    |   |   |       System.Net.Http.dll
-    |   |   |       
-    |   |   +---netstandard1.3
-    |   |   |       System.Net.Http.dll
-    |   |   |       
-    |   |   +---portable-net45+win8+wpa81
-    |   |   |       _._
-    |   |   |       
-    |   |   +---win8
-    |   |   |       _._
-    |   |   |       
-    |   |   +---wpa81
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarinios10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---Xamarinmac20
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarintvos10
-    |   |   |       _._
-    |   |   |       
-    |   |   \---xamarinwatchos10
-    |   |           _._
-    |   |           
-    |   \---runtimes
-    |       +---unix
-    |       |   \---lib
-    |       |       \---netstandard1.6
-    |       |               System.Net.Http.dll
-    |       |               
-    |       \---win
-    |           \---lib
-    |               +---net46
-    |               |       System.Net.Http.dll
-    |               |       
-    |               +---netcore50
-    |               |       System.Net.Http.dll
-    |               |       
-    |               \---netstandard1.3
-    |                       System.Net.Http.dll
-    |                       
-    +---System.Runtime.4.3.1
-    |   |   .signature.p7s
-    |   |   dotnet_library_license.txt
-    |   |   System.Runtime.4.3.1.nupkg
-    |   |   ThirdPartyNotices.txt
-    |   |   
-    |   +---lib
-    |   |   +---MonoAndroid10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---MonoTouch10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---net45
-    |   |   |       _._
-    |   |   |       
-    |   |   +---net462
-    |   |   |       System.Runtime.dll
-    |   |   |       
-    |   |   +---portable-net45+win8+wp80+wpa81
-    |   |   |       _._
-    |   |   |       
-    |   |   +---win8
-    |   |   |       _._
-    |   |   |       
-    |   |   +---wp80
-    |   |   |       _._
-    |   |   |       
-    |   |   +---wpa81
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarinios10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarinmac20
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarintvos10
-    |   |   |       _._
-    |   |   |       
-    |   |   \---xamarinwatchos10
-    |   |           _._
-    |   |           
-    |   \---ref
-    |       +---MonoAndroid10
-    |       |       _._
-    |       |       
-    |       +---MonoTouch10
-    |       |       _._
-    |       |       
-    |       +---net45
-    |       |       _._
-    |       |       
-    |       +---net462
-    |       |       System.Runtime.dll
-    |       |       
-    |       +---netcore50
-    |       |   |   System.Runtime.dll
-    |       |   |   System.Runtime.xml
-    |       |   |   
-    |       |   +---de
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---es
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---fr
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---it
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---ja
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---ko
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---ru
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---zh-hans
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   \---zh-hant
-    |       |           System.Runtime.xml
-    |       |           
-    |       +---netstandard1.0
-    |       |   |   System.Runtime.dll
-    |       |   |   System.Runtime.xml
-    |       |   |   
-    |       |   +---de
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---es
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---fr
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---it
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---ja
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---ko
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---ru
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---zh-hans
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   \---zh-hant
-    |       |           System.Runtime.xml
-    |       |           
-    |       +---netstandard1.2
-    |       |   |   System.Runtime.dll
-    |       |   |   System.Runtime.xml
-    |       |   |   
-    |       |   +---de
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---es
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---fr
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---it
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---ja
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---ko
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---ru
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---zh-hans
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   \---zh-hant
-    |       |           System.Runtime.xml
-    |       |           
-    |       +---netstandard1.3
-    |       |   |   System.Runtime.dll
-    |       |   |   System.Runtime.xml
-    |       |   |   
-    |       |   +---de
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---es
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---fr
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---it
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---ja
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---ko
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---ru
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---zh-hans
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   \---zh-hant
-    |       |           System.Runtime.xml
-    |       |           
-    |       +---netstandard1.5
-    |       |   |   System.Runtime.dll
-    |       |   |   System.Runtime.xml
-    |       |   |   
-    |       |   +---de
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---es
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---fr
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---it
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---ja
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---ko
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---ru
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   +---zh-hans
-    |       |   |       System.Runtime.xml
-    |       |   |       
-    |       |   \---zh-hant
-    |       |           System.Runtime.xml
-    |       |           
-    |       +---portable-net45+win8+wp80+wpa81
-    |       |       _._
-    |       |       
-    |       +---win8
-    |       |       _._
-    |       |       
-    |       +---wp80
-    |       |       _._
-    |       |       
-    |       +---wpa81
-    |       |       _._
-    |       |       
-    |       +---xamarinios10
-    |       |       _._
-    |       |       
-    |       +---xamarinmac20
-    |       |       _._
-    |       |       
-    |       +---xamarintvos10
-    |       |       _._
-    |       |       
-    |       \---xamarinwatchos10
-    |               _._
-    |               
-    +---System.Security.Cryptography.Algorithms.4.3.1
-    |   |   .signature.p7s
-    |   |   dotnet_library_license.txt
-    |   |   System.Security.Cryptography.Algorithms.4.3.1.nupkg
-    |   |   ThirdPartyNotices.txt
-    |   |   
-    |   +---lib
-    |   |   +---MonoAndroid10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---MonoTouch10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---net46
-    |   |   |       System.Security.Cryptography.Algorithms.dll
-    |   |   |       
-    |   |   +---net461
-    |   |   |       System.Security.Cryptography.Algorithms.dll
-    |   |   |       
-    |   |   +---net463
-    |   |   |       System.Security.Cryptography.Algorithms.dll
-    |   |   |       
-    |   |   +---xamarinios10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarinmac20
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarintvos10
-    |   |   |       _._
-    |   |   |       
-    |   |   \---xamarinwatchos10
-    |   |           _._
-    |   |           
-    |   +---ref
-    |   |   +---MonoAndroid10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---MonoTouch10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---net46
-    |   |   |       System.Security.Cryptography.Algorithms.dll
-    |   |   |       
-    |   |   +---net461
-    |   |   |       System.Security.Cryptography.Algorithms.dll
-    |   |   |       
-    |   |   +---net463
-    |   |   |       System.Security.Cryptography.Algorithms.dll
-    |   |   |       
-    |   |   +---netstandard1.3
-    |   |   |       System.Security.Cryptography.Algorithms.dll
-    |   |   |       
-    |   |   +---netstandard1.4
-    |   |   |       System.Security.Cryptography.Algorithms.dll
-    |   |   |       
-    |   |   +---netstandard1.6
-    |   |   |       System.Security.Cryptography.Algorithms.dll
-    |   |   |       
-    |   |   +---xamarinios10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarinmac20
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarintvos10
-    |   |   |       _._
-    |   |   |       
-    |   |   \---xamarinwatchos10
-    |   |           _._
-    |   |           
-    |   \---runtimes
-    |       +---osx
-    |       |   \---lib
-    |       |       \---netstandard1.6
-    |       |               System.Security.Cryptography.Algorithms.dll
-    |       |               
-    |       +---unix
-    |       |   \---lib
-    |       |       \---netstandard1.6
-    |       |               System.Security.Cryptography.Algorithms.dll
-    |       |               
-    |       \---win
-    |           \---lib
-    |               +---net46
-    |               |       System.Security.Cryptography.Algorithms.dll
-    |               |       
-    |               +---net461
-    |               |       System.Security.Cryptography.Algorithms.dll
-    |               |       
-    |               +---net463
-    |               |       System.Security.Cryptography.Algorithms.dll
-    |               |       
-    |               +---netcore50
-    |               |       System.Security.Cryptography.Algorithms.dll
-    |               |       
-    |               \---netstandard1.6
-    |                       System.Security.Cryptography.Algorithms.dll
-    |                       
-    +---System.Security.Cryptography.Encoding.4.3.0
-    |   |   .signature.p7s
-    |   |   dotnet_library_license.txt
-    |   |   System.Security.Cryptography.Encoding.4.3.0.nupkg
-    |   |   ThirdPartyNotices.txt
-    |   |   
-    |   +---lib
-    |   |   +---MonoAndroid10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---MonoTouch10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---net46
-    |   |   |       System.Security.Cryptography.Encoding.dll
-    |   |   |       
-    |   |   +---xamarinios10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarinmac20
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarintvos10
-    |   |   |       _._
-    |   |   |       
-    |   |   \---xamarinwatchos10
-    |   |           _._
-    |   |           
-    |   +---ref
-    |   |   +---MonoAndroid10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---MonoTouch10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---net46
-    |   |   |       System.Security.Cryptography.Encoding.dll
-    |   |   |       
-    |   |   +---netstandard1.3
-    |   |   |   |   System.Security.Cryptography.Encoding.dll
-    |   |   |   |   System.Security.Cryptography.Encoding.xml
-    |   |   |   |   
-    |   |   |   +---de
-    |   |   |   |       System.Security.Cryptography.Encoding.xml
-    |   |   |   |       
-    |   |   |   +---es
-    |   |   |   |       System.Security.Cryptography.Encoding.xml
-    |   |   |   |       
-    |   |   |   +---fr
-    |   |   |   |       System.Security.Cryptography.Encoding.xml
-    |   |   |   |       
-    |   |   |   +---it
-    |   |   |   |       System.Security.Cryptography.Encoding.xml
-    |   |   |   |       
-    |   |   |   +---ja
-    |   |   |   |       System.Security.Cryptography.Encoding.xml
-    |   |   |   |       
-    |   |   |   +---ko
-    |   |   |   |       System.Security.Cryptography.Encoding.xml
-    |   |   |   |       
-    |   |   |   +---ru
-    |   |   |   |       System.Security.Cryptography.Encoding.xml
-    |   |   |   |       
-    |   |   |   +---zh-hans
-    |   |   |   |       System.Security.Cryptography.Encoding.xml
-    |   |   |   |       
-    |   |   |   \---zh-hant
-    |   |   |           System.Security.Cryptography.Encoding.xml
-    |   |   |           
-    |   |   +---xamarinios10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarinmac20
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarintvos10
-    |   |   |       _._
-    |   |   |       
-    |   |   \---xamarinwatchos10
-    |   |           _._
-    |   |           
-    |   \---runtimes
-    |       +---unix
-    |       |   \---lib
-    |       |       \---netstandard1.3
-    |       |               System.Security.Cryptography.Encoding.dll
-    |       |               
-    |       \---win
-    |           \---lib
-    |               +---net46
-    |               |       System.Security.Cryptography.Encoding.dll
-    |               |       
-    |               \---netstandard1.3
-    |                       System.Security.Cryptography.Encoding.dll
-    |                       
-    +---System.Security.Cryptography.Primitives.4.3.0
-    |   |   .signature.p7s
-    |   |   dotnet_library_license.txt
-    |   |   System.Security.Cryptography.Primitives.4.3.0.nupkg
-    |   |   ThirdPartyNotices.txt
-    |   |   
-    |   +---lib
-    |   |   +---MonoAndroid10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---MonoTouch10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---net46
-    |   |   |       System.Security.Cryptography.Primitives.dll
-    |   |   |       
-    |   |   +---netstandard1.3
-    |   |   |       System.Security.Cryptography.Primitives.dll
-    |   |   |       
-    |   |   +---xamarinios10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarinmac20
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarintvos10
-    |   |   |       _._
-    |   |   |       
-    |   |   \---xamarinwatchos10
-    |   |           _._
-    |   |           
-    |   \---ref
-    |       +---MonoAndroid10
-    |       |       _._
-    |       |       
-    |       +---MonoTouch10
-    |       |       _._
-    |       |       
-    |       +---net46
-    |       |       System.Security.Cryptography.Primitives.dll
-    |       |       
-    |       +---netstandard1.3
-    |       |       System.Security.Cryptography.Primitives.dll
-    |       |       
-    |       +---xamarinios10
-    |       |       _._
-    |       |       
-    |       +---xamarinmac20
-    |       |       _._
-    |       |       
-    |       +---xamarintvos10
-    |       |       _._
-    |       |       
-    |       \---xamarinwatchos10
-    |               _._
-    |               
-    +---System.Security.Cryptography.X509Certificates.4.3.2
-    |   |   .signature.p7s
-    |   |   dotnet_library_license.txt
-    |   |   System.Security.Cryptography.X509Certificates.4.3.2.nupkg
-    |   |   ThirdPartyNotices.txt
-    |   |   
-    |   +---lib
-    |   |   +---MonoAndroid10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---MonoTouch10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---net46
-    |   |   |       System.Security.Cryptography.X509Certificates.dll
-    |   |   |       
-    |   |   +---net461
-    |   |   |       System.Security.Cryptography.X509Certificates.dll
-    |   |   |       
-    |   |   +---xamarinios10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarinmac20
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarintvos10
-    |   |   |       _._
-    |   |   |       
-    |   |   \---xamarinwatchos10
-    |   |           _._
-    |   |           
-    |   +---ref
-    |   |   +---MonoAndroid10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---MonoTouch10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---net46
-    |   |   |       System.Security.Cryptography.X509Certificates.dll
-    |   |   |       
-    |   |   +---net461
-    |   |   |       System.Security.Cryptography.X509Certificates.dll
-    |   |   |       
-    |   |   +---netstandard1.3
-    |   |   |       System.Security.Cryptography.X509Certificates.dll
-    |   |   |       
-    |   |   +---netstandard1.4
-    |   |   |       System.Security.Cryptography.X509Certificates.dll
-    |   |   |       
-    |   |   +---xamarinios10
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarinmac20
-    |   |   |       _._
-    |   |   |       
-    |   |   +---xamarintvos10
-    |   |   |       _._
-    |   |   |       
-    |   |   \---xamarinwatchos10
-    |   |           _._
-    |   |           
-    |   \---runtimes
-    |       +---unix
-    |       |   \---lib
-    |       |       \---netstandard1.6
-    |       |               System.Security.Cryptography.X509Certificates.dll
-    |       |               
-    |       \---win
-    |           \---lib
-    |               +---net46
-    |               |       System.Security.Cryptography.X509Certificates.dll
-    |               |       
-    |               +---net461
-    |               |       System.Security.Cryptography.X509Certificates.dll
-    |               |       
-    |               +---netcore50
-    |               |       System.Security.Cryptography.X509Certificates.dll
-    |               |       
-    |               \---netstandard1.6
-    |                       System.Security.Cryptography.X509Certificates.dll
-    |                       
-    \---WebGrease.1.6.0
-        |   .signature.p7s
-        |   WebGrease.1.6.0.nupkg
-        |   
-        +---lib
-        |       WebGrease.dll
-        |       
-        \---tools
-                WG.EXE
-                
+D:\DEV\PERSONAL\MYWEBFORMS\MYWEBFORMS
+ª   About.aspx
+ª   About.aspx.cs
+ª   About.aspx.designer.cs
+ª   Bundle.config
+ª   ChartWidget.ascx
+ª   ChartWidget.ascx.cs
+ª   ChartWidget.ascx.designer.cs
+ª   Contact.aspx
+ª   Contact.aspx.cs
+ª   Contact.aspx.designer.cs
+ª   Default.aspx
+ª   Default.aspx.cs
+ª   Default.aspx.designer.cs
+ª   favicon.ico
+ª   Global.asax
+ª   Global.asax.cs
+ª   HackerNews.aspx
+ª   HackerNews.aspx.cs
+ª   HackerNews.aspx.designer.cs
+ª   HackerNewsEventArgs.cs
+ª   HackerNewsRefresh.ashx
+ª   HackerNewsRefresh.ashx.cs
+ª   HnComment.ascx
+ª   HnComment.ascx.cs
+ª   HnComment.ascx.designer.cs
+ª   HnStoryRow.ascx
+ª   HnStoryRow.ascx.cs
+ª   HnStoryRow.ascx.designer.cs
+ª   HnUserCard.ascx
+ª   HnUserCard.ascx.cs
+ª   HnUserCard.ascx.designer.cs
+ª   libman.json
+ª   LibraryStatusWidget.ascx
+ª   LibraryStatusWidget.ascx.cs
+ª   LibraryStatusWidget.ascx.designer.cs
+ª   MyWebForms.csproj
+ª   MyWebForms.csproj.user
+ª   packages.config
+ª   Site.Master
+ª   Site.Master.cs
+ª   Site.Master.designer.cs
+ª   ViewSwitcher.ascx
+ª   ViewSwitcher.ascx.cs
+ª   ViewSwitcher.ascx.designer.cs
+ª   Web.config
+ª   Web.Debug.config
+ª   Web.Release.config
+ª   
++---App_Data
++---App_Start
+ª       BundleConfig.cs
+ª       RouteConfig.cs
+ª       
++---bin
+ª   ª   Antlr3.Runtime.dll
+ª   ª   Antlr3.Runtime.pdb
+ª   ª   Microsoft.AspNet.FriendlyUrls.dll
+ª   ª   Microsoft.AspNet.FriendlyUrls.xml
+ª   ª   Microsoft.AspNet.Web.Optimization.WebForms.dll
+ª   ª   Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+ª   ª   Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+ª   ª   Microsoft.ScriptManager.MSAjax.dll
+ª   ª   Microsoft.ScriptManager.WebForms.dll
+ª   ª   Microsoft.Web.Infrastructure.dll
+ª   ª   MyWebForms.dll
+ª   ª   MyWebForms.dll.config
+ª   ª   MyWebForms.pdb
+ª   ª   Newtonsoft.Json.dll
+ª   ª   Newtonsoft.Json.xml
+ª   ª   System.IO.dll
+ª   ª   System.Net.Http.dll
+ª   ª   System.Runtime.dll
+ª   ª   System.Security.Cryptography.Algorithms.dll
+ª   ª   System.Security.Cryptography.Encoding.dll
+ª   ª   System.Security.Cryptography.Primitives.dll
+ª   ª   System.Security.Cryptography.X509Certificates.dll
+ª   ª   System.Web.Optimization.dll
+ª   ª   System.Web.Optimization.xml
+ª   ª   WebGrease.dll
+ª   ª   
+ª   +---roslyn
+ª           csc.exe
+ª           csc.exe.config
+ª           csc.rsp
+ª           csi.exe
+ª           csi.exe.config
+ª           csi.rsp
+ª           Microsoft.Build.Tasks.CodeAnalysis.dll
+ª           Microsoft.CodeAnalysis.CSharp.dll
+ª           Microsoft.CodeAnalysis.CSharp.Scripting.dll
+ª           Microsoft.CodeAnalysis.dll
+ª           Microsoft.CodeAnalysis.Scripting.dll
+ª           Microsoft.CodeAnalysis.VisualBasic.dll
+ª           Microsoft.CSharp.Core.targets
+ª           Microsoft.DiaSymReader.Native.amd64.dll
+ª           Microsoft.DiaSymReader.Native.x86.dll
+ª           Microsoft.Managed.Core.CurrentVersions.targets
+ª           Microsoft.Managed.Core.targets
+ª           Microsoft.VisualBasic.Core.targets
+ª           System.Buffers.dll
+ª           System.Collections.Immutable.dll
+ª           System.Memory.dll
+ª           System.Numerics.Vectors.dll
+ª           System.Reflection.Metadata.dll
+ª           System.Runtime.CompilerServices.Unsafe.dll
+ª           System.Text.Encoding.CodePages.dll
+ª           System.Threading.Tasks.Extensions.dll
+ª           vbc.exe
+ª           vbc.exe.config
+ª           vbc.rsp
+ª           VBCSCompiler.exe
+ª           VBCSCompiler.exe.config
+ª           
++---Content
+ª   ª   bootstrap-grid.css
+ª   ª   bootstrap-grid.css.map
+ª   ª   bootstrap-grid.min.css
+ª   ª   bootstrap-grid.min.css.map
+ª   ª   bootstrap-grid.rtl.css
+ª   ª   bootstrap-grid.rtl.css.map
+ª   ª   bootstrap-grid.rtl.min.css
+ª   ª   bootstrap-grid.rtl.min.css.map
+ª   ª   bootstrap-reboot.css
+ª   ª   bootstrap-reboot.css.map
+ª   ª   bootstrap-reboot.min.css
+ª   ª   bootstrap-reboot.min.css.map
+ª   ª   bootstrap-reboot.rtl.css
+ª   ª   bootstrap-reboot.rtl.css.map
+ª   ª   bootstrap-reboot.rtl.min.css
+ª   ª   bootstrap-reboot.rtl.min.css.map
+ª   ª   bootstrap-utilities.css
+ª   ª   bootstrap-utilities.css.map
+ª   ª   bootstrap-utilities.min.css
+ª   ª   bootstrap-utilities.min.css.map
+ª   ª   bootstrap-utilities.rtl.css
+ª   ª   bootstrap-utilities.rtl.css.map
+ª   ª   bootstrap-utilities.rtl.min.css
+ª   ª   bootstrap-utilities.rtl.min.css.map
+ª   ª   bootstrap.css
+ª   ª   bootstrap.css.map
+ª   ª   bootstrap.min.css
+ª   ª   bootstrap.min.css.map
+ª   ª   bootstrap.rtl.css
+ª   ª   bootstrap.rtl.css.map
+ª   ª   bootstrap.rtl.min.css
+ª   ª   bootstrap.rtl.min.css.map
+ª   ª   Site.css
+ª   ª   
+ª   +---animate.css
+ª           animate.min.css
+ª           
++---Models
+ª       HackerNewsItem.cs
+ª       HackerNewsUser.cs
+ª       
++---obj
+ª   +---Debug
+ª   ª   ª   .NETFramework,Version=v4.8.1.AssemblyAttributes.cs
+ª   ª   ª   DesignTimeResolveAssemblyReferences.cache
+ª   ª   ª   DesignTimeResolveAssemblyReferencesInput.cache
+ª   ª   ª   MyWebForms.csproj.AssemblyReference.cache
+ª   ª   ª   MyWebForms.csproj.CoreCompileInputs.cache
+ª   ª   ª   MyWebForms.csproj.FileListAbsolute.txt
+ª   ª   ª   MyWebForms.csproj.Up2Date
+ª   ª   ª   MyWebForms.dll
+ª   ª   ª   MyWebForms.pdb
+ª   ª   ª   
+ª   ª   +---TempPE
+ª   +---Release
+ª       ª   .NETFramework,Version=v4.8.1.AssemblyAttributes.cs
+ª       ª   CSAutoParameterize.parameters.xml
+ª       ª   DesignTimeResolveAssemblyReferences.cache
+ª       ª   DesignTimeResolveAssemblyReferencesInput.cache
+ª       ª   MyWebForms.csproj.AssemblyReference.cache
+ª       ª   MyWebForms.csproj.CoreCompileInputs.cache
+ª       ª   MyWebForms.csproj.FileListAbsolute.txt
+ª       ª   MyWebForms.dll
+ª       ª   MyWebForms.pdb
+ª       ª   _WPPLastBuildInfo.txt
+ª       ª   
+ª       +---CSAutoParameterize
+ª       ª   +---original
+ª       ª   ª       Web.config
+ª       ª   ª       
+ª       ª   +---transformed
+ª       ª           Web.config
+ª       ª           
+ª       +---Package
+ª       ª   ª   MyWebForms.SourceManifest.xml
+ª       ª   ª   
+ª       ª   +---PackageTmp
+ª       ª       ª   About.aspx
+ª       ª       ª   Bundle.config
+ª       ª       ª   ChartWidget.ascx
+ª       ª       ª   Contact.aspx
+ª       ª       ª   Default.aspx
+ª       ª       ª   favicon.ico
+ª       ª       ª   Global.asax
+ª       ª       ª   HackerNews.aspx
+ª       ª       ª   HackerNewsRefresh.ashx
+ª       ª       ª   HnComment.ascx
+ª       ª       ª   HnStoryRow.ascx
+ª       ª       ª   HnUserCard.ascx
+ª       ª       ª   libman.json
+ª       ª       ª   LibraryStatusWidget.ascx
+ª       ª       ª   Site.Master
+ª       ª       ª   ViewSwitcher.ascx
+ª       ª       ª   Web.config
+ª       ª       ª   
+ª       ª       +---bin
+ª       ª       ª   ª   Antlr3.Runtime.dll
+ª       ª       ª   ª   Antlr3.Runtime.pdb
+ª       ª       ª   ª   Microsoft.AspNet.FriendlyUrls.dll
+ª       ª       ª   ª   Microsoft.AspNet.Web.Optimization.WebForms.dll
+ª       ª       ª   ª   Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+ª       ª       ª   ª   Microsoft.ScriptManager.MSAjax.dll
+ª       ª       ª   ª   Microsoft.ScriptManager.WebForms.dll
+ª       ª       ª   ª   Microsoft.Web.Infrastructure.dll
+ª       ª       ª   ª   MyWebForms.dll
+ª       ª       ª   ª   MyWebForms.pdb
+ª       ª       ª   ª   Newtonsoft.Json.dll
+ª       ª       ª   ª   System.Web.Optimization.dll
+ª       ª       ª   ª   WebGrease.dll
+ª       ª       ª   ª   
+ª       ª       ª   +---roslyn
+ª       ª       ª           csc.exe
+ª       ª       ª           csc.exe.config
+ª       ª       ª           csc.rsp
+ª       ª       ª           csi.exe
+ª       ª       ª           csi.exe.config
+ª       ª       ª           csi.rsp
+ª       ª       ª           Microsoft.Build.Tasks.CodeAnalysis.dll
+ª       ª       ª           Microsoft.CodeAnalysis.CSharp.dll
+ª       ª       ª           Microsoft.CodeAnalysis.CSharp.Scripting.dll
+ª       ª       ª           Microsoft.CodeAnalysis.dll
+ª       ª       ª           Microsoft.CodeAnalysis.Scripting.dll
+ª       ª       ª           Microsoft.CodeAnalysis.VisualBasic.dll
+ª       ª       ª           Microsoft.CSharp.Core.targets
+ª       ª       ª           Microsoft.DiaSymReader.Native.amd64.dll
+ª       ª       ª           Microsoft.DiaSymReader.Native.x86.dll
+ª       ª       ª           Microsoft.Managed.Core.CurrentVersions.targets
+ª       ª       ª           Microsoft.Managed.Core.targets
+ª       ª       ª           Microsoft.VisualBasic.Core.targets
+ª       ª       ª           System.Buffers.dll
+ª       ª       ª           System.Collections.Immutable.dll
+ª       ª       ª           System.Memory.dll
+ª       ª       ª           System.Numerics.Vectors.dll
+ª       ª       ª           System.Reflection.Metadata.dll
+ª       ª       ª           System.Runtime.CompilerServices.Unsafe.dll
+ª       ª       ª           System.Text.Encoding.CodePages.dll
+ª       ª       ª           System.Threading.Tasks.Extensions.dll
+ª       ª       ª           vbc.exe
+ª       ª       ª           vbc.exe.config
+ª       ª       ª           vbc.rsp
+ª       ª       ª           VBCSCompiler.exe
+ª       ª       ª           VBCSCompiler.exe.config
+ª       ª       ª           
+ª       ª       +---Content
+ª       ª       ª   ª   bootstrap-grid.css
+ª       ª       ª   ª   bootstrap-grid.css.map
+ª       ª       ª   ª   bootstrap-grid.min.css
+ª       ª       ª   ª   bootstrap-grid.min.css.map
+ª       ª       ª   ª   bootstrap-grid.rtl.css
+ª       ª       ª   ª   bootstrap-grid.rtl.css.map
+ª       ª       ª   ª   bootstrap-grid.rtl.min.css
+ª       ª       ª   ª   bootstrap-grid.rtl.min.css.map
+ª       ª       ª   ª   bootstrap-reboot.css
+ª       ª       ª   ª   bootstrap-reboot.css.map
+ª       ª       ª   ª   bootstrap-reboot.min.css
+ª       ª       ª   ª   bootstrap-reboot.min.css.map
+ª       ª       ª   ª   bootstrap-reboot.rtl.css
+ª       ª       ª   ª   bootstrap-reboot.rtl.css.map
+ª       ª       ª   ª   bootstrap-reboot.rtl.min.css
+ª       ª       ª   ª   bootstrap-reboot.rtl.min.css.map
+ª       ª       ª   ª   bootstrap-utilities.css
+ª       ª       ª   ª   bootstrap-utilities.css.map
+ª       ª       ª   ª   bootstrap-utilities.min.css
+ª       ª       ª   ª   bootstrap-utilities.min.css.map
+ª       ª       ª   ª   bootstrap-utilities.rtl.css
+ª       ª       ª   ª   bootstrap-utilities.rtl.css.map
+ª       ª       ª   ª   bootstrap-utilities.rtl.min.css
+ª       ª       ª   ª   bootstrap-utilities.rtl.min.css.map
+ª       ª       ª   ª   bootstrap.css
+ª       ª       ª   ª   bootstrap.css.map
+ª       ª       ª   ª   bootstrap.min.css
+ª       ª       ª   ª   bootstrap.min.css.map
+ª       ª       ª   ª   bootstrap.rtl.css
+ª       ª       ª   ª   bootstrap.rtl.css.map
+ª       ª       ª   ª   bootstrap.rtl.min.css
+ª       ª       ª   ª   bootstrap.rtl.min.css.map
+ª       ª       ª   ª   Site.css
+ª       ª       ª   ª   
+ª       ª       ª   +---animate.css
+ª       ª       ª           animate.min.css
+ª       ª       ª           
+ª       ª       +---Scripts
+ª       ª           ª   bootstrap.bundle.js
+ª       ª           ª   bootstrap.bundle.js.map
+ª       ª           ª   bootstrap.bundle.min.js
+ª       ª           ª   bootstrap.bundle.min.js.map
+ª       ª           ª   bootstrap.esm.js
+ª       ª           ª   bootstrap.esm.js.map
+ª       ª           ª   bootstrap.esm.min.js
+ª       ª           ª   bootstrap.esm.min.js.map
+ª       ª           ª   bootstrap.js
+ª       ª           ª   bootstrap.js.map
+ª       ª           ª   bootstrap.min.js
+ª       ª           ª   bootstrap.min.js.map
+ª       ª           ª   jquery-3.7.1.js
+ª       ª           ª   jquery-3.7.1.min.js
+ª       ª           ª   jquery-3.7.1.min.map
+ª       ª           ª   jquery-3.7.1.slim.js
+ª       ª           ª   jquery-3.7.1.slim.min.js
+ª       ª           ª   jquery-3.7.1.slim.min.map
+ª       ª           ª   modernizr-2.8.3.js
+ª       ª           ª   
+ª       ª           +---lib
+ª       ª           ª   +---chartjs
+ª       ª           ª           chart.umd.js
+ª       ª           ª           
+ª       ª           +---WebForms
+ª       ª               ª   DetailsView.js
+ª       ª               ª   Focus.js
+ª       ª               ª   GridView.js
+ª       ª               ª   Menu.js
+ª       ª               ª   MenuStandards.js
+ª       ª               ª   SmartNav.js
+ª       ª               ª   TreeView.js
+ª       ª               ª   WebForms.js
+ª       ª               ª   WebParts.js
+ª       ª               ª   WebUIValidation.js
+ª       ª               ª   
+ª       ª               +---MSAjax
+ª       ª                       MicrosoftAjax.js
+ª       ª                       MicrosoftAjaxApplicationServices.js
+ª       ª                       MicrosoftAjaxComponentModel.js
+ª       ª                       MicrosoftAjaxCore.js
+ª       ª                       MicrosoftAjaxGlobalization.js
+ª       ª                       MicrosoftAjaxHistory.js
+ª       ª                       MicrosoftAjaxNetwork.js
+ª       ª                       MicrosoftAjaxSerialization.js
+ª       ª                       MicrosoftAjaxTimer.js
+ª       ª                       MicrosoftAjaxWebForms.js
+ª       ª                       MicrosoftAjaxWebServices.js
+ª       ª                       
+ª       +---ProfileTransformWebConfig
+ª       ª   +---transformed
+ª       +---TempPE
+ª       +---TransformWebConfig
+ª           +---assist
+ª           ª       Web.config
+ª           ª       
+ª           +---original
+ª           ª       Web.config
+ª           ª       
+ª           +---transformed
+ª                   Web.config
+ª                   
++---Properties
+ª   ª   AssemblyInfo.cs
+ª   ª   
+ª   +---PublishProfiles
+ª           site55560-WebDeploy.pubxml
+ª           site55560-WebDeploy.pubxml.user
+ª           
++---Scripts
+ª   ª   bootstrap.bundle.js
+ª   ª   bootstrap.bundle.js.map
+ª   ª   bootstrap.bundle.min.js
+ª   ª   bootstrap.bundle.min.js.map
+ª   ª   bootstrap.esm.js
+ª   ª   bootstrap.esm.js.map
+ª   ª   bootstrap.esm.min.js
+ª   ª   bootstrap.esm.min.js.map
+ª   ª   bootstrap.js
+ª   ª   bootstrap.js.map
+ª   ª   bootstrap.min.js
+ª   ª   bootstrap.min.js.map
+ª   ª   jquery-3.7.1.intellisense.js
+ª   ª   jquery-3.7.1.js
+ª   ª   jquery-3.7.1.min.js
+ª   ª   jquery-3.7.1.min.map
+ª   ª   jquery-3.7.1.slim.js
+ª   ª   jquery-3.7.1.slim.min.js
+ª   ª   jquery-3.7.1.slim.min.map
+ª   ª   modernizr-2.8.3.js
+ª   ª   
+ª   +---lib
+ª   ª   +---chartjs
+ª   ª           chart.umd.js
+ª   ª           
+ª   +---WebForms
+ª       ª   DetailsView.js
+ª       ª   Focus.js
+ª       ª   GridView.js
+ª       ª   Menu.js
+ª       ª   MenuStandards.js
+ª       ª   SmartNav.js
+ª       ª   TreeView.js
+ª       ª   WebForms.js
+ª       ª   WebParts.js
+ª       ª   WebUIValidation.js
+ª       ª   
+ª       +---MSAjax
+ª               MicrosoftAjax.js
+ª               MicrosoftAjaxApplicationServices.js
+ª               MicrosoftAjaxComponentModel.js
+ª               MicrosoftAjaxCore.js
+ª               MicrosoftAjaxGlobalization.js
+ª               MicrosoftAjaxHistory.js
+ª               MicrosoftAjaxNetwork.js
+ª               MicrosoftAjaxSerialization.js
+ª               MicrosoftAjaxTimer.js
+ª               MicrosoftAjaxWebForms.js
+ª               MicrosoftAjaxWebServices.js
+ª               
++---Services
+        HackerNewsService.cs
+        
 
-
-FILE CONTENTS:
-==============
-
-================================================================================
-FILE: D:\DEV\personal\MyWebForms\.gitattributes
-SIZE: 2.52 KB
-MODIFIED: 02/17/2026 12:41:17
-================================================================================
-
-###############################################################################
-# Set default behavior to automatically normalize line endings.
-###############################################################################
-* text=auto
-
-###############################################################################
-# Set default behavior for command prompt diff.
-#
-# This is need for earlier builds of msysgit that does not have it on by
-# default for csharp files.
-# Note: This is only used by command line
-###############################################################################
-#*.cs     diff=csharp
-
-###############################################################################
-# Set the merge driver for project and solution files
-#
-# Merging from the command prompt will add diff markers to the files if there
-# are conflicts (Merging from VS is not affected by the settings below, in VS
-# the diff markers are never inserted). Diff markers may cause the following 
-# file extensions to fail to load in VS. An alternative would be to treat
-# these files as binary and thus will always conflict and require user
-# intervention with every merge. To do so, just uncomment the entries below
-###############################################################################
-#*.sln       merge=binary
-#*.csproj    merge=binary
-#*.vbproj    merge=binary
-#*.vcxproj   merge=binary
-#*.vcproj    merge=binary
-#*.dbproj    merge=binary
-#*.fsproj    merge=binary
-#*.lsproj    merge=binary
-#*.wixproj   merge=binary
-#*.modelproj merge=binary
-#*.sqlproj   merge=binary
-#*.wwaproj   merge=binary
-
-###############################################################################
-# behavior for image files
-#
-# image files are treated as binary by default.
-###############################################################################
-#*.jpg   binary
-#*.png   binary
-#*.gif   binary
-
-###############################################################################
-# diff behavior for common document formats
-# 
-# Convert binary document formats to text before diffing them. This feature
-# is only available from the command line. Turn it on by uncommenting the 
-# entries below.
-###############################################################################
-#*.doc   diff=astextplain
-#*.DOC   diff=astextplain
-#*.docx  diff=astextplain
-#*.DOCX  diff=astextplain
-#*.dot   diff=astextplain
-#*.DOT   diff=astextplain
-#*.pdf   diff=astextplain
-#*.PDF   diff=astextplain
-#*.rtf   diff=astextplain
-#*.RTF   diff=astextplain
-
-
-
-================================================================================
-FILE: D:\DEV\personal\MyWebForms\.gitignore
-SIZE: 6.43 KB
-MODIFIED: 02/17/2026 12:41:17
-================================================================================
-
-## Ignore Visual Studio temporary files, build results, and
-## files generated by popular Visual Studio add-ons.
-##
-## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
-
-# User-specific files
-*.rsuser
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
-
-# User-specific files (MonoDevelop/Xamarin Studio)
-*.userprefs
-
-# Mono auto generated files
-mono_crash.*
-
-# Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-[Ww][Ii][Nn]32/
-[Aa][Rr][Mm]/
-[Aa][Rr][Mm]64/
-bld/
-[Bb]in/
-[Oo]bj/
-[Oo]ut/
-[Ll]og/
-[Ll]ogs/
-
-# Visual Studio 2015/2017 cache/options directory
-.vs/
-# Uncomment if you have tasks that create the project's static files in wwwroot
-#wwwroot/
-
-# Visual Studio 2017 auto generated files
-Generated\ Files/
-
-# MSTest test Results
-[Tt]est[Rr]esult*/
-[Bb]uild[Ll]og.*
-
-# NUnit
-*.VisualState.xml
-TestResult.xml
-nunit-*.xml
-
-# Build Results of an ATL Project
-[Dd]ebugPS/
-[Rr]eleasePS/
-dlldata.c
-
-# Benchmark Results
-BenchmarkDotNet.Artifacts/
-
-# .NET Core
-project.lock.json
-project.fragment.lock.json
-artifacts/
-
-# ASP.NET Scaffolding
-ScaffoldingReadMe.txt
-
-# StyleCop
-StyleCopReport.xml
-
-# Files built by Visual Studio
-*_i.c
-*_p.c
-*_h.h
-*.ilk
-*.meta
-*.obj
-*.iobj
-*.pch
-*.pdb
-*.ipdb
-*.pgc
-*.pgd
-*.rsp
-*.sbr
-*.tlb
-*.tli
-*.tlh
-*.tmp
-*.tmp_proj
-*_wpftmp.csproj
-*.log
-*.vspscc
-*.vssscc
-.builds
-*.pidb
-*.svclog
-*.scc
-
-# Chutzpah Test files
-_Chutzpah*
-
-# Visual C++ cache files
-ipch/
-*.aps
-*.ncb
-*.opendb
-*.opensdf
-*.sdf
-*.cachefile
-*.VC.db
-*.VC.VC.opendb
-
-# Visual Studio profiler
-*.psess
-*.vsp
-*.vspx
-*.sap
-
-# Visual Studio Trace Files
-*.e2e
-
-# TFS 2012 Local Workspace
-$tf/
-
-# Guidance Automation Toolkit
-*.gpState
-
-# ReSharper is a .NET coding add-in
-_ReSharper*/
-*.[Rr]e[Ss]harper
-*.DotSettings.user
-
-# TeamCity is a build add-in
-_TeamCity*
-
-# DotCover is a Code Coverage Tool
-*.dotCover
-
-# AxoCover is a Code Coverage Tool
-.axoCover/*
-!.axoCover/settings.json
-
-# Coverlet is a free, cross platform Code Coverage Tool
-coverage*.json
-coverage*.xml
-coverage*.info
-
-# Visual Studio code coverage results
-*.coverage
-*.coveragexml
-
-# NCrunch
-_NCrunch_*
-.*crunch*.local.xml
-nCrunchTemp_*
-
-# MightyMoose
-*.mm.*
-AutoTest.Net/
-
-# Web workbench (sass)
-.sass-cache/
-
-# Installshield output folder
-[Ee]xpress/
-
-# DocProject is a documentation generator add-in
-DocProject/buildhelp/
-DocProject/Help/*.HxT
-DocProject/Help/*.HxC
-DocProject/Help/*.hhc
-DocProject/Help/*.hhk
-DocProject/Help/*.hhp
-DocProject/Help/Html2
-DocProject/Help/html
-
-# Click-Once directory
-publish/
-
-# Publish Web Output
-*.[Pp]ublish.xml
-*.azurePubxml
-# Note: Comment the next line if you want to checkin your web deploy settings,
-# but database connection strings (with potential passwords) will be unencrypted
-*.pubxml
-*.publishproj
-
-# Microsoft Azure Web App publish settings. Comment the next line if you want to
-# checkin your Azure Web App publish settings, but sensitive information contained
-# in these scripts will be unencrypted
-PublishScripts/
-
-# NuGet Packages
-*.nupkg
-# NuGet Symbol Packages
-*.snupkg
-# The packages folder can be ignored because of Package Restore
-**/[Pp]ackages/*
-# except build/, which is used as an MSBuild target.
-!**/[Pp]ackages/build/
-# Uncomment if necessary however generally it will be regenerated when needed
-#!**/[Pp]ackages/repositories.config
-# NuGet v3's project.json files produces more ignorable files
-*.nuget.props
-*.nuget.targets
-
-# Microsoft Azure Build Output
-csx/
-*.build.csdef
-
-# Microsoft Azure Emulator
-ecf/
-rcf/
-
-# Windows Store app package directories and files
-AppPackages/
-BundleArtifacts/
-Package.StoreAssociation.xml
-_pkginfo.txt
-*.appx
-*.appxbundle
-*.appxupload
-
-# Visual Studio cache files
-# files ending in .cache can be ignored
-*.[Cc]ache
-# but keep track of directories ending in .cache
-!?*.[Cc]ache/
-
-# Others
-ClientBin/
-~$*
-*~
-*.dbmdl
-*.dbproj.schemaview
-*.jfm
-*.pfx
-*.publishsettings
-orleans.codegen.cs
-
-# Including strong name files can present a security risk
-# (https://github.com/github/gitignore/pull/2483#issue-259490424)
-#*.snk
-
-# Since there are multiple workflows, uncomment next line to ignore bower_components
-# (https://github.com/github/gitignore/pull/1529#issuecomment-104372622)
-#bower_components/
-
-# RIA/Silverlight projects
-Generated_Code/
-
-# Backup & report files from converting an old project file
-# to a newer Visual Studio version. Backup files are not needed,
-# because we have git ;-)
-_UpgradeReport_Files/
-Backup*/
-UpgradeLog*.XML
-UpgradeLog*.htm
-ServiceFabricBackup/
-*.rptproj.bak
-
-# SQL Server files
-*.mdf
-*.ldf
-*.ndf
-
-# Business Intelligence projects
-*.rdl.data
-*.bim.layout
-*.bim_*.settings
-*.rptproj.rsuser
-*- [Bb]ackup.rdl
-*- [Bb]ackup ([0-9]).rdl
-*- [Bb]ackup ([0-9][0-9]).rdl
-
-# Microsoft Fakes
-FakesAssemblies/
-
-# GhostDoc plugin setting file
-*.GhostDoc.xml
-
-# Node.js Tools for Visual Studio
-.ntvs_analysis.dat
-node_modules/
-
-# Visual Studio 6 build log
-*.plg
-
-# Visual Studio 6 workspace options file
-*.opt
-
-# Visual Studio 6 auto-generated workspace file (contains which files were open etc.)
-*.vbw
-
-# Visual Studio LightSwitch build output
-**/*.HTMLClient/GeneratedArtifacts
-**/*.DesktopClient/GeneratedArtifacts
-**/*.DesktopClient/ModelManifest.xml
-**/*.Server/GeneratedArtifacts
-**/*.Server/ModelManifest.xml
-_Pvt_Extensions
-
-# Paket dependency manager
-.paket/paket.exe
-paket-files/
-
-# FAKE - F# Make
-.fake/
-
-# CodeRush personal settings
-.cr/personal
-
-# Python Tools for Visual Studio (PTVS)
-__pycache__/
-*.pyc
-
-# Cake - Uncomment if you are using it
-# tools/**
-# !tools/packages.config
-
-# Tabs Studio
-*.tss
-
-# Telerik's JustMock configuration file
-*.jmconfig
-
-# BizTalk build output
-*.btp.cs
-*.btm.cs
-*.odx.cs
-*.xsd.cs
-
-# OpenCover UI analysis results
-OpenCover/
-
-# Azure Stream Analytics local run output
-ASALocalRun/
-
-# MSBuild Binary and Structured Log
-*.binlog
-
-# NVidia Nsight GPU debugger configuration file
-*.nvuser
-
-# MFractors (Xamarin productivity tool) working folder
-.mfractor/
-
-# Local History for Visual Studio
-.localhistory/
-
-# BeatPulse healthcheck temp database
-healthchecksdb
-
-# Backup folder for Package Reference Convert tool in Visual Studio 2017
-MigrationBackup/
-
-# Ionide (cross platform F# VS Code tools) working folder
-.ionide/
-
-# Fody - auto-generated XML schema
-FodyWeavers.xsd
 
 
 ================================================================================
@@ -2319,7 +506,7 @@ MODIFIED: 02/17/2026 13:43:43
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\About.aspx.cs
-SIZE: 0.75 KB
+SIZE: 769 B
 MODIFIED: 02/17/2026 13:43:54
 ================================================================================
 
@@ -2343,41 +530,6 @@ namespace MyWebForms
             // IsPostBack checks belong in Page_Load when the page itself needs
             // to distinguish first load from postback.
         }
-    }
-}
-
-
-
-================================================================================
-FILE: D:\DEV\personal\MyWebForms\MyWebForms\About.aspx.designer.cs
-SIZE: 0.75 KB
-MODIFIED: 02/17/2026 13:43:43
-================================================================================
-
-//------------------------------------------------------------------------------
-// <auto-generated>
-//     This code was generated by a tool.
-//
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated. 
-// </auto-generated>
-//------------------------------------------------------------------------------
-
-namespace MyWebForms
-{
-
-
-    public partial class About
-    {
-
-        /// <summary>
-        /// libraryChart control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::MyWebForms.ChartWidget libraryChart;
     }
 }
 
@@ -2535,7 +687,7 @@ namespace MyWebForms
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\Bundle.config
-SIZE: 0.22 KB
+SIZE: 226 B
 MODIFIED: 02/17/2026 12:40:44
 ================================================================================
 
@@ -2787,115 +939,8 @@ namespace MyWebForms
 
 
 ================================================================================
-FILE: D:\DEV\personal\MyWebForms\MyWebForms\ChartWidget.ascx.designer.cs
-SIZE: 3.31 KB
-MODIFIED: 02/17/2026 13:45:19
-================================================================================
-
-//------------------------------------------------------------------------------
-// <auto-generated>
-//     This code was generated by a tool.
-//
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated. 
-// </auto-generated>
-//------------------------------------------------------------------------------
-
-namespace MyWebForms
-{
-
-
-    public partial class ChartWidget
-    {
-
-        /// <summary>
-        /// litTitle control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litTitle;
-
-        /// <summary>
-        /// chartCanvas control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl chartCanvas;
-
-        /// <summary>
-        /// hfLabels control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hfLabels;
-
-        /// <summary>
-        /// hfValues control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hfValues;
-
-        /// <summary>
-        /// hfColors control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hfColors;
-
-        /// <summary>
-        /// hfChartType control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hfChartType;
-
-        /// <summary>
-        /// lblDescription control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDescription;
-
-        /// <summary>
-        /// lblLastUpdated control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblLastUpdated;
-
-        /// <summary>
-        /// btnRefresh control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnRefresh;
-    }
-}
-
-
-
-================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\Contact.aspx
-SIZE: 0.81 KB
+SIZE: 830 B
 MODIFIED: 02/17/2026 12:40:44
 ================================================================================
 
@@ -2923,7 +968,7 @@ MODIFIED: 02/17/2026 12:40:44
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\Contact.aspx.cs
-SIZE: 0.31 KB
+SIZE: 317 B
 MODIFIED: 02/17/2026 12:40:44
 ================================================================================
 
@@ -2947,34 +992,8 @@ namespace MyWebForms
 
 
 ================================================================================
-FILE: D:\DEV\personal\MyWebForms\MyWebForms\Contact.aspx.designer.cs
-SIZE: 0.44 KB
-MODIFIED: 02/17/2026 12:40:44
-================================================================================
-
-//------------------------------------------------------------------------------
-// <auto-generated>
-//     This code was generated by a tool.
-//
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated.
-// </auto-generated>
-//------------------------------------------------------------------------------
-
-namespace MyWebForms
-{
-
-
-    public partial class Contact
-    {
-    }
-}
-
-
-
-================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\Content\Site.css
-SIZE: 2.8 KB
+SIZE: 2.80 KB
 MODIFIED: 02/17/2026 15:34:20
 ================================================================================
 
@@ -3385,124 +1404,18 @@ namespace MyWebForms
 
 
 ================================================================================
-FILE: D:\DEV\personal\MyWebForms\MyWebForms\Default.aspx.designer.cs
-SIZE: 3.61 KB
-MODIFIED: 02/17/2026 15:46:40
+FILE: D:\DEV\personal\MyWebForms\MyWebForms\Global.asax
+SIZE: 94 B
+MODIFIED: 02/17/2026 12:40:44
 ================================================================================
 
-//------------------------------------------------------------------------------
-// <auto-generated>
-//     This code was generated by a tool.
-//
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated. 
-// </auto-generated>
-//------------------------------------------------------------------------------
-
-namespace MyWebForms
-{
-
-
-    public partial class _Default
-    {
-
-        /// <summary>
-        /// lblTimestamp control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTimestamp;
-
-        /// <summary>
-        /// lblIsPostBack control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblIsPostBack;
-
-        /// <summary>
-        /// lblIsAsync control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblIsAsync;
-
-        /// <summary>
-        /// upAsync control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.UpdatePanel upAsync;
-
-        /// <summary>
-        /// lblClickCount control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblClickCount;
-
-        /// <summary>
-        /// progressBar control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl progressBar;
-
-        /// <summary>
-        /// btnAsyncClick control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAsyncClick;
-
-        /// <summary>
-        /// upProgress control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.UpdateProgress upProgress;
-
-        /// <summary>
-        /// btnFullPostback control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnFullPostback;
-
-        /// <summary>
-        /// btnReset control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnReset;
-    }
-}
+<%@ Application Codebehind="Global.asax.cs" Inherits="MyWebForms.Global" Language="C#" %>
 
 
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\Global.asax.cs
-SIZE: 0.54 KB
+SIZE: 556 B
 MODIFIED: 02/17/2026 12:40:44
 ================================================================================
 
@@ -3694,8 +1607,8 @@ MODIFIED: 02/17/2026 14:24:15
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\HackerNews.aspx.cs
-SIZE: 24.32 KB
-MODIFIED: 02/17/2026 16:14:01
+SIZE: 26.77 KB
+MODIFIED: 02/17/2026 17:37:45
 ================================================================================
 
 using System;
@@ -3720,6 +1633,7 @@ namespace MyWebForms
     ///                        controls from ViewState-cached IDs so that ASP.NET
     ///                        can route LinkButton click events (which happen
     ///                        between Load and PreRender).
+    ///                        ALSO re-creates comment stubs for the same reason.
     ///                        Queues the async data load via RegisterAsyncTask.
     /// 2. [Event handlers]  — btnTab_Click, lnkComments, lnkAuthor etc. update
     ///                        ViewState before PreRenderComplete runs.
@@ -3733,31 +1647,26 @@ namespace MyWebForms
     /// if they exist in the control tree BEFORE the event-dispatch phase (which
     /// runs between Page_Load and Page_PreRender).
     ///
-    /// Solution: cache the current page's story IDs in ViewState ("ShownIds").
+    /// Story rows: cache the current page's story IDs in ViewState ("ShownIds").
     /// On every postback, RecreateStoryRowsForEventRouting() runs in Page_Load,
     /// adding invisible stub HnStoryRow controls with the same stable IDs
     /// (row_{storyId}).  These stubs carry the event-handler wiring, so
     /// lnkComments_Click and lnkAuthor_Click route correctly.
-    /// PreRenderComplete then replaces them with fully-populated controls.
+    ///
+    /// Comments: the same problem applies to HnComment controls inside the
+    /// detail panel.  If the user clicks an author link in the comment list,
+    /// the postback targets an HnComment control — but those controls are only
+    /// added in PreRenderComplete (too late).  Fix: cache a flat list of
+    /// (CommentId, AuthorName, ParentId) in ViewState ("ShownComments") and
+    /// recreate minimal stub HnComment controls in Page_Load on every postback
+    /// when a story is selected.  The stubs have Item set just enough for the
+    /// click handler to read Item.By; they are Visible=false so they don't render.
     ///
     /// Background refresh
     /// ------------------
     /// A JS IIFE polls HackerNewsRefresh.ashx on a timer and:
     ///   - Updates score spans in the DOM via data-hn-score-num (no postback).
     ///   - Triggers __doPostBack only when listChanged == true.
-    ///
-    /// Timer restart fix
-    /// -----------------
-    /// The previous code used  arguments.callee.caller  inside a setTimeout
-    /// callback — unreliable and broken in strict mode.
-    /// Fix: a named  tick()  function referenced directly by setInterval.
-    ///
-    /// Score update fix
-    /// ----------------
-    /// The previous code set  spanScore.textContent  which erased the ▲ triangle
-    /// (plain HTML text in the outer span).
-    /// Fix: a dedicated inner span carries  data-hn-score-num  and the JS only
-    /// updates that inner span's textContent.
     /// </summary>
     public partial class HackerNews : Page
     {
@@ -3822,6 +1731,32 @@ namespace MyWebForms
             set { ViewState["ShownIds"] = value; }
         }
 
+        /// <summary>
+        /// Minimal comment data needed to recreate event-routing stub controls.
+        /// Each entry is [commentId, authorName, parentId].
+        /// Stored as a List of int-arrays so it survives ViewState serialisation
+        /// without needing a custom serialisable type.
+        /// Format: [ [id, parentId], ... ] — authorName stored separately in
+        /// ShownCommentAuthors because ViewState only reliably round-trips
+        /// primitives and simple arrays.
+        /// </summary>
+        private List<int[]> ShownCommentMeta
+        {
+            get { return ViewState["ShownCommentMeta"] as List<int[]> ?? new List<int[]>(); }
+            set { ViewState["ShownCommentMeta"] = value; }
+        }
+
+        /// <summary>
+        /// Author names parallel to ShownCommentMeta (same index).
+        /// Stored separately because ViewState doesn't reliably round-trip
+        /// mixed-type arrays.
+        /// </summary>
+        private List<string> ShownCommentAuthors
+        {
+            get { return ViewState["ShownCommentAuthors"] as List<string> ?? new List<string>(); }
+            set { ViewState["ShownCommentAuthors"] = value; }
+        }
+
         // ── Page lifecycle ───────────────────────────────────────────────────
 
         protected void Page_Load(object sender, EventArgs e)
@@ -3836,6 +1771,15 @@ namespace MyWebForms
                 // Recreate story-row stubs so ASP.NET can route click events
                 // before the async data tasks have completed.
                 RecreateStoryRowsForEventRouting();
+
+                // Recreate comment stubs for the same reason.
+                // Without this, clicking an author link inside the comment list
+                // causes a runtime error because the HnComment control does not
+                // yet exist in the control tree when the event-dispatch phase runs.
+                if (SelectedItemId > 0)
+                {
+                    RecreateCommentStubsForEventRouting();
+                }
             }
 
             hfActiveTab.Value = ActiveTab;
@@ -3863,6 +1807,41 @@ namespace MyWebForms
                 row.StorySelected += OnStorySelected;
                 row.AuthorSelected += OnAuthorSelected;
                 phStories.Controls.Add(row);
+            }
+        }
+
+        /// <summary>
+        /// Adds invisible HnComment stubs to phComments using data cached in
+        /// ShownCommentMeta / ShownCommentAuthors.  Each stub has a minimal
+        /// HackerNewsItem set so lnkAuthor_Click can read Item.By.
+        /// The IDs must exactly match those assigned in RenderCommentTree so
+        /// ASP.NET's event-routing finds the correct control.
+        /// </summary>
+        private void RecreateCommentStubsForEventRouting()
+        {
+            phComments.Controls.Clear();
+            var meta = ShownCommentMeta;
+            var authors = ShownCommentAuthors;
+
+            for (int i = 0; i < meta.Count; i++)
+            {
+                int commentId = meta[i][0];
+                int parentId = meta[i][1];
+                string by = i < authors.Count ? authors[i] : string.Empty;
+
+                var stub = (HnComment)LoadControl("~/HnComment.ascx");
+                stub.ID = "cmt_" + commentId;   // must match RenderCommentTree
+                stub.Item = new HackerNewsItem     // minimal — just enough for the event handler
+                {
+                    Id = commentId,
+                    By = by,
+                    Parent = parentId
+                };
+                stub.Depth = 0;           // depth doesn't matter for invisible stubs
+                stub.AuthorSelected += OnAuthorSelected;
+                // Keep it invisible so it doesn't render duplicate HTML.
+                stub.Visible = false;
+                phComments.Controls.Add(stub);
             }
         }
 
@@ -3951,78 +1930,51 @@ namespace MyWebForms
 
             var shownIdsJoined = string.Join(",", shownIds.ToArray());
 
-            // ── JavaScript ────────────────────────────────────────────────────
-            // Fix 1 – Timer restart:
-            //   Old code used  arguments.callee.caller  inside a setTimeout
-            //   callback.  arguments.callee refers to the anonymous setTimeout
-            //   callback, not the setInterval tick — so .caller is null/wrong.
-            //   Fix: name the tick function and reference it by name in both
-            //   setInterval calls.
-            //
-            // Fix 2 – Score update:
-            //   Old code: els[i].textContent = score + ' pts'  where els was
-            //   querySelectorAll('[data-hn-score-id="N"]') — the outer badge
-            //   span.  Setting textContent on the outer span deletes the ▲
-            //   triangle (which is a text node, not a child element).
-            //   Fix: the JS now targets  data-hn-score-num  on a dedicated inner
-            //   span that wraps only the "NNN pts" text.  The ▲ stays untouched.
-
             var sb = new StringBuilder();
             sb.AppendLine("(function () {");
-            sb.AppendLine("    'use strict';");
             sb.AppendLine("    var remaining = " + seconds + ";");
             sb.AppendLine("    var timer;");
-            sb.AppendLine("    var lbl = document.getElementById('" + countdownClientId + "');");
-            sb.AppendLine("    var handlerUrl = '" + handlerUrl + "';");
-            sb.AppendLine("    var tab = '" + activeTab + "';");
-            sb.AppendLine("    var postbackTarget = '" + currentTabBtnUniqueId + "';");
-            sb.AppendLine("    var shownIds = '" + shownIdsJoined + "';");
+            sb.AppendLine("    var countdownEl = document.getElementById('" + countdownClientId + "');");
             sb.AppendLine("");
             sb.AppendLine("    function updateCountdown() {");
-            sb.AppendLine("        if (lbl) { lbl.textContent = 'next check in ' + remaining + 's'; }");
+            sb.AppendLine("        if (countdownEl) {");
+            sb.AppendLine("            countdownEl.style.display = '';");
+            sb.AppendLine("            countdownEl.textContent = 'Refreshing in ' + remaining + 's';");
+            sb.AppendLine("        }");
             sb.AppendLine("    }");
             sb.AppendLine("");
             sb.AppendLine("    function poll() {");
-            sb.AppendLine("        if (lbl) { lbl.textContent = 'checking\u2026'; }");
-            sb.AppendLine("        var url = handlerUrl + '?tab=' + tab + '&ids=' + shownIds;");
             sb.AppendLine("        var xhr = new XMLHttpRequest();");
-            sb.AppendLine("        xhr.open('GET', url, true);");
+            sb.AppendLine("        xhr.open('GET', '" + handlerUrl + "?tab=" + activeTab + "&ids=" + shownIdsJoined + "', true);");
             sb.AppendLine("        xhr.onreadystatechange = function () {");
             sb.AppendLine("            if (xhr.readyState !== 4) return;");
             sb.AppendLine("            if (xhr.status === 200) {");
             sb.AppendLine("                try {");
-            sb.AppendLine("                    var data = JSON.parse(xhr.responseText);");
-            sb.AppendLine("                    if (data.scores) {");
-            sb.AppendLine("                        // Target the inner score-num span only — preserves the ▲ triangle.");
-            sb.AppendLine("                        Object.keys(data.scores).forEach(function (id) {");
-            sb.AppendLine("                            var els = document.querySelectorAll('[data-hn-score-num=\"' + id + '\"]');");
-            sb.AppendLine("                            for (var i = 0; i < els.length; i++) {");
-            sb.AppendLine("                                els[i].textContent = data.scores[id] + ' pts';");
-            sb.AppendLine("                            }");
-            sb.AppendLine("                        });");
+            sb.AppendLine("                    var result = JSON.parse(xhr.responseText);");
+            sb.AppendLine("                    if (result.listChanged) {");
+            sb.AppendLine("                        __doPostBack('" + currentTabBtnUniqueId + "', '');");
+            sb.AppendLine("                        return;");
             sb.AppendLine("                    }");
-            sb.AppendLine("                    if (data.listChanged) {");
-            sb.AppendLine("                        if (lbl) { lbl.textContent = 'new stories \u2014 reloading\u2026'; }");
-            sb.AppendLine("                        __doPostBack(postbackTarget, '');");
-            sb.AppendLine("                        return;  // Don't restart timer — page is reloading.");
+            sb.AppendLine("                    if (result.scores) {");
+            sb.AppendLine("                        for (var id in result.scores) {");
+            sb.AppendLine("                            var span = document.querySelector('[data-hn-score-num=\"' + id + '\"]');");
+            sb.AppendLine("                            if (span) span.textContent = result.scores[id] + ' pts';");
+            sb.AppendLine("                        }");
             sb.AppendLine("                    }");
-            sb.AppendLine("                } catch (ex) { /* ignore parse errors */ }");
+            sb.AppendLine("                } catch (ex) { }");
             sb.AppendLine("            }");
-            sb.AppendLine("            // XHR done — reset countdown and restart the interval.");
             sb.AppendLine("            remaining = " + seconds + ";");
             sb.AppendLine("            updateCountdown();");
-            sb.AppendLine("            timer = setInterval(tick, 1000);  // Named reference — no arguments.callee needed.");
+            sb.AppendLine("            timer = setInterval(tick, 1000);");
             sb.AppendLine("        };");
             sb.AppendLine("        xhr.send();");
             sb.AppendLine("    }");
             sb.AppendLine("");
-            sb.AppendLine("    // Named tick function so poll() can reference it by name when restarting.");
             sb.AppendLine("    function tick() {");
             sb.AppendLine("        remaining--;");
             sb.AppendLine("        if (remaining <= 0) {");
             sb.AppendLine("            clearInterval(timer);");
             sb.AppendLine("            poll();");
-            sb.AppendLine("            // poll()'s onreadystatechange callback restarts the interval.");
             sb.AppendLine("        } else {");
             sb.AppendLine("            updateCountdown();");
             sb.AppendLine("        }");
@@ -4069,6 +2021,9 @@ namespace MyWebForms
         protected void btnCloseDetail_Click(object sender, EventArgs e)
         {
             SelectedItemId = 0;
+            // Clear comment stubs too so stale data doesn't linger in ViewState.
+            ShownCommentMeta = new List<int[]>();
+            ShownCommentAuthors = new List<string>();
         }
 
         protected void btnCloseUser_Click(object sender, EventArgs e)
@@ -4084,7 +2039,8 @@ namespace MyWebForms
 
             if (_storyPage == null || _storyPage.Count == 0)
             {
-                litMessage.Text = "No stories found. The API may be temporarily unavailable.";
+                litMessage.Text = "No stories found. " +
+                    "The API may be temporarily unavailable.";
                 pnlMessage.Visible = true;
                 ShownIds = new List<int>();
                 return;
@@ -4171,27 +2127,54 @@ namespace MyWebForms
                 noComments.Attributes["class"] = "text-muted small";
                 noComments.InnerText = "No comments yet.";
                 phComments.Controls.Add(noComments);
+
+                // No comments to stub — clear cached comment meta.
+                ShownCommentMeta = new List<int[]>();
+                ShownCommentAuthors = new List<string>();
             }
             else
             {
-                RenderCommentTree(_comments, _selectedStory.Id, 0);
+                // Reset the comment-stub caches before rebuilding.
+                var newMeta = new List<int[]>();
+                var newAuthors = new List<string>();
+
+                RenderCommentTree(_comments, _selectedStory.Id, 0, newMeta, newAuthors);
+
+                // Persist so the next postback can recreate stubs.
+                ShownCommentMeta = newMeta;
+                ShownCommentAuthors = newAuthors;
             }
         }
 
-        private void RenderCommentTree(List<HackerNewsItem> comments, int parentId, int depth)
+        /// <summary>
+        /// Recursively renders the comment tree into phComments and simultaneously
+        /// populates the stub-cache lists (newMeta / newAuthors) so that the next
+        /// postback can recreate invisible routing stubs without re-fetching data.
+        /// </summary>
+        private void RenderCommentTree(
+            List<HackerNewsItem> comments,
+            int parentId,
+            int depth,
+            List<int[]> newMeta,
+            List<string> newAuthors)
         {
             foreach (var comment in comments)
             {
                 if (comment.Parent != parentId) continue;
 
                 var ctrl = (HnComment)LoadControl("~/HnComment.ascx");
+                ctrl.ID = "cmt_" + comment.Id;  // must match RecreateCommentStubsForEventRouting
                 ctrl.Item = comment;
                 ctrl.Depth = depth;
                 ctrl.AuthorSelected += OnAuthorSelected;
                 phComments.Controls.Add(ctrl);
 
+                // Cache the minimal data needed to recreate this stub on postback.
+                newMeta.Add(new int[] { comment.Id, comment.Parent });
+                newAuthors.Add(comment.By ?? string.Empty);
+
                 if (depth < MaxCommentDepth)
-                    RenderCommentTree(comments, comment.Id, depth + 1);
+                    RenderCommentTree(comments, comment.Id, depth + 1, newMeta, newAuthors);
             }
         }
 
@@ -4273,128 +2256,8 @@ namespace MyWebForms
 
 
 ================================================================================
-FILE: D:\DEV\personal\MyWebForms\MyWebForms\HackerNews.aspx.designer.cs
-SIZE: 4.65 KB
-MODIFIED: 02/17/2026 14:44:31
-================================================================================
-
-//------------------------------------------------------------------------------
-// <auto-generated>
-//     This code was generated by a tool.
-//
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated.
-// </auto-generated>
-//------------------------------------------------------------------------------
-
-namespace MyWebForms
-{
-    public partial class HackerNews
-    {
-        /// <summary>hfActiveTab control.</summary>
-        protected global::System.Web.UI.WebControls.HiddenField hfActiveTab;
-
-        /// <summary>lblLiveBadge control.</summary>
-        protected global::System.Web.UI.WebControls.Label lblLiveBadge;
-
-        /// <summary>lblRefreshCountdown control.</summary>
-        protected global::System.Web.UI.WebControls.Label lblRefreshCountdown;
-
-        /// <summary>btnTabTop control.</summary>
-        protected global::System.Web.UI.WebControls.LinkButton btnTabTop;
-
-        /// <summary>btnTabNew control.</summary>
-        protected global::System.Web.UI.WebControls.LinkButton btnTabNew;
-
-        /// <summary>btnTabBest control.</summary>
-        protected global::System.Web.UI.WebControls.LinkButton btnTabBest;
-
-        /// <summary>btnTabAsk control.</summary>
-        protected global::System.Web.UI.WebControls.LinkButton btnTabAsk;
-
-        /// <summary>btnTabShow control.</summary>
-        protected global::System.Web.UI.WebControls.LinkButton btnTabShow;
-
-        /// <summary>btnTabJobs control.</summary>
-        protected global::System.Web.UI.WebControls.LinkButton btnTabJobs;
-
-        /// <summary>pnlMessage control.</summary>
-        protected global::System.Web.UI.WebControls.Panel pnlMessage;
-
-        /// <summary>litMessage control.</summary>
-        protected global::System.Web.UI.WebControls.Literal litMessage;
-
-        /// <summary>phStories control.</summary>
-        protected global::System.Web.UI.WebControls.PlaceHolder phStories;
-
-        /// <summary>pnlPager control.</summary>
-        protected global::System.Web.UI.WebControls.Panel pnlPager;
-
-        /// <summary>btnPrev control.</summary>
-        protected global::System.Web.UI.WebControls.LinkButton btnPrev;
-
-        /// <summary>litPage control.</summary>
-        protected global::System.Web.UI.WebControls.Literal litPage;
-
-        /// <summary>litPageCount control.</summary>
-        protected global::System.Web.UI.WebControls.Literal litPageCount;
-
-        /// <summary>btnNext control.</summary>
-        protected global::System.Web.UI.WebControls.LinkButton btnNext;
-
-        // ── Story detail panel ────────────────────────────────────────────────
-
-        /// <summary>pnlStoryDetail control.</summary>
-        protected global::System.Web.UI.WebControls.Panel pnlStoryDetail;
-
-        /// <summary>btnCloseDetail control.</summary>
-        protected global::System.Web.UI.WebControls.LinkButton btnCloseDetail;
-
-        /// <summary>litDetailTitle control.</summary>
-        protected global::System.Web.UI.WebControls.Literal litDetailTitle;
-
-        /// <summary>litDetailMeta control.</summary>
-        protected global::System.Web.UI.WebControls.Literal litDetailMeta;
-
-        /// <summary>pnlDetailText control.</summary>
-        protected global::System.Web.UI.WebControls.Panel pnlDetailText;
-
-        /// <summary>litDetailText control.</summary>
-        protected global::System.Web.UI.WebControls.Literal litDetailText;
-
-        /// <summary>pnlPollOptions control.</summary>
-        protected global::System.Web.UI.WebControls.Panel pnlPollOptions;
-
-        /// <summary>phPollOptions control.</summary>
-        protected global::System.Web.UI.WebControls.PlaceHolder phPollOptions;
-
-        /// <summary>litDetailCommentCount control.</summary>
-        protected global::System.Web.UI.WebControls.Literal litDetailCommentCount;
-
-        /// <summary>pnlCommentLoading control.</summary>
-        protected global::System.Web.UI.WebControls.Panel pnlCommentLoading;
-
-        /// <summary>phComments control.</summary>
-        protected global::System.Web.UI.WebControls.PlaceHolder phComments;
-
-        // ── User profile panel ────────────────────────────────────────────────
-
-        /// <summary>pnlUserProfile control.</summary>
-        protected global::System.Web.UI.WebControls.Panel pnlUserProfile;
-
-        /// <summary>btnCloseUser control.</summary>
-        protected global::System.Web.UI.WebControls.LinkButton btnCloseUser;
-
-        /// <summary>ucUserCard control.</summary>
-        protected global::MyWebForms.HnUserCard ucUserCard;
-    }
-}
-
-
-
-================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\HackerNewsEventArgs.cs
-SIZE: 0.99 KB
+SIZE: 1017 B
 MODIFIED: 02/17/2026 14:38:53
 ================================================================================
 
@@ -4432,6 +2295,16 @@ namespace MyWebForms
         }
     }
 }
+
+
+
+================================================================================
+FILE: D:\DEV\personal\MyWebForms\MyWebForms\HackerNewsRefresh.ashx
+SIZE: 109 B
+MODIFIED: 02/17/2026 14:32:02
+================================================================================
+
+<%@ WebHandler Language="C#" CodeBehind="HackerNewsRefresh.ashx.cs" Class="MyWebForms.HackerNewsRefresh" %>
 
 
 
@@ -4691,59 +2564,6 @@ namespace MyWebForms
 
 
 ================================================================================
-FILE: D:\DEV\personal\MyWebForms\MyWebForms\HnComment.ascx.designer.cs
-SIZE: 1.38 KB
-MODIFIED: 02/17/2026 14:13:28
-================================================================================
-
-//------------------------------------------------------------------------------
-// <auto-generated>
-//     This code was generated by a tool.
-//
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated. 
-// </auto-generated>
-//------------------------------------------------------------------------------
-
-namespace MyWebForms
-{
-
-
-    public partial class HnComment
-    {
-
-        /// <summary>
-        /// lnkAuthor control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkAuthor;
-
-        /// <summary>
-        /// litTimeAgo control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litTimeAgo;
-
-        /// <summary>
-        /// litText control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litText;
-    }
-}
-
-
-
-================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\HnStoryRow.ascx
 SIZE: 2.78 KB
 MODIFIED: 02/17/2026 16:16:26
@@ -4921,115 +2741,8 @@ namespace MyWebForms
 
 
 ================================================================================
-FILE: D:\DEV\personal\MyWebForms\MyWebForms\HnStoryRow.ascx.designer.cs
-SIZE: 3.3 KB
-MODIFIED: 02/17/2026 16:17:16
-================================================================================
-
-//------------------------------------------------------------------------------
-// <auto-generated>
-//     This code was generated by a tool.
-//
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated. 
-// </auto-generated>
-//------------------------------------------------------------------------------
-
-namespace MyWebForms
-{
-
-
-    public partial class HnStoryRow
-    {
-
-        /// <summary>
-        /// litRank control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litRank;
-
-        /// <summary>
-        /// spanScore control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl spanScore;
-
-        /// <summary>
-        /// spanScoreNum control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl spanScoreNum;
-
-        /// <summary>
-        /// litScore control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litScore;
-
-        /// <summary>
-        /// lnkTitle control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkTitle;
-
-        /// <summary>
-        /// litDomain control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litDomain;
-
-        /// <summary>
-        /// litTimeAgo control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litTimeAgo;
-
-        /// <summary>
-        /// lnkAuthor control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkAuthor;
-
-        /// <summary>
-        /// lnkComments control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkComments;
-    }
-}
-
-
-
-================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\HnUserCard.ascx
-SIZE: 1.6 KB
+SIZE: 1.60 KB
 MODIFIED: 02/17/2026 14:13:27
 ================================================================================
 
@@ -5146,111 +2859,6 @@ namespace MyWebForms
 
 
 ================================================================================
-FILE: D:\DEV\personal\MyWebForms\MyWebForms\HnUserCard.ascx.designer.cs
-SIZE: 2.35 KB
-MODIFIED: 02/17/2026 14:13:28
-================================================================================
-
-//------------------------------------------------------------------------------
-// <auto-generated>
-//     This code was generated by a tool.
-//
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated. 
-// </auto-generated>
-//------------------------------------------------------------------------------
-
-namespace MyWebForms
-{
-
-
-    public partial class HnUserCard
-    {
-
-        /// <summary>
-        /// litUsername control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litUsername;
-
-        /// <summary>
-        /// litKarma control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litKarma;
-
-        /// <summary>
-        /// litMemberSince control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litMemberSince;
-
-        /// <summary>
-        /// litSubmissionCount control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litSubmissionCount;
-
-        /// <summary>
-        /// pnlAbout control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlAbout;
-
-        /// <summary>
-        /// litAbout control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litAbout;
-    }
-}
-
-
-
-================================================================================
-FILE: D:\DEV\personal\MyWebForms\MyWebForms\libman.json
-SIZE: 0.33 KB
-MODIFIED: 02/17/2026 13:08:14
-================================================================================
-
-{
-  "version": "1.0",
-  "defaultProvider": "cdnjs",
-  "libraries": [
-    {
-      "library": "Chart.js@4.4.1",
-      "destination": "Scripts/lib/chartjs/",
-      "files": [ "chart.umd.js" ]
-    },
-    {
-      "library": "animate.css@4.1.1",
-      "destination": "Content/animate.css/",
-      "files": [ "animate.min.css" ]
-    }
-  ]
-}
-
-
-
-================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\LibraryStatusWidget.ascx
 SIZE: 1.25 KB
 MODIFIED: 02/17/2026 13:15:35
@@ -5292,7 +2900,7 @@ MODIFIED: 02/17/2026 13:15:35
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\LibraryStatusWidget.ascx.cs
-SIZE: 0.94 KB
+SIZE: 958 B
 MODIFIED: 02/17/2026 13:16:14
 ================================================================================
 
@@ -5326,50 +2934,8 @@ namespace MyWebForms
 
 
 ================================================================================
-FILE: D:\DEV\personal\MyWebForms\MyWebForms\LibraryStatusWidget.ascx.designer.cs
-SIZE: 1.03 KB
-MODIFIED: 02/17/2026 13:39:09
-================================================================================
-
-//------------------------------------------------------------------------------
-// <auto-generated>
-//     This code was generated by a tool.
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated.
-// </auto-generated>
-//------------------------------------------------------------------------------
-
-namespace MyWebForms
-{
-    public partial class LibraryStatusWidget
-    {
-        /// <summary>
-        /// litLibraryName control.
-        /// </summary>
-        protected global::System.Web.UI.WebControls.Literal litLibraryName;
-
-        /// <summary>
-        /// litVersion control.
-        /// </summary>
-        protected global::System.Web.UI.WebControls.Literal litVersion;
-
-        /// <summary>
-        /// progressBar control.
-        /// </summary>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl progressBar;
-
-        /// <summary>
-        /// lblStatus control.
-        /// </summary>
-        protected global::System.Web.UI.WebControls.Label lblStatus;
-    }
-}
-
-
-
-================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\Models\HackerNewsItem.cs
-SIZE: 4.3 KB
+SIZE: 4.30 KB
 MODIFIED: 02/17/2026 14:03:16
 ================================================================================
 
@@ -5947,6 +3513,128 @@ MODIFIED: 02/17/2026 14:55:44
 
 
 ================================================================================
+FILE: D:\DEV\personal\MyWebForms\MyWebForms\obj\Release\Package\PackageTmp\Content\Site.css
+SIZE: 2.80 KB
+MODIFIED: 02/17/2026 15:34:20
+================================================================================
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    margin-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set widths on the form inputs since otherwise they're 100% wide */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+    .body-content {
+        padding: 0;
+    }
+}
+
+/* ── Hacker News page ──────────────────────────────────────────────────── */
+
+/* Story row hover */
+.hn-story-row:hover {
+    background-color: #fffaf5;
+}
+
+/* Story title link colour — matches classic HN */
+.hn-title {
+    color: #000 !important;
+}
+
+    .hn-title:hover {
+        color: #ff6600 !important;
+    }
+
+/* Comment text inherits HN's HTML tags cleanly */
+.hn-comment-text p:last-child,
+.hn-story-text p:last-child {
+    margin-bottom: 0;
+}
+
+.hn-comment-text pre,
+.hn-story-text pre {
+    background: #f6f8fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 4px;
+    padding: .5rem;
+    font-size: .78rem;
+}
+
+/* Depth connector line */
+.hn-comment + .hn-comment {
+    border-top: 1px solid #f0f0f0;
+}
+
+/* User about HTML passthrough */
+.hn-user-about a {
+    color: #555;
+    word-break: break-all;
+}
+
+/* Smooth tab transitions */
+.nav-link {
+    transition: color .15s ease;
+}
+
+/* Poll option bar */
+.hn-poll-option {
+    padding: .4rem 0;
+    border-bottom: 1px solid #eee;
+    font-size: .85rem;
+}
+
+    .hn-poll-option:last-child {
+        border-bottom: none;
+    }
+
+/* ── (append these rules to the bottom of the existing Site.css) ──────── */
+
+/* ── Home page hero ─────────────────────────────────────────────────────── */
+
+.home-hero {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: .75rem;
+}
+
+    .home-hero code {
+        background: rgba(0,0,0,.07);
+        padding: .1em .35em;
+        border-radius: .25em;
+        font-size: .88em;
+    }
+
+/* ── Learning goals progress bar ─────────────────────────────────────────── */
+
+.progress {
+    border-radius: 999px;
+    background-color: #e9ecef;
+}
+
+/* ── Stack / goal cards ──────────────────────────────────────────────────── */
+
+.card {
+    transition: box-shadow .15s ease;
+}
+
+    .card:hover {
+        box-shadow: 0 .25rem .75rem rgba(0,0,0,.1) !important;
+    }
+
+
+
+
+================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\packages.config
 SIZE: 1.96 KB
 MODIFIED: 02/17/2026 14:35:55
@@ -6021,6 +3709,38 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
+
+
+================================================================================
+FILE: D:\DEV\personal\MyWebForms\MyWebForms\Properties\PublishProfiles\site55560-WebDeploy.pubxml
+SIZE: 1.15 KB
+MODIFIED: 02/17/2026 14:55:39
+================================================================================
+
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project>
+  <PropertyGroup>
+    <WebPublishMethod>MSDeploy</WebPublishMethod>
+    <LastUsedBuildConfiguration>Release</LastUsedBuildConfiguration>
+    <LastUsedPlatform>Any CPU</LastUsedPlatform>
+    <SiteUrlToLaunchAfterPublish>http://mywebforms.runasp.net/</SiteUrlToLaunchAfterPublish>
+    <LaunchSiteAfterPublish>true</LaunchSiteAfterPublish>
+    <ExcludeApp_Data>false</ExcludeApp_Data>
+    <MSDeployServiceURL>site55560.siteasp.net</MSDeployServiceURL>
+    <DeployIisAppPath>site55560</DeployIisAppPath>
+    <RemoteSitePhysicalPath />
+    <SkipExtraFilesOnServer>true</SkipExtraFilesOnServer>
+    <MSDeployPublishMethod>WMSVC</MSDeployPublishMethod>
+    <EnableMSDeployBackup>true</EnableMSDeployBackup>
+    <EnableMsDeployAppOffline>false</EnableMsDeployAppOffline>
+    <UserName>site55560</UserName>
+    <_SavePWD>true</_SavePWD>
+  </PropertyGroup>
+</Project>
 
 
 ================================================================================
@@ -6367,7 +4087,7 @@ MODIFIED: 02/17/2026 15:52:30
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\Site.Master.cs
-SIZE: 0.32 KB
+SIZE: 326 B
 MODIFIED: 02/17/2026 12:40:44
 ================================================================================
 
@@ -6391,51 +4111,8 @@ namespace MyWebForms
 
 
 ================================================================================
-FILE: D:\DEV\personal\MyWebForms\MyWebForms\Site.Master.designer.cs
-SIZE: 1.06 KB
-MODIFIED: 02/17/2026 15:49:29
-================================================================================
-
-//------------------------------------------------------------------------------
-// <auto-generated>
-//     This code was generated by a tool.
-//
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated. 
-// </auto-generated>
-//------------------------------------------------------------------------------
-
-namespace MyWebForms
-{
-
-    public partial class SiteMaster
-    {
-
-        /// <summary>
-        /// HeadContent control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder HeadContent;
-
-        /// <summary>
-        /// MainContent control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
-    }
-}
-
-
-
-================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\ViewSwitcher.ascx
-SIZE: 0.26 KB
+SIZE: 264 B
 MODIFIED: 02/17/2026 12:40:50
 ================================================================================
 
@@ -6494,30 +4171,6 @@ namespace MyWebForms
         }
     }
 }
-
-
-================================================================================
-FILE: D:\DEV\personal\MyWebForms\MyWebForms\ViewSwitcher.ascx.designer.cs
-SIZE: 0.44 KB
-MODIFIED: 02/17/2026 12:40:50
-================================================================================
-
-//------------------------------------------------------------------------------
-// <auto-generated>
-//     This code was generated by a tool.
-//
-//     Changes to this file may cause incorrect behavior and will be lost if
-//     the code is regenerated. 
-// </auto-generated>
-//------------------------------------------------------------------------------
-
-namespace MyWebForms {
-    
-    
-    public partial class ViewSwitcher {
-    }
-}
-
 
 
 ================================================================================
@@ -6651,7 +4304,5 @@ MODIFIED: 02/17/2026 12:40:45
 
 
 ===============================================================================
-EXPORT COMPLETED: 02/17/2026 16:22:55
-Total Files Exported: 52
-Output File: D:\DEV\personal\MyWebForms\docs\llm\dump.txt
+END OF EXPORT — 42 files, 147.92 KB total
 ===============================================================================
