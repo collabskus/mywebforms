@@ -6,20 +6,25 @@
     HnStoryRow.ascx
     ---------------
     Renders a single Hacker News story in the classic orange-site list style.
-    The parent page supplies the Item and Rank properties before Page_Load runs.
 
-    LinkButton vs HyperLink:
-      - External story URL  -> plain <a> (HyperLink) -- leaves the app entirely
-      - "N comments" link   -> LinkButton -- triggers a postback so the parent
-        page can load the story detail panel server-side without a full redirect
-      - Author name link    -> LinkButton -- same pattern for the user panel
+    Score badge markup
+    ------------------
+    The outer badge span (spanScore) contains:
+      ▲ (triangle, plain HTML text) + <span data-hn-score-num="ID">NNN pts</span>
 
-    data-hn-score-id attribute
-    --------------------------
-    The score <span> carries  data-hn-score-id="{itemId}"  so the background
-    polling script (injected by HackerNews.aspx.cs InjectAutoRefreshScript)
-    can locate it via  querySelectorAll('[data-hn-score-id="N"]')  and update
-    the score text in place without a full postback.
+    The JS poller targets  data-hn-score-num  to update ONLY the number text.
+    This preserves the ▲ triangle — previously targeting the whole spanScore
+    with textContent would wipe the triangle.
+
+    data-hn-score-id on the outer span is kept for any other selectors that
+    may need to locate the badge by story ID.
+
+    LinkButton vs HyperLink
+    -----------------------
+    - External story URL  → plain <a> (HyperLink) — leaves the app entirely
+    - "N comments" link   → LinkButton — triggers a postback so the parent
+      page can load the story detail panel server-side
+    - Author name link    → LinkButton — same pattern for the user panel
 --%>
 
 <div class="hn-story-row d-flex align-items-start py-2 border-bottom border-light">
@@ -30,14 +35,14 @@
     </span>
 
     <%--
-        Score badge: "▲ NNN pts"
-        The data-hn-score-id attribute is set from code-behind once Item.Id
-        is known, allowing the JS poller to update it without a postback.
+        Score badge outer span: carries data-hn-score-id for general lookups.
+        The inner spanScoreNum carries data-hn-score-num, which the JS poller
+        updates in-place without touching the ▲ triangle.
     --%>
     <span class="hn-score badge bg-warning text-dark me-3 mt-1"
           style="min-width:3.5rem; text-align:center;"
           runat="server" id="spanScore">
-        &#9650;&nbsp;<asp:Literal ID="litScore" runat="server" />
+        &#9650;&nbsp;<span runat="server" id="spanScoreNum"><asp:Literal ID="litScore" runat="server" /></span>
     </span>
 
     <div class="flex-grow-1">

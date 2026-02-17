@@ -1,7 +1,7 @@
 ﻿
 ===============================================================================
 ASP.NET PROJECT EXPORT
-Generated: 02/17/2026 16:01:55
+Generated: 02/17/2026 16:14:38
 Project Path: D:\DEV\personal\MyWebForms
 ===============================================================================
 
@@ -3411,8 +3411,8 @@ MODIFIED: 02/17/2026 14:24:15
 
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\HackerNews.aspx.cs
-SIZE: 22.77 KB
-MODIFIED: 02/17/2026 14:44:15
+SIZE: 24.32 KB
+MODIFIED: 02/17/2026 16:14:01
 ================================================================================
 
 using System;
@@ -3432,37 +3432,49 @@ namespace MyWebForms
     ///
     /// Page lifecycle summary
     /// ----------------------
-    /// 1. Page_Load         — restores tab/page state from ViewState; queues
-    ///                        the async data load via RegisterAsyncTask.
-    /// 2. [Event handlers]  — btnTab_Click etc. update ViewState before
-    ///                        PreRenderComplete runs.
-    /// 3. PreRenderComplete — fires after all async tasks complete; calls
-    ///                        HighlightActiveTab (so the active tab is always
-    ///                        correct after event handlers have run), binds
-    ///                        all panels, and injects the background-refresh
-    ///                        script.
+    /// 1. Page_Load         — restores tab/page state from ViewState.
+    ///                        On postback, immediately re-creates the story-row
+    ///                        controls from ViewState-cached IDs so that ASP.NET
+    ///                        can route LinkButton click events (which happen
+    ///                        between Load and PreRender).
+    ///                        Queues the async data load via RegisterAsyncTask.
+    /// 2. [Event handlers]  — btnTab_Click, lnkComments, lnkAuthor etc. update
+    ///                        ViewState before PreRenderComplete runs.
+    /// 3. PreRenderComplete — fires after all async tasks complete; fully binds
+    ///                        all panels with fresh API data and injects the
+    ///                        background-refresh script.
     ///
-    /// Background refresh (all tabs)
-    /// ------------------------------
-    /// Instead of a blunt "full postback after N seconds", we inject a
-    /// JavaScript poller that calls HackerNewsRefresh.ashx every
-    /// AutoRefreshSeconds seconds.  The handler returns:
-    ///   { listChanged: bool, scores: { id: score, ... } }
+    /// Dynamic control event routing — important Web Forms note
+    /// ---------------------------------------------------------
+    /// Controls added dynamically to a PlaceHolder only receive postback events
+    /// if they exist in the control tree BEFORE the event-dispatch phase (which
+    /// runs between Page_Load and Page_PreRender).
     ///
-    /// The script:
-    ///   - Updates score spans in the DOM immediately (no postback needed).
-    ///   - Only does a __doPostBack if listChanged == true (new stories in
-    ///     the list that the server knows about but the client does not have).
+    /// Solution: cache the current page's story IDs in ViewState ("ShownIds").
+    /// On every postback, RecreateStoryRowsForEventRouting() runs in Page_Load,
+    /// adding invisible stub HnStoryRow controls with the same stable IDs
+    /// (row_{storyId}).  These stubs carry the event-handler wiring, so
+    /// lnkComments_Click and lnkAuthor_Click route correctly.
+    /// PreRenderComplete then replaces them with fully-populated controls.
     ///
-    /// This is a demonstration of the HttpHandler + client polling pattern,
-    /// which is the .NET 4.8 / Web Forms idiom for lightweight background
-    /// updates without a full UpdatePanel.
+    /// Background refresh
+    /// ------------------
+    /// A JS IIFE polls HackerNewsRefresh.ashx on a timer and:
+    ///   - Updates score spans in the DOM via data-hn-score-num (no postback).
+    ///   - Triggers __doPostBack only when listChanged == true.
     ///
-    /// Why not UpdatePanel here?
-    ///   UpdatePanel wraps a ScriptManager partial-render postback — perfectly
-    ///   valid but brings in the MS Ajax infrastructure.  The polling approach
-    ///   is deliberately lighter and exercises the IHttpAsyncHandler pattern
-    ///   from the learning checklist.
+    /// Timer restart fix
+    /// -----------------
+    /// The previous code used  arguments.callee.caller  inside a setTimeout
+    /// callback — unreliable and broken in strict mode.
+    /// Fix: a named  tick()  function referenced directly by setInterval.
+    ///
+    /// Score update fix
+    /// ----------------
+    /// The previous code set  spanScore.textContent  which erased the ▲ triangle
+    /// (plain HTML text in the outer span).
+    /// Fix: a dedicated inner span carries  data-hn-score-num  and the JS only
+    /// updates that inner span's textContent.
     /// </summary>
     public partial class HackerNews : Page
     {
@@ -3470,11 +3482,6 @@ namespace MyWebForms
 
         private const int PageSize = 20;
         private const int MaxCommentDepth = 4;
-
-        /// <summary>
-        /// How many seconds between background refresh polls.
-        /// 60 s is respectful of the HN Firebase API rate limits.
-        /// </summary>
         private const int AutoRefreshSeconds = 60;
 
         // ── Service ──────────────────────────────────────────────────────────
@@ -3522,6 +3529,16 @@ namespace MyWebForms
             set { ViewState["SelUser"] = value; }
         }
 
+        /// <summary>
+        /// IDs of the story items currently shown on the page.
+        /// Stored so we can recreate event-routing stubs on the next postback.
+        /// </summary>
+        private List<int> ShownIds
+        {
+            get { return ViewState["ShownIds"] as List<int> ?? new List<int>(); }
+            set { ViewState["ShownIds"] = value; }
+        }
+
         // ── Page lifecycle ───────────────────────────────────────────────────
 
         protected void Page_Load(object sender, EventArgs e)
@@ -3531,18 +3548,39 @@ namespace MyWebForms
                 ActiveTab = "top";
                 CurrentPage = 1;
             }
+            else
+            {
+                // Recreate story-row stubs so ASP.NET can route click events
+                // before the async data tasks have completed.
+                RecreateStoryRowsForEventRouting();
+            }
 
-            // Expose the active tab to JavaScript via a hidden field.
             hfActiveTab.Value = ActiveTab;
-
-            // NOTE: HighlightActiveTab() is intentionally NOT called here.
-            // It is called in OnPreRenderComplete so that tab click event
-            // handlers (which run after Page_Load but before PreRender) have
-            // already updated ActiveTab in ViewState before we read it.
-            // Calling it here would mean the highlight reflects the *previous*
-            // tab on the very first click.
-
             RegisterAsyncTask(new PageAsyncTask(LoadDataAsync));
+        }
+
+        /// <summary>
+        /// Adds invisible HnStoryRow stubs to phStories using only the IDs
+        /// cached in ShownIds.  The stubs have no Item data (Item == null →
+        /// Visible = false), but their UniqueIDs match those produced by
+        /// BindStoryList, giving ASP.NET a valid event target for each row's
+        /// LinkButtons.
+        /// </summary>
+        private void RecreateStoryRowsForEventRouting()
+        {
+            phStories.Controls.Clear();
+            var ids = ShownIds;
+            int startRank = (CurrentPage - 1) * PageSize + 1;
+            for (int i = 0; i < ids.Count; i++)
+            {
+                var row = (HnStoryRow)LoadControl("~/HnStoryRow.ascx");
+                row.ID = "row_" + ids[i];
+                row.Item = null;  // Stub — no data, will be invisible
+                row.Rank = startRank + i;
+                row.StorySelected += OnStorySelected;
+                row.AuthorSelected += OnAuthorSelected;
+                phStories.Controls.Add(row);
+            }
         }
 
         private async Task LoadDataAsync()
@@ -3550,12 +3588,12 @@ namespace MyWebForms
             var ids = await GetIdsForTabAsync(ActiveTab).ConfigureAwait(false);
             _totalIds = ids.Count;
             _storyPage = await Service.GetItemPageAsync(ids, CurrentPage, PageSize)
-                .ConfigureAwait(false);
+                             .ConfigureAwait(false);
 
             if (SelectedItemId > 0)
             {
                 _selectedStory = await Service.GetItemAsync(SelectedItemId)
-                    .ConfigureAwait(false);
+                                     .ConfigureAwait(false);
 
                 if (_selectedStory != null)
                 {
@@ -3568,7 +3606,7 @@ namespace MyWebForms
                         foreach (var partId in _selectedStory.Parts)
                         {
                             var opt = await Service.GetItemAsync(partId)
-                                .ConfigureAwait(false);
+                                          .ConfigureAwait(false);
                             if (opt != null) _pollOptions.Add(opt);
                         }
                     }
@@ -3578,7 +3616,7 @@ namespace MyWebForms
             if (!string.IsNullOrEmpty(SelectedUsername))
             {
                 _selectedUser = await Service.GetUserAsync(SelectedUsername)
-                    .ConfigureAwait(false);
+                                    .ConfigureAwait(false);
             }
         }
 
@@ -3586,8 +3624,6 @@ namespace MyWebForms
         {
             base.OnPreRenderComplete(e);
 
-            // Run here (not in Page_Load) so tab-click event handlers have
-            // already updated ActiveTab before we apply the highlight.
             HighlightActiveTab();
 
             BindStoryList();
@@ -3595,16 +3631,15 @@ namespace MyWebForms
             BindUserPanel();
             BindPager();
 
-            // Show the LIVE badge on all tabs (it indicates live polling).
             lblLiveBadge.Visible = true;
 
-            // Inject the background-refresh script on all tabs when no detail
-            // panel is open (avoid interrupting reading).
             if (SelectedItemId == 0 && string.IsNullOrEmpty(SelectedUsername))
             {
                 InjectAutoRefreshScript();
             }
         }
+
+        // ── Auto-refresh script ──────────────────────────────────────────────
 
         private void InjectAutoRefreshScript()
         {
@@ -3619,7 +3654,7 @@ namespace MyWebForms
             var countdownClientId = lblRefreshCountdown.ClientID;
             var seconds = AutoRefreshSeconds;
             var handlerUrl = ResolveUrl("~/hn-refresh");
-            // Build the current tab's postback target (whatever tab we are on).
+
             string currentTabBtnUniqueId;
             switch (activeTab)
             {
@@ -3630,22 +3665,40 @@ namespace MyWebForms
                 case "jobs": currentTabBtnUniqueId = btnTabJobs.UniqueID; break;
                 default: currentTabBtnUniqueId = btnTabTop.UniqueID; break;
             }
-            var shownIdsJson = string.Join(",", shownIds.ToArray());
+
+            var shownIdsJoined = string.Join(",", shownIds.ToArray());
+
+            // ── JavaScript ────────────────────────────────────────────────────
+            // Fix 1 – Timer restart:
+            //   Old code used  arguments.callee.caller  inside a setTimeout
+            //   callback.  arguments.callee refers to the anonymous setTimeout
+            //   callback, not the setInterval tick — so .caller is null/wrong.
+            //   Fix: name the tick function and reference it by name in both
+            //   setInterval calls.
+            //
+            // Fix 2 – Score update:
+            //   Old code: els[i].textContent = score + ' pts'  where els was
+            //   querySelectorAll('[data-hn-score-id="N"]') — the outer badge
+            //   span.  Setting textContent on the outer span deletes the ▲
+            //   triangle (which is a text node, not a child element).
+            //   Fix: the JS now targets  data-hn-score-num  on a dedicated inner
+            //   span that wraps only the "NNN pts" text.  The ▲ stays untouched.
 
             var sb = new StringBuilder();
             sb.AppendLine("(function () {");
+            sb.AppendLine("    'use strict';");
             sb.AppendLine("    var remaining = " + seconds + ";");
+            sb.AppendLine("    var timer;");
             sb.AppendLine("    var lbl = document.getElementById('" + countdownClientId + "');");
             sb.AppendLine("    var handlerUrl = '" + handlerUrl + "';");
             sb.AppendLine("    var tab = '" + activeTab + "';");
             sb.AppendLine("    var postbackTarget = '" + currentTabBtnUniqueId + "';");
-            sb.AppendLine("    var shownIds = '" + shownIdsJson + "';");
+            sb.AppendLine("    var shownIds = '" + shownIdsJoined + "';");
             sb.AppendLine("");
             sb.AppendLine("    function updateCountdown() {");
             sb.AppendLine("        if (lbl) { lbl.textContent = 'next check in ' + remaining + 's'; }");
             sb.AppendLine("    }");
             sb.AppendLine("");
-            sb.AppendLine("    // Poll the lightweight handler — no full postback unless needed.");
             sb.AppendLine("    function poll() {");
             sb.AppendLine("        if (lbl) { lbl.textContent = 'checking\u2026'; }");
             sb.AppendLine("        var url = handlerUrl + '?tab=' + tab + '&ids=' + shownIds;");
@@ -3656,49 +3709,44 @@ namespace MyWebForms
             sb.AppendLine("            if (xhr.status === 200) {");
             sb.AppendLine("                try {");
             sb.AppendLine("                    var data = JSON.parse(xhr.responseText);");
-            sb.AppendLine("                    // Update scores in the DOM without a postback.");
             sb.AppendLine("                    if (data.scores) {");
+            sb.AppendLine("                        // Target the inner score-num span only — preserves the ▲ triangle.");
             sb.AppendLine("                        Object.keys(data.scores).forEach(function (id) {");
-            sb.AppendLine("                            var els = document.querySelectorAll('[data-hn-score-id=\"' + id + '\"]');");
+            sb.AppendLine("                            var els = document.querySelectorAll('[data-hn-score-num=\"' + id + '\"]');");
             sb.AppendLine("                            for (var i = 0; i < els.length; i++) {");
             sb.AppendLine("                                els[i].textContent = data.scores[id] + ' pts';");
             sb.AppendLine("                            }");
             sb.AppendLine("                        });");
             sb.AppendLine("                    }");
-            sb.AppendLine("                    // Only do a full postback if the story list changed.");
             sb.AppendLine("                    if (data.listChanged) {");
             sb.AppendLine("                        if (lbl) { lbl.textContent = 'new stories \u2014 reloading\u2026'; }");
             sb.AppendLine("                        __doPostBack(postbackTarget, '');");
-            sb.AppendLine("                        return;");
+            sb.AppendLine("                        return;  // Don't restart timer — page is reloading.");
             sb.AppendLine("                    }");
             sb.AppendLine("                } catch (ex) { /* ignore parse errors */ }");
             sb.AppendLine("            }");
-            sb.AppendLine("            // Reset countdown for next poll.");
+            sb.AppendLine("            // XHR done — reset countdown and restart the interval.");
             sb.AppendLine("            remaining = " + seconds + ";");
             sb.AppendLine("            updateCountdown();");
+            sb.AppendLine("            timer = setInterval(tick, 1000);  // Named reference — no arguments.callee needed.");
             sb.AppendLine("        };");
             sb.AppendLine("        xhr.send();");
             sb.AppendLine("    }");
             sb.AppendLine("");
-            sb.AppendLine("    // Tick the countdown every second; poll when it hits zero.");
-            sb.AppendLine("    var timer = setInterval(function () {");
+            sb.AppendLine("    // Named tick function so poll() can reference it by name when restarting.");
+            sb.AppendLine("    function tick() {");
             sb.AppendLine("        remaining--;");
             sb.AppendLine("        if (remaining <= 0) {");
             sb.AppendLine("            clearInterval(timer);");
             sb.AppendLine("            poll();");
-            sb.AppendLine("            // After the poll resets 'remaining', restart the ticker.");
-            sb.AppendLine("            // We restart it inside the XHR callback above by re-invoking");
-            sb.AppendLine("            // the whole IIFE via a recursive call — but to keep things");
-            sb.AppendLine("            // simple and avoid a closure loop, we just restart the interval");
-            sb.AppendLine("            // after a short grace period to let the XHR finish.");
-            sb.AppendLine("            setTimeout(function () {");
-            sb.AppendLine("                remaining = " + seconds + ";");
-            sb.AppendLine("                timer = setInterval(arguments.callee.caller, 1000);");
-            sb.AppendLine("            }, 2000);");
+            sb.AppendLine("            // poll()'s onreadystatechange callback restarts the interval.");
             sb.AppendLine("        } else {");
             sb.AppendLine("            updateCountdown();");
             sb.AppendLine("        }");
-            sb.AppendLine("    }, 1000);");
+            sb.AppendLine("    }");
+            sb.AppendLine("");
+            sb.AppendLine("    updateCountdown();");
+            sb.AppendLine("    timer = setInterval(tick, 1000);");
             sb.AppendLine("})();");
 
             ScriptManager.RegisterStartupScript(
@@ -3733,7 +3781,7 @@ namespace MyWebForms
             if (CurrentPage < pageCount) CurrentPage++;
         }
 
-        // ── Detail panel close ───────────────────────────────────────────────
+        // ── Detail / user panel close ─────────────────────────────────────────
 
         protected void btnCloseDetail_Click(object sender, EventArgs e)
         {
@@ -3755,23 +3803,27 @@ namespace MyWebForms
             {
                 litMessage.Text = "No stories found. The API may be temporarily unavailable.";
                 pnlMessage.Visible = true;
+                ShownIds = new List<int>();
                 return;
             }
 
             pnlMessage.Visible = false;
-            var offset = (CurrentPage - 1) * PageSize;
 
+            // Cache IDs so the next postback can create event-routing stubs.
+            var newShownIds = new List<int>();
+            foreach (var s in _storyPage)
+                newShownIds.Add(s.Id);
+            ShownIds = newShownIds;
+
+            int startRank = (CurrentPage - 1) * PageSize + 1;
             for (int i = 0; i < _storyPage.Count; i++)
             {
-                var story = _storyPage[i];
-
                 var row = (HnStoryRow)LoadControl("~/HnStoryRow.ascx");
-                row.Item = story;
-                row.Rank = offset + i + 1;
-
+                row.ID = "row_" + _storyPage[i].Id;  // Stable ID — must match RecreateStoryRowsForEventRouting
+                row.Item = _storyPage[i];
+                row.Rank = startRank + i;
                 row.StorySelected += OnStorySelected;
                 row.AuthorSelected += OnAuthorSelected;
-
                 phStories.Controls.Add(row);
             }
         }
@@ -3786,22 +3838,19 @@ namespace MyWebForms
 
             pnlStoryDetail.Visible = true;
 
-            // ── Header literals ───────────────────────────────────────────────
             litDetailTitle.Text = System.Web.HttpUtility.HtmlEncode(
                 _selectedStory.Title ?? "(untitled)");
 
             litDetailMeta.Text = string.Format(
-                "{0} points by {1} &nbsp;|&nbsp; {2} &nbsp;|&nbsp; {3} comments",
+                "{0} points by <strong>{1}</strong> &nbsp;|&nbsp; {2} &nbsp;|&nbsp; {3} comments",
                 _selectedStory.Score,
                 System.Web.HttpUtility.HtmlEncode(_selectedStory.By ?? "[deleted]"),
                 _selectedStory.TimeAgo,
                 _selectedStory.Descendants);
 
-            // ── Self-text (Ask HN / Jobs) ─────────────────────────────────────
             if (!string.IsNullOrEmpty(_selectedStory.Text))
             {
-                // HN returns HTML; render verbatim (source is trusted API).
-                litDetailText.Text = _selectedStory.Text;
+                litDetailText.Text = _selectedStory.Text; // HN returns trusted HTML
                 pnlDetailText.Visible = true;
             }
             else
@@ -3809,7 +3858,6 @@ namespace MyWebForms
                 pnlDetailText.Visible = false;
             }
 
-            // ── Poll options ──────────────────────────────────────────────────
             if (_pollOptions != null && _pollOptions.Count > 0)
             {
                 phPollOptions.Controls.Clear();
@@ -3818,8 +3866,8 @@ namespace MyWebForms
                     var div = new HtmlGenericControl("div");
                     div.Attributes["class"] = "hn-poll-option";
                     div.InnerHtml = string.Format(
-                        "<strong>{0}</strong> &nbsp;<span class=\"badge bg-secondary\">{1} pts</span>",
-                        System.Web.HttpUtility.HtmlEncode(opt.Text ?? opt.Title ?? string.Empty),
+                        "<strong>{0}</strong> &mdash; {1} pts",
+                        System.Web.HttpUtility.HtmlEncode(opt.Title ?? string.Empty),
                         opt.Score);
                     phPollOptions.Controls.Add(div);
                 }
@@ -3830,10 +3878,7 @@ namespace MyWebForms
                 pnlPollOptions.Visible = false;
             }
 
-            // ── Comment count ─────────────────────────────────────────────────
             litDetailCommentCount.Text = _selectedStory.Descendants.ToString();
-
-            // ── Comment tree ──────────────────────────────────────────────────
             phComments.Controls.Clear();
             pnlCommentLoading.Visible = false;
 
@@ -3922,6 +3967,7 @@ namespace MyWebForms
         private void OnAuthorSelected(object sender, AuthorSelectedEventArgs e)
         {
             SelectedUsername = e.Username;
+            SelectedItemId = 0;
         }
 
         // ── API tab → ID list routing ────────────────────────────────────────
@@ -5835,7 +5881,7 @@ MODIFIED: 02/17/2026 12:40:45
 
 
 ===============================================================================
-EXPORT COMPLETED: 02/17/2026 16:02:01
+EXPORT COMPLETED: 02/17/2026 16:14:45
 Total Files Exported: 41
 Output File: .\docs\llm\dump.txt
 ===============================================================================
