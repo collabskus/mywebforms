@@ -1,7 +1,7 @@
 ﻿
 ===============================================================================
 ASP.NET PROJECT EXPORT
-Generated: 02/17/2026 14:40:17
+Generated: 02/17/2026 15:25:19
 Project Path: D:\DEV\personal\MyWebForms
 ===============================================================================
 
@@ -78,6 +78,21 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   |       RouteConfig.cs
 |   |       
 |   +---bin
+|   |   |   Antlr3.Runtime.dll
+|   |   |   Antlr3.Runtime.pdb
+|   |   |   Microsoft.AspNet.FriendlyUrls.dll
+|   |   |   Microsoft.AspNet.FriendlyUrls.xml
+|   |   |   Microsoft.AspNet.Web.Optimization.WebForms.dll
+|   |   |   Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+|   |   |   Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+|   |   |   Microsoft.ScriptManager.MSAjax.dll
+|   |   |   Microsoft.ScriptManager.WebForms.dll
+|   |   |   Microsoft.Web.Infrastructure.dll
+|   |   |   MyWebForms.dll
+|   |   |   MyWebForms.dll.config
+|   |   |   MyWebForms.pdb
+|   |   |   Newtonsoft.Json.dll
+|   |   |   Newtonsoft.Json.xml
 |   |   |   System.IO.dll
 |   |   |   System.Net.Http.dll
 |   |   |   System.Runtime.dll
@@ -85,8 +100,43 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   |   |   System.Security.Cryptography.Encoding.dll
 |   |   |   System.Security.Cryptography.Primitives.dll
 |   |   |   System.Security.Cryptography.X509Certificates.dll
+|   |   |   System.Web.Optimization.dll
+|   |   |   System.Web.Optimization.xml
+|   |   |   WebGrease.dll
 |   |   |   
 |   |   \---roslyn
+|   |           csc.exe
+|   |           csc.exe.config
+|   |           csc.rsp
+|   |           csi.exe
+|   |           csi.exe.config
+|   |           csi.rsp
+|   |           Microsoft.Build.Tasks.CodeAnalysis.dll
+|   |           Microsoft.CodeAnalysis.CSharp.dll
+|   |           Microsoft.CodeAnalysis.CSharp.Scripting.dll
+|   |           Microsoft.CodeAnalysis.dll
+|   |           Microsoft.CodeAnalysis.Scripting.dll
+|   |           Microsoft.CodeAnalysis.VisualBasic.dll
+|   |           Microsoft.CSharp.Core.targets
+|   |           Microsoft.DiaSymReader.Native.amd64.dll
+|   |           Microsoft.DiaSymReader.Native.x86.dll
+|   |           Microsoft.Managed.Core.CurrentVersions.targets
+|   |           Microsoft.Managed.Core.targets
+|   |           Microsoft.VisualBasic.Core.targets
+|   |           System.Buffers.dll
+|   |           System.Collections.Immutable.dll
+|   |           System.Memory.dll
+|   |           System.Numerics.Vectors.dll
+|   |           System.Reflection.Metadata.dll
+|   |           System.Runtime.CompilerServices.Unsafe.dll
+|   |           System.Text.Encoding.CodePages.dll
+|   |           System.Threading.Tasks.Extensions.dll
+|   |           vbc.exe
+|   |           vbc.exe.config
+|   |           vbc.rsp
+|   |           VBCSCompiler.exe
+|   |           VBCSCompiler.exe.config
+|   |           
 |   +---Content
 |   |   |   bootstrap-grid.css
 |   |   |   bootstrap-grid.css.map
@@ -137,15 +187,207 @@ D:\DEV\PERSONAL\MYWEBFORMS
 |   |   |   |   MyWebForms.csproj.AssemblyReference.cache
 |   |   |   |   MyWebForms.csproj.CoreCompileInputs.cache
 |   |   |   |   MyWebForms.csproj.FileListAbsolute.txt
+|   |   |   |   MyWebForms.csproj.Up2Date
+|   |   |   |   MyWebForms.dll
+|   |   |   |   MyWebForms.pdb
 |   |   |   |   
 |   |   |   \---TempPE
 |   |   \---Release
-|   |           .NETFramework,Version=v4.8.1.AssemblyAttributes.cs
-|   |           MyWebForms.csproj.AssemblyReference.cache
-|   |           
+|   |       |   .NETFramework,Version=v4.8.1.AssemblyAttributes.cs
+|   |       |   CSAutoParameterize.parameters.xml
+|   |       |   DesignTimeResolveAssemblyReferencesInput.cache
+|   |       |   MyWebForms.csproj.AssemblyReference.cache
+|   |       |   MyWebForms.csproj.CoreCompileInputs.cache
+|   |       |   MyWebForms.csproj.FileListAbsolute.txt
+|   |       |   MyWebForms.dll
+|   |       |   MyWebForms.pdb
+|   |       |   _WPPLastBuildInfo.txt
+|   |       |   
+|   |       +---CSAutoParameterize
+|   |       |   +---original
+|   |       |   |       Web.config
+|   |       |   |       
+|   |       |   \---transformed
+|   |       |           Web.config
+|   |       |           
+|   |       +---Package
+|   |       |   |   MyWebForms.SourceManifest.xml
+|   |       |   |   
+|   |       |   \---PackageTmp
+|   |       |       |   About.aspx
+|   |       |       |   Bundle.config
+|   |       |       |   ChartWidget.ascx
+|   |       |       |   Contact.aspx
+|   |       |       |   Default.aspx
+|   |       |       |   favicon.ico
+|   |       |       |   Global.asax
+|   |       |       |   HackerNews.aspx
+|   |       |       |   HackerNewsRefresh.ashx
+|   |       |       |   HnComment.ascx
+|   |       |       |   HnStoryRow.ascx
+|   |       |       |   HnUserCard.ascx
+|   |       |       |   libman.json
+|   |       |       |   LibraryStatusWidget.ascx
+|   |       |       |   Site.Master
+|   |       |       |   ViewSwitcher.ascx
+|   |       |       |   Web.config
+|   |       |       |   
+|   |       |       +---bin
+|   |       |       |   |   Antlr3.Runtime.dll
+|   |       |       |   |   Antlr3.Runtime.pdb
+|   |       |       |   |   Microsoft.AspNet.FriendlyUrls.dll
+|   |       |       |   |   Microsoft.AspNet.Web.Optimization.WebForms.dll
+|   |       |       |   |   Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+|   |       |       |   |   Microsoft.ScriptManager.MSAjax.dll
+|   |       |       |   |   Microsoft.ScriptManager.WebForms.dll
+|   |       |       |   |   Microsoft.Web.Infrastructure.dll
+|   |       |       |   |   MyWebForms.dll
+|   |       |       |   |   MyWebForms.pdb
+|   |       |       |   |   Newtonsoft.Json.dll
+|   |       |       |   |   System.Web.Optimization.dll
+|   |       |       |   |   WebGrease.dll
+|   |       |       |   |   
+|   |       |       |   \---roslyn
+|   |       |       |           csc.exe
+|   |       |       |           csc.exe.config
+|   |       |       |           csc.rsp
+|   |       |       |           csi.exe
+|   |       |       |           csi.exe.config
+|   |       |       |           csi.rsp
+|   |       |       |           Microsoft.Build.Tasks.CodeAnalysis.dll
+|   |       |       |           Microsoft.CodeAnalysis.CSharp.dll
+|   |       |       |           Microsoft.CodeAnalysis.CSharp.Scripting.dll
+|   |       |       |           Microsoft.CodeAnalysis.dll
+|   |       |       |           Microsoft.CodeAnalysis.Scripting.dll
+|   |       |       |           Microsoft.CodeAnalysis.VisualBasic.dll
+|   |       |       |           Microsoft.CSharp.Core.targets
+|   |       |       |           Microsoft.DiaSymReader.Native.amd64.dll
+|   |       |       |           Microsoft.DiaSymReader.Native.x86.dll
+|   |       |       |           Microsoft.Managed.Core.CurrentVersions.targets
+|   |       |       |           Microsoft.Managed.Core.targets
+|   |       |       |           Microsoft.VisualBasic.Core.targets
+|   |       |       |           System.Buffers.dll
+|   |       |       |           System.Collections.Immutable.dll
+|   |       |       |           System.Memory.dll
+|   |       |       |           System.Numerics.Vectors.dll
+|   |       |       |           System.Reflection.Metadata.dll
+|   |       |       |           System.Runtime.CompilerServices.Unsafe.dll
+|   |       |       |           System.Text.Encoding.CodePages.dll
+|   |       |       |           System.Threading.Tasks.Extensions.dll
+|   |       |       |           vbc.exe
+|   |       |       |           vbc.exe.config
+|   |       |       |           vbc.rsp
+|   |       |       |           VBCSCompiler.exe
+|   |       |       |           VBCSCompiler.exe.config
+|   |       |       |           
+|   |       |       +---Content
+|   |       |       |   |   bootstrap-grid.css
+|   |       |       |   |   bootstrap-grid.css.map
+|   |       |       |   |   bootstrap-grid.min.css
+|   |       |       |   |   bootstrap-grid.min.css.map
+|   |       |       |   |   bootstrap-grid.rtl.css
+|   |       |       |   |   bootstrap-grid.rtl.css.map
+|   |       |       |   |   bootstrap-grid.rtl.min.css
+|   |       |       |   |   bootstrap-grid.rtl.min.css.map
+|   |       |       |   |   bootstrap-reboot.css
+|   |       |       |   |   bootstrap-reboot.css.map
+|   |       |       |   |   bootstrap-reboot.min.css
+|   |       |       |   |   bootstrap-reboot.min.css.map
+|   |       |       |   |   bootstrap-reboot.rtl.css
+|   |       |       |   |   bootstrap-reboot.rtl.css.map
+|   |       |       |   |   bootstrap-reboot.rtl.min.css
+|   |       |       |   |   bootstrap-reboot.rtl.min.css.map
+|   |       |       |   |   bootstrap-utilities.css
+|   |       |       |   |   bootstrap-utilities.css.map
+|   |       |       |   |   bootstrap-utilities.min.css
+|   |       |       |   |   bootstrap-utilities.min.css.map
+|   |       |       |   |   bootstrap-utilities.rtl.css
+|   |       |       |   |   bootstrap-utilities.rtl.css.map
+|   |       |       |   |   bootstrap-utilities.rtl.min.css
+|   |       |       |   |   bootstrap-utilities.rtl.min.css.map
+|   |       |       |   |   bootstrap.css
+|   |       |       |   |   bootstrap.css.map
+|   |       |       |   |   bootstrap.min.css
+|   |       |       |   |   bootstrap.min.css.map
+|   |       |       |   |   bootstrap.rtl.css
+|   |       |       |   |   bootstrap.rtl.css.map
+|   |       |       |   |   bootstrap.rtl.min.css
+|   |       |       |   |   bootstrap.rtl.min.css.map
+|   |       |       |   |   Site.css
+|   |       |       |   |   
+|   |       |       |   \---animate.css
+|   |       |       |           animate.min.css
+|   |       |       |           
+|   |       |       \---Scripts
+|   |       |           |   bootstrap.bundle.js
+|   |       |           |   bootstrap.bundle.js.map
+|   |       |           |   bootstrap.bundle.min.js
+|   |       |           |   bootstrap.bundle.min.js.map
+|   |       |           |   bootstrap.esm.js
+|   |       |           |   bootstrap.esm.js.map
+|   |       |           |   bootstrap.esm.min.js
+|   |       |           |   bootstrap.esm.min.js.map
+|   |       |           |   bootstrap.js
+|   |       |           |   bootstrap.js.map
+|   |       |           |   bootstrap.min.js
+|   |       |           |   bootstrap.min.js.map
+|   |       |           |   jquery-3.7.1.js
+|   |       |           |   jquery-3.7.1.min.js
+|   |       |           |   jquery-3.7.1.min.map
+|   |       |           |   jquery-3.7.1.slim.js
+|   |       |           |   jquery-3.7.1.slim.min.js
+|   |       |           |   jquery-3.7.1.slim.min.map
+|   |       |           |   modernizr-2.8.3.js
+|   |       |           |   
+|   |       |           +---lib
+|   |       |           |   \---chartjs
+|   |       |           |           chart.umd.js
+|   |       |           |           
+|   |       |           \---WebForms
+|   |       |               |   DetailsView.js
+|   |       |               |   Focus.js
+|   |       |               |   GridView.js
+|   |       |               |   Menu.js
+|   |       |               |   MenuStandards.js
+|   |       |               |   SmartNav.js
+|   |       |               |   TreeView.js
+|   |       |               |   WebForms.js
+|   |       |               |   WebParts.js
+|   |       |               |   WebUIValidation.js
+|   |       |               |   
+|   |       |               \---MSAjax
+|   |       |                       MicrosoftAjax.js
+|   |       |                       MicrosoftAjaxApplicationServices.js
+|   |       |                       MicrosoftAjaxComponentModel.js
+|   |       |                       MicrosoftAjaxCore.js
+|   |       |                       MicrosoftAjaxGlobalization.js
+|   |       |                       MicrosoftAjaxHistory.js
+|   |       |                       MicrosoftAjaxNetwork.js
+|   |       |                       MicrosoftAjaxSerialization.js
+|   |       |                       MicrosoftAjaxTimer.js
+|   |       |                       MicrosoftAjaxWebForms.js
+|   |       |                       MicrosoftAjaxWebServices.js
+|   |       |                       
+|   |       +---ProfileTransformWebConfig
+|   |       |   \---transformed
+|   |       +---TempPE
+|   |       \---TransformWebConfig
+|   |           +---assist
+|   |           |       Web.config
+|   |           |       
+|   |           +---original
+|   |           |       Web.config
+|   |           |       
+|   |           \---transformed
+|   |                   Web.config
+|   |                   
 |   +---Properties
-|   |       AssemblyInfo.cs
-|   |       
+|   |   |   AssemblyInfo.cs
+|   |   |   
+|   |   \---PublishProfiles
+|   |           site55560-WebDeploy.pubxml
+|   |           site55560-WebDeploy.pubxml.user
+|   |           
 |   +---Scripts
 |   |   |   bootstrap.bundle.js
 |   |   |   bootstrap.bundle.js.map
@@ -2884,8 +3126,8 @@ MODIFIED: 02/17/2026 14:24:15
 
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\HackerNews.aspx.cs
-SIZE: 21.56 KB
-MODIFIED: 02/17/2026 14:34:27
+SIZE: 22.77 KB
+MODIFIED: 02/17/2026 14:44:15
 ================================================================================
 
 using System;
@@ -3077,38 +3319,10 @@ namespace MyWebForms
             {
                 InjectAutoRefreshScript();
             }
-            else
-            {
-                lblRefreshCountdown.Visible = false;
-            }
         }
 
-        // ── Auto-refresh (background polling) ────────────────────────────────
-
-        /// <summary>
-        /// Injects a JavaScript poller that calls HackerNewsRefresh.ashx
-        /// every AutoRefreshSeconds seconds.
-        ///
-        /// On each poll:
-        ///   1. Score spans in the DOM are updated in-place — no postback.
-        ///   2. If the server reports the story list has changed (new IDs),
-        ///      we do a __doPostBack to reload the page with fresh data.
-        ///
-        /// The countdown label gives the user a live "next check in N s" cue.
-        ///
-        /// Score span convention (set in HnStoryRow.ascx):
-        ///   Each score element must have  data-hn-score-id="{itemId}"
-        ///   so the JS can find it by story ID.
-        ///
-        /// C# 7.3 compatible — no $@ interpolated verbatim strings.
-        /// </summary>
         private void InjectAutoRefreshScript()
         {
-            lblRefreshCountdown.Visible = true;
-            lblRefreshCountdown.Text = string.Format(
-                "next check in {0}s", AutoRefreshSeconds);
-
-            // Collect the IDs currently shown so we can send them to the handler.
             var shownIds = new List<string>();
             if (_storyPage != null)
             {
@@ -3168,7 +3382,7 @@ namespace MyWebForms
             sb.AppendLine("                    }");
             sb.AppendLine("                    // Only do a full postback if the story list changed.");
             sb.AppendLine("                    if (data.listChanged) {");
-            sb.AppendLine("                        if (lbl) { lbl.textContent = 'new stories — reloading\u2026'; }");
+            sb.AppendLine("                        if (lbl) { lbl.textContent = 'new stories \u2014 reloading\u2026'; }");
             sb.AppendLine("                        __doPostBack(postbackTarget, '');");
             sb.AppendLine("                        return;");
             sb.AppendLine("                    }");
@@ -3246,7 +3460,7 @@ namespace MyWebForms
             SelectedUsername = null;
         }
 
-        // ── Binding helpers ───────────────────────────────────────────────────
+        // ── Binding helpers ──────────────────────────────────────────────────
 
         private void BindStoryList()
         {
@@ -3281,16 +3495,62 @@ namespace MyWebForms
         {
             if (SelectedItemId == 0 || _selectedStory == null)
             {
-                pnlDetail.Visible = false;
+                pnlStoryDetail.Visible = false;
                 return;
             }
 
-            pnlDetail.Visible = true;
-            ucStoryDetail.Item = _selectedStory;
-            ucStoryDetail.PollOptions = _pollOptions;
-            ucStoryDetail.AuthorSelected += OnAuthorSelected;
+            pnlStoryDetail.Visible = true;
 
+            // ── Header literals ───────────────────────────────────────────────
+            litDetailTitle.Text = System.Web.HttpUtility.HtmlEncode(
+                _selectedStory.Title ?? "(untitled)");
+
+            litDetailMeta.Text = string.Format(
+                "{0} points by {1} &nbsp;|&nbsp; {2} &nbsp;|&nbsp; {3} comments",
+                _selectedStory.Score,
+                System.Web.HttpUtility.HtmlEncode(_selectedStory.By ?? "[deleted]"),
+                _selectedStory.TimeAgo,
+                _selectedStory.Descendants);
+
+            // ── Self-text (Ask HN / Jobs) ─────────────────────────────────────
+            if (!string.IsNullOrEmpty(_selectedStory.Text))
+            {
+                // HN returns HTML; render verbatim (source is trusted API).
+                litDetailText.Text = _selectedStory.Text;
+                pnlDetailText.Visible = true;
+            }
+            else
+            {
+                pnlDetailText.Visible = false;
+            }
+
+            // ── Poll options ──────────────────────────────────────────────────
+            if (_pollOptions != null && _pollOptions.Count > 0)
+            {
+                phPollOptions.Controls.Clear();
+                foreach (var opt in _pollOptions)
+                {
+                    var div = new HtmlGenericControl("div");
+                    div.Attributes["class"] = "hn-poll-option";
+                    div.InnerHtml = string.Format(
+                        "<strong>{0}</strong> &nbsp;<span class=\"badge bg-secondary\">{1} pts</span>",
+                        System.Web.HttpUtility.HtmlEncode(opt.Text ?? opt.Title ?? string.Empty),
+                        opt.Score);
+                    phPollOptions.Controls.Add(div);
+                }
+                pnlPollOptions.Visible = true;
+            }
+            else
+            {
+                pnlPollOptions.Visible = false;
+            }
+
+            // ── Comment count ─────────────────────────────────────────────────
+            litDetailCommentCount.Text = _selectedStory.Descendants.ToString();
+
+            // ── Comment tree ──────────────────────────────────────────────────
             phComments.Controls.Clear();
+            pnlCommentLoading.Visible = false;
 
             if (_comments == null || _comments.Count == 0)
             {
@@ -4269,8 +4529,8 @@ namespace MyWebForms.Models
 
 ================================================================================
 FILE: :\DEV\personal\MyWebForms\MyWebForms\MyWebForms.csproj
-SIZE: 20.63 KB
-MODIFIED: 02/17/2026 14:38:56
+SIZE: 20.71 KB
+MODIFIED: 02/17/2026 14:55:44
 ================================================================================
 
 <?xml version="1.0" encoding="utf-8"?>
@@ -4445,6 +4705,7 @@ MODIFIED: 02/17/2026 14:38:56
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="libman.json" />
     <Content Include="HackerNewsRefresh.ashx" />
+    <None Include="Properties\PublishProfiles\site55560-WebDeploy.pubxml" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />
@@ -5279,7 +5540,7 @@ MODIFIED: 02/17/2026 12:40:45
 
 
 ===============================================================================
-EXPORT COMPLETED: 02/17/2026 14:40:22
+EXPORT COMPLETED: 02/17/2026 15:25:25
 Total Files Exported: 41
 Output File: .\docs\llm\dump.txt
 ===============================================================================
