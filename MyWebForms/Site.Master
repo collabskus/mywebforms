@@ -44,9 +44,16 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" runat="server" href="~/">MyWebForms</a>
+                <%-- FIX: data-bs-target must use the ID selector (#navbarCollapse),
+                     not a class selector (.navbar-collapse).  Bootstrap 5's Collapse
+                     plugin calls document.querySelector(target) — a class selector
+                     matches the first element in the DOM with that class, which is
+                     not guaranteed to be *this* navbar's collapse div.  An ID
+                     selector is unambiguous and is what Bootstrap's own docs
+                     recommend.  aria-controls must also match the actual element ID. --%>
                 <button type="button" class="navbar-toggler" data-bs-toggle="collapse"
-                        data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent"
+                        data-bs-target="#navbarCollapse"
+                        aria-controls="navbarCollapse"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -59,7 +66,7 @@
                         <%-- HN Live: pure client-side streaming feed — no postbacks --%>
                         <li class="nav-item">
                             <a class="nav-link" runat="server" href="~/HnLive">
-                                HN Live <span class="badge bg-success ms-1" style="font-size:.6rem;vertical-align:middle;">●</span>
+                                HN Live <span class="badge bg-success ms-1" style="font-size:.6rem;vertical-align:middle;">◉</span>
                             </a>
                         </li>
                     </ul>
