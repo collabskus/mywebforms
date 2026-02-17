@@ -1,6 +1,6 @@
 ===============================================================================
 ASP.NET PROJECT EXPORT
-Generated: 02/17/2026 18:12:12
+Generated: 02/17/2026 18:17:31
 Project Path: D:\DEV\personal\MyWebForms\MyWebForms
 ===============================================================================
 
@@ -35,6 +35,9 @@ D:\DEV\PERSONAL\MYWEBFORMS\MYWEBFORMS
 ª   HnComment.ascx
 ª   HnComment.ascx.cs
 ª   HnComment.ascx.designer.cs
+ª   HnLive.aspx
+ª   HnLive.aspx.cs
+ª   HnLive.aspx.designer.cs
 ª   HnStoryRow.ascx
 ª   HnStoryRow.ascx.cs
 ª   HnStoryRow.ascx.designer.cs
@@ -1444,8 +1447,8 @@ namespace MyWebForms
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\HackerNews.aspx
-SIZE: 8.91 KB
-MODIFIED: 02/17/2026 14:24:15
+SIZE: 12.50 KB
+MODIFIED: 02/17/2026 18:15:19
 ================================================================================
 
 <%@ Page Title="Hacker News" Language="C#" MasterPageFile="~/Site.Master"
@@ -1460,14 +1463,14 @@ MODIFIED: 02/17/2026 14:24:15
 
 <main class="container-fluid mt-3" style="max-width:960px;">
 
-    <%-- ═══════════════════════════════════════════════════════════
+    <%-- ═══════════════════════════════════════════════════════════════
          Page header
-    ════════════════════════════════════════════════════════════════ --%>
-    <div class="d-flex align-items-center mb-3">
+    ═══════════════════════════════════════════════════════════════════ --%>
+    <div class="d-flex align-items-center mb-3 flex-wrap gap-2">
         <span class="hn-logo me-2" style="background:#ff6600;color:#fff;font-weight:bold;padding:2px 6px;font-family:monospace;">Y</span>
         <h4 class="mb-0 fw-bold">Hacker News</h4>
 
-        <%-- LIVE badge: only shown/animated when on the "new" tab.
+        <%-- LIVE badge: shown on the "new" / "active" / "rising" tabs.
              The server sets its Visible flag; the JS countdown sits next to it. --%>
         <asp:HiddenField ID="hfActiveTab" runat="server" />
         <span class="ms-auto d-flex align-items-center gap-2">
@@ -1479,62 +1482,119 @@ MODIFIED: 02/17/2026 14:24:15
         </span>
     </div>
 
-    <%-- ═══════════════════════════════════════════════════════════
+    <%-- ═══════════════════════════════════════════════════════════════
          Tab navigation
-    ════════════════════════════════════════════════════════════════ --%>
+         Tabs: Top | New | Best | Ask | Show | Jobs | Active | Rising
+    ═══════════════════════════════════════════════════════════════════ --%>
     <ul class="nav nav-tabs mb-3" id="hnTabs">
         <li class="nav-item">
-            <asp:LinkButton ID="btnTabTop"   runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="top">Top</asp:LinkButton>
+            <asp:LinkButton ID="btnTabTop"    runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="top">Top</asp:LinkButton>
         </li>
         <li class="nav-item">
-            <asp:LinkButton ID="btnTabNew"   runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="new">New</asp:LinkButton>
+            <asp:LinkButton ID="btnTabNew"    runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="new">New</asp:LinkButton>
         </li>
         <li class="nav-item">
-            <asp:LinkButton ID="btnTabBest"  runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="best">Best</asp:LinkButton>
+            <asp:LinkButton ID="btnTabBest"   runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="best">Best</asp:LinkButton>
         </li>
         <li class="nav-item">
-            <asp:LinkButton ID="btnTabAsk"   runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="ask">Ask</asp:LinkButton>
+            <asp:LinkButton ID="btnTabAsk"    runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="ask">Ask</asp:LinkButton>
         </li>
         <li class="nav-item">
-            <asp:LinkButton ID="btnTabShow"  runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="show">Show</asp:LinkButton>
+            <asp:LinkButton ID="btnTabShow"   runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="show">Show</asp:LinkButton>
         </li>
         <li class="nav-item">
-            <asp:LinkButton ID="btnTabJobs"  runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="jobs">Jobs</asp:LinkButton>
+            <asp:LinkButton ID="btnTabJobs"   runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="jobs">Jobs</asp:LinkButton>
+        </li>
+        <li class="nav-item">
+            <%-- Active: mirrors https://news.ycombinator.com/active
+                 Uses the HN /v0/updates.json "items" list — recently changed IDs. --%>
+            <asp:LinkButton ID="btnTabActive" runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="active">
+                Active <span class="badge bg-secondary ms-1" style="font-size:.6rem;">⚡</span>
+            </asp:LinkButton>
+        </li>
+        <li class="nav-item">
+            <%-- Rising: new stories filtered by minimum comments OR points.
+                 Thresholds are configurable via the controls below. --%>
+            <asp:LinkButton ID="btnTabRising" runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="rising">
+                Rising <span class="badge bg-secondary ms-1" style="font-size:.6rem;">🔥</span>
+            </asp:LinkButton>
         </li>
     </ul>
 
-    <%-- ═══════════════════════════════════════════════════════════
+    <%-- ═══════════════════════════════════════════════════════════════
+         Rising tab filter controls — only visible on "rising" tab
+    ═══════════════════════════════════════════════════════════════════ --%>
+    <asp:Panel ID="pnlRisingFilter" runat="server" Visible="false"
+        CssClass="card card-body mb-3 py-2 d-flex flex-row align-items-center gap-3 flex-wrap">
+        <span class="small fw-semibold text-muted">Filter new stories by:</span>
+
+        <div class="d-flex align-items-center gap-1">
+            <label class="form-label mb-0 small" for="<%= txtMinComments.ClientID %>">Min comments:</label>
+            <asp:TextBox ID="txtMinComments" runat="server"
+                CssClass="form-control form-control-sm"
+                Style="width:70px;"
+                TextMode="Number"
+                Text="5" />
+        </div>
+
+        <div class="d-flex align-items-center gap-1">
+            <label class="form-label mb-0 small" for="<%= txtMinPoints.ClientID %>">Min points:</label>
+            <asp:TextBox ID="txtMinPoints" runat="server"
+                CssClass="form-control form-control-sm"
+                Style="width:70px;"
+                TextMode="Number"
+                Text="5" />
+        </div>
+
+        <asp:Button ID="btnApplyFilter" runat="server"
+            CssClass="btn btn-sm btn-outline-warning"
+            Text="Apply"
+            OnClick="btnApplyFilter_Click" />
+
+        <span class="text-muted small">
+            Shows new stories where <em>comments ≥ min</em> <strong>or</strong> <em>points ≥ min</em>.
+        </span>
+    </asp:Panel>
+
+    <%-- ═══════════════════════════════════════════════════════════════
          Message panel (errors / empty state)
-    ════════════════════════════════════════════════════════════════ --%>
+    ═══════════════════════════════════════════════════════════════════ --%>
     <asp:Panel ID="pnlMessage" runat="server" Visible="false"
         CssClass="alert alert-warning">
         <asp:Literal ID="litMessage" runat="server" />
     </asp:Panel>
 
-    <%-- ═══════════════════════════════════════════════════════════
+    <%-- ═══════════════════════════════════════════════════════════════
          Story list
-    ════════════════════════════════════════════════════════════════ --%>
-    <asp:PlaceHolder ID="phStories" runat="server" />
+    ═══════════════════════════════════════════════════════════════════ --%>
+    <asp:Panel ID="pnlStoryList" runat="server">
+        <asp:PlaceHolder ID="phStories" runat="server" />
+    </asp:Panel>
 
-    <%-- ═══════════════════════════════════════════════════════════
+    <%-- ═══════════════════════════════════════════════════════════════
          Pager
-    ════════════════════════════════════════════════════════════════ --%>
-    <asp:Panel ID="pnlPager" runat="server" CssClass="d-flex align-items-center gap-3 mt-3">
-        <asp:LinkButton ID="btnPrev" runat="server" CssClass="btn btn-outline-secondary btn-sm"
-            OnClick="btnPrev_Click">&laquo; Prev</asp:LinkButton>
-        <span class="small text-muted">
+    ═══════════════════════════════════════════════════════════════════ --%>
+    <asp:Panel ID="pnlPager" runat="server" Visible="false"
+        CssClass="d-flex justify-content-center align-items-center gap-3 my-3">
+        <asp:Button ID="btnPrev" runat="server"
+            CssClass="btn btn-sm btn-outline-secondary"
+            Text="&laquo; Prev"
+            OnClick="btnPrev_Click" />
+        <span class="text-muted small">
             Page <asp:Literal ID="litPage" runat="server" /> of
             <asp:Literal ID="litPageCount" runat="server" />
         </span>
-        <asp:LinkButton ID="btnNext" runat="server" CssClass="btn btn-outline-secondary btn-sm"
-            OnClick="btnNext_Click">Next &raquo;</asp:LinkButton>
+        <asp:Button ID="btnNext" runat="server"
+            CssClass="btn btn-sm btn-outline-secondary"
+            Text="Next &raquo;"
+            OnClick="btnNext_Click" />
     </asp:Panel>
 
-    <%-- ═══════════════════════════════════════════════════════════
+    <%-- ═══════════════════════════════════════════════════════════════
          Story detail panel
-    ════════════════════════════════════════════════════════════════ --%>
+    ═══════════════════════════════════════════════════════════════════ --%>
     <asp:Panel ID="pnlStoryDetail" runat="server" Visible="false"
-        CssClass="mt-4 p-3 border rounded animate__animated animate__fadeIn">
+        CssClass="mt-4 animate__animated animate__fadeIn">
 
         <div class="d-flex justify-content-end mb-1">
             <asp:LinkButton ID="btnCloseDetail" runat="server"
@@ -1542,35 +1602,49 @@ MODIFIED: 02/17/2026 14:24:15
                 OnClick="btnCloseDetail_Click">&#10005; Close</asp:LinkButton>
         </div>
 
-        <h5><asp:Literal ID="litDetailTitle" runat="server" /></h5>
-        <p class="small text-muted mb-2">
-            <asp:Literal ID="litDetailMeta" runat="server" />
-        </p>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title hn-title">
+                    <asp:Literal ID="litDetailTitle" runat="server" />
+                </h5>
+                <p class="card-text hn-meta">
+                    <asp:Literal ID="litDetailMeta" runat="server" />
+                </p>
 
-        <%-- Self text (Ask HN / jobs) --%>
-        <asp:Panel ID="pnlDetailText" runat="server" Visible="false"
-            CssClass="hn-story-text mb-3 p-2 bg-light rounded small">
-            <asp:Literal ID="litDetailText" runat="server" />
-        </asp:Panel>
+                <%-- Story body text (Ask HN, polls, etc.) --%>
+                <asp:Panel ID="pnlDetailText" runat="server" Visible="false"
+                    CssClass="hn-story-text border-top pt-2 mt-2">
+                    <asp:Literal ID="litDetailText" runat="server" />
+                </asp:Panel>
 
-        <%-- Poll options --%>
-        <asp:Panel ID="pnlPollOptions" runat="server" Visible="false" CssClass="mb-3">
-            <h6 class="small text-uppercase text-muted">Poll options</h6>
-            <asp:PlaceHolder ID="phPollOptions" runat="server" />
-        </asp:Panel>
+                <%-- Poll options --%>
+                <asp:Panel ID="pnlPollOptions" runat="server" Visible="false"
+                    CssClass="mt-3">
+                    <h6>Poll options</h6>
+                    <asp:PlaceHolder ID="phPollOptions" runat="server" />
+                </asp:Panel>
+            </div>
+        </div>
 
         <%-- Comments --%>
-        <h6 class="mt-3">
-            <asp:Literal ID="litDetailCommentCount" runat="server" /> comments
-        </h6>
-        <asp:Panel ID="pnlCommentLoading" runat="server" Visible="true"
-            CssClass="text-muted small">Loading comments&hellip;</asp:Panel>
-        <asp:PlaceHolder ID="phComments" runat="server" />
+        <div class="mt-3">
+            <h6 class="text-muted small fw-semibold text-uppercase mb-2">
+                <asp:Literal ID="litDetailCommentCount" runat="server" /> comments
+            </h6>
+
+            <asp:Panel ID="pnlCommentLoading" runat="server" Visible="false"
+                CssClass="text-center py-3">
+                <div class="spinner-border spinner-border-sm text-warning" role="status"></div>
+                <span class="ms-2 small text-muted">Loading comments…</span>
+            </asp:Panel>
+
+            <asp:PlaceHolder ID="phComments" runat="server" />
+        </div>
     </asp:Panel>
 
-    <%-- ═══════════════════════════════════════════════════════════
+    <%-- ═══════════════════════════════════════════════════════════════
          User profile panel
-    ════════════════════════════════════════════════════════════════ --%>
+    ═══════════════════════════════════════════════════════════════════ --%>
     <asp:Panel ID="pnlUserProfile" runat="server" Visible="false"
         CssClass="animate__animated animate__fadeIn">
         <div class="d-flex justify-content-end mb-1">
@@ -1607,8 +1681,8 @@ MODIFIED: 02/17/2026 14:24:15
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\HackerNews.aspx.cs
-SIZE: 26.83 KB
-MODIFIED: 02/17/2026 17:48:30
+SIZE: 31.05 KB
+MODIFIED: 02/17/2026 18:15:29
 ================================================================================
 
 using System;
@@ -1645,7 +1719,7 @@ namespace MyWebForms
     /// ---------------------------------------------------------
     /// Controls added dynamically to a PlaceHolder only receive postback events
     /// if they exist in the control tree BEFORE the event-dispatch phase (which
-    /// runs between Page_Load and Page_PreRender).
+    /// runs between Load and PreRender).
     ///
     /// Story rows: cache the current page's story IDs in ViewState ("ShownIds")
     /// AND their author names in ViewState ("ShownAuthors") — both parallel lists.
@@ -1667,14 +1741,35 @@ namespace MyWebForms
     /// A JS IIFE polls HackerNewsRefresh.ashx on a timer and:
     ///   - Updates score spans in the DOM via data-hn-score-num (no postback).
     ///   - Triggers __doPostBack only when listChanged == true.
+    ///
+    /// New tabs
+    /// --------
+    /// "active"  — Uses the HN /v0/updates.json endpoint which returns a JSON
+    ///             object { items: [...], profiles: [...] }.  The "items" array
+    ///             contains IDs of recently updated items (within the last few
+    ///             minutes).  This mirrors https://news.ycombinator.com/active.
+    ///
+    /// "rising"  — Filters the standard "new" story list by
+    ///             (comments >= MinComments) OR (score >= MinPoints).
+    ///             Because the HN Firebase API does not expose sorted/filtered
+    ///             endpoints, we fetch the first RisingCandidates new story IDs,
+    ///             load those items concurrently, then apply the filter.
+    ///             Thresholds are user-configurable and persisted in ViewState.
     /// </summary>
     public partial class HackerNews : Page
     {
-        // ── Constants ─────────────────────────────────────────────────────────
+        // ── Constants ────────────────────────────────────────────────────────────
 
-        private const int PageSize = 20;
-        private const int MaxCommentDepth = 4;
+        private const int PageSize         = 20;
+        private const int MaxCommentDepth  = 4;
         private const int AutoRefreshSeconds = 60;
+
+        /// <summary>
+        /// How many raw "new" story IDs to fetch and inspect when building the
+        /// "rising" tab.  A larger number means better coverage but more API
+        /// calls.  Cached for 60 s so repeated postbacks don't re-fetch.
+        /// </summary>
+        private const int RisingCandidates = 200;
 
         // ── Service ───────────────────────────────────────────────────────────
 
@@ -1686,14 +1781,14 @@ namespace MyWebForms
             set { _service = value; }
         }
 
-        // ── Data loaded by async tasks ────────────────────────────────────────
+        // ── Data loaded by async tasks ─────────────────────────────────────────
 
         private List<HackerNewsItem> _storyPage;
-        private int _totalIds;
-        private HackerNewsItem _selectedStory;
+        private int                  _totalIds;
+        private HackerNewsItem       _selectedStory;
         private List<HackerNewsItem> _comments;
         private List<HackerNewsItem> _pollOptions;
-        private HackerNewsUser _selectedUser;
+        private HackerNewsUser       _selectedUser;
 
         // ── ViewState keys ────────────────────────────────────────────────────
 
@@ -1719,6 +1814,26 @@ namespace MyWebForms
         {
             get { return ViewState["SelUser"] as string; }
             set { ViewState["SelUser"] = value; }
+        }
+
+        /// <summary>
+        /// Minimum comment count threshold for the "rising" tab.
+        /// Persisted in ViewState so the user's choice survives postbacks.
+        /// </summary>
+        private int MinComments
+        {
+            get { return (int)(ViewState["MinComments"] ?? 5); }
+            set { ViewState["MinComments"] = value; }
+        }
+
+        /// <summary>
+        /// Minimum score threshold for the "rising" tab.
+        /// Persisted in ViewState so the user's choice survives postbacks.
+        /// </summary>
+        private int MinPoints
+        {
+            get { return (int)(ViewState["MinPoints"] ?? 5); }
+            set { ViewState["MinPoints"] = value; }
         }
 
         /// <summary>
@@ -1770,8 +1885,12 @@ namespace MyWebForms
         {
             if (!IsPostBack)
             {
-                ActiveTab = "top";
+                ActiveTab   = "top";
                 CurrentPage = 1;
+
+                // Sync filter textboxes with ViewState defaults on first load.
+                txtMinComments.Text = MinComments.ToString();
+                txtMinPoints.Text   = MinPoints.ToString();
             }
             else
             {
@@ -1781,9 +1900,7 @@ namespace MyWebForms
 
                 // Recreate comment stubs for the same reason.
                 if (SelectedItemId > 0)
-                {
                     RecreateCommentStubsForEventRouting();
-                }
             }
 
             hfActiveTab.Value = ActiveTab;
@@ -1802,19 +1919,19 @@ namespace MyWebForms
         private void RecreateStoryRowsForEventRouting()
         {
             phStories.Controls.Clear();
-            var ids = ShownIds;
+            var ids     = ShownIds;
             var authors = ShownAuthors;
             int startRank = (CurrentPage - 1) * PageSize + 1;
 
             for (int i = 0; i < ids.Count; i++)
             {
                 var row = (HnStoryRow)LoadControl("~/HnStoryRow.ascx");
-                row.ID = "row_" + ids[i];
-                row.Item = null;                   // Stub — renders nothing
-                row.Rank = startRank + i;
-                row.StubItemId = ids[i];
-                row.StubItemBy = i < authors.Count ? authors[i] : string.Empty;
-                row.StorySelected += OnStorySelected;
+                row.ID          = "row_" + ids[i];
+                row.Item        = null;   // Stub — renders nothing
+                row.Rank        = startRank + i;
+                row.StubItemId  = ids[i];
+                row.StubItemBy  = i < authors.Count ? authors[i] : string.Empty;
+                row.StorySelected  += OnStorySelected;
                 row.AuthorSelected += OnAuthorSelected;
                 phStories.Controls.Add(row);
             }
@@ -1830,24 +1947,24 @@ namespace MyWebForms
         private void RecreateCommentStubsForEventRouting()
         {
             phComments.Controls.Clear();
-            var meta = ShownCommentMeta;
+            var meta    = ShownCommentMeta;
             var authors = ShownCommentAuthors;
 
             for (int i = 0; i < meta.Count; i++)
             {
                 int commentId = meta[i][0];
-                int parentId = meta[i][1];
-                string by = i < authors.Count ? authors[i] : string.Empty;
+                int parentId  = meta[i][1];
+                string by     = i < authors.Count ? authors[i] : string.Empty;
 
                 var stub = (HnComment)LoadControl("~/HnComment.ascx");
-                stub.ID = "cmt_" + commentId;   // must match RenderCommentTree
+                stub.ID   = "cmt_" + commentId;   // must match RenderCommentTree
                 stub.Item = new HackerNewsItem
                 {
-                    Id = commentId,
-                    By = by,
+                    Id     = commentId,
+                    By     = by,
                     Parent = parentId
                 };
-                stub.Depth = 0;    // depth doesn't matter for invisible stubs
+                stub.Depth = 0;
                 stub.AuthorSelected += OnAuthorSelected;
                 stub.Visible = false;
                 phComments.Controls.Add(stub);
@@ -1857,7 +1974,7 @@ namespace MyWebForms
         private async Task LoadDataAsync()
         {
             var ids = await GetIdsForTabAsync(ActiveTab).ConfigureAwait(false);
-            _totalIds = ids.Count;
+            _totalIds  = ids.Count;
             _storyPage = await Service.GetItemPageAsync(ids, CurrentPage, PageSize)
                              .ConfigureAwait(false);
 
@@ -1897,6 +2014,17 @@ namespace MyWebForms
 
             HighlightActiveTab();
 
+            // Show the Rising filter controls only on the "rising" tab.
+            pnlRisingFilter.Visible = (ActiveTab == "rising");
+
+            // Sync textboxes with current ViewState thresholds (so they reflect
+            // any server-side changes, e.g. after btnApplyFilter_Click).
+            if (ActiveTab == "rising")
+            {
+                txtMinComments.Text = MinComments.ToString();
+                txtMinPoints.Text   = MinPoints.ToString();
+            }
+
             BindStoryList();
             BindDetailPanel();
             BindUserPanel();
@@ -1905,12 +2033,10 @@ namespace MyWebForms
             lblLiveBadge.Visible = true;
 
             if (SelectedItemId == 0 && string.IsNullOrEmpty(SelectedUsername))
-            {
                 InjectAutoRefreshScript();
-            }
         }
 
-        // ── Auto-refresh script ───────────────────────────────────────────────
+        // ── Auto-refresh script ──────────────────────────────────────────────
 
         private void InjectAutoRefreshScript()
         {
@@ -1921,20 +2047,22 @@ namespace MyWebForms
                     shownIds.Add(s.Id.ToString());
             }
 
-            var activeTab = ActiveTab;
-            var countdownClientId = lblRefreshCountdown.ClientID;
-            var seconds = AutoRefreshSeconds;
-            var handlerUrl = ResolveUrl("~/hn-refresh");
+            var activeTab          = ActiveTab;
+            var countdownClientId  = lblRefreshCountdown.ClientID;
+            var seconds            = AutoRefreshSeconds;
+            var handlerUrl         = ResolveUrl("~/hn-refresh");
 
             string currentTabBtnUniqueId;
             switch (activeTab)
             {
-                case "new": currentTabBtnUniqueId = btnTabNew.UniqueID; break;
-                case "best": currentTabBtnUniqueId = btnTabBest.UniqueID; break;
-                case "ask": currentTabBtnUniqueId = btnTabAsk.UniqueID; break;
-                case "show": currentTabBtnUniqueId = btnTabShow.UniqueID; break;
-                case "jobs": currentTabBtnUniqueId = btnTabJobs.UniqueID; break;
-                default: currentTabBtnUniqueId = btnTabTop.UniqueID; break;
+                case "new":    currentTabBtnUniqueId = btnTabNew.UniqueID;    break;
+                case "best":   currentTabBtnUniqueId = btnTabBest.UniqueID;   break;
+                case "ask":    currentTabBtnUniqueId = btnTabAsk.UniqueID;    break;
+                case "show":   currentTabBtnUniqueId = btnTabShow.UniqueID;   break;
+                case "jobs":   currentTabBtnUniqueId = btnTabJobs.UniqueID;   break;
+                case "active": currentTabBtnUniqueId = btnTabActive.UniqueID; break;
+                case "rising": currentTabBtnUniqueId = btnTabRising.UniqueID; break;
+                default:       currentTabBtnUniqueId = btnTabTop.UniqueID;    break;
             }
 
             var shownIdsJoined = string.Join(",", shownIds.ToArray());
@@ -1948,37 +2076,48 @@ namespace MyWebForms
             sb.AppendLine("    function updateCountdown() {");
             sb.AppendLine("        if (countdownEl) {");
             sb.AppendLine("            countdownEl.style.display = '';");
-            sb.AppendLine("            countdownEl.textContent = 'Refreshing in ' + remaining + 's';");
+            sb.AppendLine("            countdownEl.textContent = 'Refresh in ' + remaining + 's';");
             sb.AppendLine("        }");
             sb.AppendLine("    }");
             sb.AppendLine("");
-            sb.AppendLine("    function poll() {");
+            sb.AppendLine("    function tick() {");
+            sb.AppendLine("        remaining--;");
+            sb.AppendLine("        updateCountdown();");
+            sb.AppendLine("        if (remaining <= 0) {");
+            sb.AppendLine("            clearInterval(timer);");
+            sb.AppendLine("            doRefresh();");
+            sb.AppendLine("        }");
+            sb.AppendLine("    }");
+            sb.AppendLine("");
+            sb.AppendLine("    function doRefresh() {");
             sb.AppendLine("        var url = '" + handlerUrl + "?tab=" + activeTab + "&ids=" + shownIdsJoined + "';");
-            sb.AppendLine("        fetch(url)");
-            sb.AppendLine("            .then(function(r) { return r.json(); })");
-            sb.AppendLine("            .then(function(data) {");
+            sb.AppendLine("        var xhr = new XMLHttpRequest();");
+            sb.AppendLine("        xhr.open('GET', url, true);");
+            sb.AppendLine("        xhr.onload = function () {");
+            sb.AppendLine("            if (xhr.status !== 200) { restart(); return; }");
+            sb.AppendLine("            try {");
+            sb.AppendLine("                var data = JSON.parse(xhr.responseText);");
             sb.AppendLine("                if (data.scores) {");
-            sb.AppendLine("                    Object.keys(data.scores).forEach(function(id) {");
+            sb.AppendLine("                    Object.keys(data.scores).forEach(function (id) {");
             sb.AppendLine("                        var el = document.querySelector('[data-hn-score-num=\"' + id + '\"]');");
             sb.AppendLine("                        if (el) el.textContent = data.scores[id] + ' pts';");
             sb.AppendLine("                    });");
             sb.AppendLine("                }");
             sb.AppendLine("                if (data.listChanged) {");
             sb.AppendLine("                    __doPostBack('" + currentTabBtnUniqueId + "', '');");
+            sb.AppendLine("                } else {");
+            sb.AppendLine("                    restart();");
             sb.AppendLine("                }");
-            sb.AppendLine("            })");
-            sb.AppendLine("            .catch(function() { /* ignore network errors during poll */ });");
+            sb.AppendLine("            } catch (ex) { restart(); }");
+            sb.AppendLine("        };");
+            sb.AppendLine("        xhr.onerror = function () { restart(); };");
+            sb.AppendLine("        xhr.send();");
             sb.AppendLine("    }");
             sb.AppendLine("");
-            sb.AppendLine("    function tick() {");
-            sb.AppendLine("        remaining--;");
-            sb.AppendLine("        if (remaining <= 0) {");
-            sb.AppendLine("            remaining = " + seconds + ";");
-            sb.AppendLine("            clearInterval(timer);");
-            sb.AppendLine("            poll();");
-            sb.AppendLine("        } else {");
-            sb.AppendLine("            updateCountdown();");
-            sb.AppendLine("        }");
+            sb.AppendLine("    function restart() {");
+            sb.AppendLine("        remaining = " + seconds + ";");
+            sb.AppendLine("        updateCountdown();");
+            sb.AppendLine("        timer = setInterval(tick, 1000);");
             sb.AppendLine("    }");
             sb.AppendLine("");
             sb.AppendLine("    updateCountdown();");
@@ -1993,18 +2132,30 @@ namespace MyWebForms
                 addScriptTags: true);
         }
 
-        // ── Tab click ─────────────────────────────────────────────────────────
+        // ── Tab click ────────────────────────────────────────────────────────
 
         protected void btnTab_Click(object sender, EventArgs e)
         {
-            var btn = (LinkButton)sender;
+            var btn   = (LinkButton)sender;
             ActiveTab = btn.CommandArgument;
-            CurrentPage = 1;
-            SelectedItemId = 0;
+            CurrentPage   = 1;
+            SelectedItemId   = 0;
             SelectedUsername = null;
         }
 
-        // ── Pager clicks ──────────────────────────────────────────────────────
+        // ── Apply rising filter ──────────────────────────────────────────────
+
+        protected void btnApplyFilter_Click(object sender, EventArgs e)
+        {
+            int minC, minP;
+            if (int.TryParse(txtMinComments.Text, out minC) && minC >= 0) MinComments = minC;
+            if (int.TryParse(txtMinPoints.Text,   out minP) && minP >= 0) MinPoints   = minP;
+
+            // Reset to page 1 so the filtered list starts from the beginning.
+            CurrentPage = 1;
+        }
+
+        // ── Pager clicks ─────────────────────────────────────────────────────
 
         protected void btnPrev_Click(object sender, EventArgs e)
         {
@@ -2017,12 +2168,12 @@ namespace MyWebForms
             if (CurrentPage < pageCount) CurrentPage++;
         }
 
-        // ── Detail / user panel close ─────────────────────────────────────────
+        // ── Detail / user panel close ────────────────────────────────────────
 
         protected void btnCloseDetail_Click(object sender, EventArgs e)
         {
             SelectedItemId = 0;
-            ShownCommentMeta = new List<int[]>();
+            ShownCommentMeta    = new List<int[]>();
             ShownCommentAuthors = new List<string>();
         }
 
@@ -2031,7 +2182,7 @@ namespace MyWebForms
             SelectedUsername = null;
         }
 
-        // ── Binding helpers ───────────────────────────────────────────────────
+        // ── Binding helpers ──────────────────────────────────────────────────
 
         private void BindStoryList()
         {
@@ -2042,38 +2193,33 @@ namespace MyWebForms
                 litMessage.Text = "No stories found. " +
                     "The API may be temporarily unavailable.";
                 pnlMessage.Visible = true;
-                ShownIds = new List<int>();
+                ShownIds    = new List<int>();
                 ShownAuthors = new List<string>();
                 return;
             }
 
             pnlMessage.Visible = false;
 
-            // Cache IDs and author names so the next postback can create stubs
-            // that fire the correct events.
-            var newShownIds = new List<int>();
+            var newShownIds     = new List<int>();
             var newShownAuthors = new List<string>();
-
-            foreach (var s in _storyPage)
-            {
-                newShownIds.Add(s.Id);
-                newShownAuthors.Add(s.By ?? string.Empty);
-            }
-
-            ShownIds = newShownIds;
-            ShownAuthors = newShownAuthors;
 
             int startRank = (CurrentPage - 1) * PageSize + 1;
             for (int i = 0; i < _storyPage.Count; i++)
             {
+                newShownIds.Add(_storyPage[i].Id);
+                newShownAuthors.Add(_storyPage[i].By ?? string.Empty);
+
                 var row = (HnStoryRow)LoadControl("~/HnStoryRow.ascx");
-                row.ID = "row_" + _storyPage[i].Id;  // Stable ID — must match RecreateStoryRowsForEventRouting
+                row.ID   = "row_" + _storyPage[i].Id;  // stable ID — must match RecreateStoryRowsForEventRouting
                 row.Item = _storyPage[i];
                 row.Rank = startRank + i;
-                row.StorySelected += OnStorySelected;
+                row.StorySelected  += OnStorySelected;
                 row.AuthorSelected += OnAuthorSelected;
                 phStories.Controls.Add(row);
             }
+
+            ShownIds     = newShownIds;
+            ShownAuthors = newShownAuthors;
         }
 
         private void BindDetailPanel()
@@ -2098,7 +2244,7 @@ namespace MyWebForms
 
             if (!string.IsNullOrEmpty(_selectedStory.Text))
             {
-                litDetailText.Text = _selectedStory.Text;
+                litDetailText.Text  = _selectedStory.Text;
                 pnlDetailText.Visible = true;
             }
             else
@@ -2128,7 +2274,7 @@ namespace MyWebForms
 
             litDetailCommentCount.Text = _selectedStory.Descendants.ToString();
             phComments.Controls.Clear();
-            pnlCommentLoading.Visible = false;
+            pnlCommentLoading.Visible  = false;
 
             if (_comments == null || _comments.Count == 0)
             {
@@ -2137,17 +2283,15 @@ namespace MyWebForms
                 noComments.InnerText = "No comments yet.";
                 phComments.Controls.Add(noComments);
 
-                ShownCommentMeta = new List<int[]>();
+                ShownCommentMeta    = new List<int[]>();
                 ShownCommentAuthors = new List<string>();
             }
             else
             {
-                var newMeta = new List<int[]>();
+                var newMeta    = new List<int[]>();
                 var newAuthors = new List<string>();
-
                 RenderCommentTree(_comments, _selectedStory.Id, 0, newMeta, newAuthors);
-
-                ShownCommentMeta = newMeta;
+                ShownCommentMeta    = newMeta;
                 ShownCommentAuthors = newAuthors;
             }
         }
@@ -2174,15 +2318,12 @@ namespace MyWebForms
                 if (comment.Parent != parentId) continue;
 
                 var ctrl = (HnComment)LoadControl("~/HnComment.ascx");
-                ctrl.ID = "cmt_" + comment.Id;   // must match RecreateCommentStubsForEventRouting
-                ctrl.Item = comment;
+                ctrl.ID   = "cmt_" + comment.Id;   // must match RecreateCommentStubsForEventRouting
+                ctrl.Item  = comment;
                 ctrl.Depth = depth;
                 ctrl.AuthorSelected += OnAuthorSelected;
                 phComments.Controls.Add(ctrl);
 
-                // Always add both entries together to keep the parallel lists in sync.
-                // comment.Parent is int? but the HN API always sets it for comments;
-                // default to 0 on the off chance of a malformed item.
                 newMeta.Add(new int[] { comment.Id, comment.Parent ?? 0 });
                 newAuthors.Add(comment.By ?? string.Empty);
 
@@ -2209,29 +2350,32 @@ namespace MyWebForms
                 ? (int)Math.Ceiling((double)_totalIds / PageSize)
                 : 1;
 
-            litPage.Text = CurrentPage.ToString();
+            litPage.Text      = CurrentPage.ToString();
             litPageCount.Text = pageCount.ToString();
-            btnPrev.Enabled = CurrentPage > 1;
-            btnNext.Enabled = CurrentPage < pageCount;
-            pnlPager.Visible = pageCount > 1;
+            btnPrev.Enabled   = CurrentPage > 1;
+            btnNext.Enabled   = CurrentPage < pageCount;
+            pnlPager.Visible  = pageCount > 1;
         }
 
         private void HighlightActiveTab()
         {
             foreach (var btn in new[] { btnTabTop, btnTabNew, btnTabBest,
-                                        btnTabAsk, btnTabShow, btnTabJobs })
+                                        btnTabAsk, btnTabShow, btnTabJobs,
+                                        btnTabActive, btnTabRising })
             {
                 btn.CssClass = "nav-link";
             }
 
             switch (ActiveTab)
             {
-                case "top": btnTabTop.CssClass = "nav-link active"; break;
-                case "new": btnTabNew.CssClass = "nav-link active"; break;
-                case "best": btnTabBest.CssClass = "nav-link active"; break;
-                case "ask": btnTabAsk.CssClass = "nav-link active"; break;
-                case "show": btnTabShow.CssClass = "nav-link active"; break;
-                case "jobs": btnTabJobs.CssClass = "nav-link active"; break;
+                case "top":    btnTabTop.CssClass    = "nav-link active"; break;
+                case "new":    btnTabNew.CssClass    = "nav-link active"; break;
+                case "best":   btnTabBest.CssClass   = "nav-link active"; break;
+                case "ask":    btnTabAsk.CssClass    = "nav-link active"; break;
+                case "show":   btnTabShow.CssClass   = "nav-link active"; break;
+                case "jobs":   btnTabJobs.CssClass   = "nav-link active"; break;
+                case "active": btnTabActive.CssClass = "nav-link active"; break;
+                case "rising": btnTabRising.CssClass = "nav-link active"; break;
             }
         }
 
@@ -2239,28 +2383,31 @@ namespace MyWebForms
 
         private void OnStorySelected(object sender, StorySelectedEventArgs e)
         {
-            SelectedItemId = e.ItemId;
+            SelectedItemId   = e.ItemId;
             SelectedUsername = null;
         }
 
         private void OnAuthorSelected(object sender, AuthorSelectedEventArgs e)
         {
             SelectedUsername = e.Username;
-            SelectedItemId = 0;
+            SelectedItemId   = 0;
         }
 
         // ── API tab → ID list routing ─────────────────────────────────────────
 
-        private Task<List<int>> GetIdsForTabAsync(string tab)
+        private async Task<List<int>> GetIdsForTabAsync(string tab)
         {
             switch (tab)
             {
-                case "new": return Service.GetNewStoryIdsAsync();
-                case "best": return Service.GetBestStoryIdsAsync();
-                case "ask": return Service.GetAskStoryIdsAsync();
-                case "show": return Service.GetShowStoryIdsAsync();
-                case "jobs": return Service.GetJobStoryIdsAsync();
-                default: return Service.GetTopStoryIdsAsync();
+                case "new":    return await Service.GetNewStoryIdsAsync().ConfigureAwait(false);
+                case "best":   return await Service.GetBestStoryIdsAsync().ConfigureAwait(false);
+                case "ask":    return await Service.GetAskStoryIdsAsync().ConfigureAwait(false);
+                case "show":   return await Service.GetShowStoryIdsAsync().ConfigureAwait(false);
+                case "jobs":   return await Service.GetJobStoryIdsAsync().ConfigureAwait(false);
+                case "active": return await Service.GetActiveItemIdsAsync().ConfigureAwait(false);
+                case "rising": return await Service.GetRisingStoryIdsAsync(
+                                   MinComments, MinPoints, RisingCandidates).ConfigureAwait(false);
+                default:       return await Service.GetTopStoryIdsAsync().ConfigureAwait(false);
             }
         }
     }
@@ -2323,8 +2470,8 @@ MODIFIED: 02/17/2026 14:32:02
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\HackerNewsRefresh.ashx.cs
-SIZE: 5.74 KB
-MODIFIED: 02/17/2026 14:31:41
+SIZE: 6.29 KB
+MODIFIED: 02/17/2026 18:16:04
 ================================================================================
 
 using System;
@@ -2357,15 +2504,19 @@ namespace MyWebForms
     ///
     /// Route: registered via RouteConfig so the URL is /hn-refresh
     /// Query params:
-    ///   tab  — one of top|new|best|ask|show|jobs  (default: top)
-    ///   ids  — comma-separated list of item IDs currently shown on the page
-    ///           (used by the handler to decide whether to include scores)
+    ///   tab       — one of top|new|best|ask|show|jobs|active|rising (default: top)
+    ///   ids       — comma-separated list of item IDs currently shown on the page
+    ///   minc      — minimum comments threshold (for "rising" tab, default 5)
+    ///   minp      — minimum points threshold (for "rising" tab, default 5)
     /// </summary>
     public class HackerNewsRefresh : HttpTaskAsyncHandler
     {
         // Only fetch scores for the IDs the client already has on screen.
         // Cap at 30 to keep the response fast.
         private const int MaxScoreFetch = 30;
+
+        // Candidates to scan when building the "rising" list for comparison.
+        private const int RisingCandidates = 200;
 
         public override bool IsReusable { get { return true; } }
 
@@ -2374,15 +2525,20 @@ namespace MyWebForms
             context.Response.ContentType = "application/json";
             context.Response.Cache.SetCacheability(HttpCacheability.NoCache);
 
-            var tab = context.Request.QueryString["tab"] ?? "top";
-            var rawIds = context.Request.QueryString["ids"] ?? string.Empty;
+            var tab    = context.Request.QueryString["tab"]  ?? "top";
+            var rawIds = context.Request.QueryString["ids"]  ?? string.Empty;
+
+            // Parse rising-tab thresholds passed by the auto-refresh script.
+            int minC, minP;
+            if (!int.TryParse(context.Request.QueryString["minc"], out minC)) minC = 5;
+            if (!int.TryParse(context.Request.QueryString["minp"], out minP)) minP = 5;
 
             var service = new HackerNewsService();
 
             try
             {
                 // 1. Fetch the current list of IDs for this tab.
-                var currentIds = await GetIdsForTabAsync(service, tab)
+                var currentIds = await GetIdsForTabAsync(service, tab, minC, minP)
                     .ConfigureAwait(false);
 
                 // Take the first page worth for comparison.
@@ -2400,9 +2556,8 @@ namespace MyWebForms
                 scoreIds = scoreIds.Take(MaxScoreFetch).ToList();
 
                 var scores = new Dictionary<int, int>();
-                // Fetch items concurrently — HackerNewsService is stateless.
-                var tasks = scoreIds.Select(id => service.GetItemAsync(id));
-                var items = await Task.WhenAll(tasks).ConfigureAwait(false);
+                var tasks  = scoreIds.Select(id => service.GetItemAsync(id));
+                var items  = await Task.WhenAll(tasks).ConfigureAwait(false);
                 foreach (var item in items)
                 {
                     if (item != null)
@@ -2412,15 +2567,13 @@ namespace MyWebForms
                 var result = new RefreshResult
                 {
                     ListChanged = listChanged,
-                    Scores = scores
+                    Scores      = scores
                 };
 
                 context.Response.Write(JsonConvert.SerializeObject(result));
             }
             catch (Exception ex)
             {
-                // Return a safe error payload — client will ignore score updates
-                // but won't crash.
                 var error = new { error = ex.Message };
                 context.Response.StatusCode = 500;
                 context.Response.Write(JsonConvert.SerializeObject(error));
@@ -2429,16 +2582,19 @@ namespace MyWebForms
 
         // ── Helpers ──────────────────────────────────────────────────────────
 
-        private static Task<List<int>> GetIdsForTabAsync(HackerNewsService svc, string tab)
+        private static Task<List<int>> GetIdsForTabAsync(
+            HackerNewsService svc, string tab, int minC, int minP)
         {
             switch (tab)
             {
-                case "new": return svc.GetNewStoryIdsAsync();
-                case "best": return svc.GetBestStoryIdsAsync();
-                case "ask": return svc.GetAskStoryIdsAsync();
-                case "show": return svc.GetShowStoryIdsAsync();
-                case "jobs": return svc.GetJobStoryIdsAsync();
-                default: return svc.GetTopStoryIdsAsync();
+                case "new":    return svc.GetNewStoryIdsAsync();
+                case "best":   return svc.GetBestStoryIdsAsync();
+                case "ask":    return svc.GetAskStoryIdsAsync();
+                case "show":   return svc.GetShowStoryIdsAsync();
+                case "jobs":   return svc.GetJobStoryIdsAsync();
+                case "active": return svc.GetActiveItemIdsAsync();
+                case "rising": return svc.GetRisingStoryIdsAsync(minC, minP, RisingCandidates);
+                default:       return svc.GetTopStoryIdsAsync();
             }
         }
 
@@ -2455,7 +2611,7 @@ namespace MyWebForms
             return result;
         }
 
-        // ── Response DTO ─────────────────────────────────────────────────────
+        // ── Response DTO ──────────────────────────────────────────────────────
 
         private class RefreshResult
         {
@@ -2570,6 +2726,417 @@ namespace MyWebForms
         {
             if (Item == null || string.IsNullOrEmpty(Item.By)) return;
             AuthorSelected?.Invoke(this, new AuthorSelectedEventArgs(Item.By));
+        }
+    }
+}
+
+
+
+================================================================================
+FILE: D:\DEV\personal\MyWebForms\MyWebForms\HnLive.aspx
+SIZE: 16.25 KB
+MODIFIED: 02/17/2026 18:14:44
+================================================================================
+
+<%@ Page Title="HN Live" Language="C#" MasterPageFile="~/Site.Master"
+    AutoEventWireup="true" CodeBehind="HnLive.aspx.cs"
+    Inherits="MyWebForms.HnLive" %>
+
+<asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+
+<main class="container-fluid mt-3" style="max-width:960px;">
+
+    <%-- ═══════════════════════════════════════════════════════════════
+         Page header
+    ═══════════════════════════════════════════════════════════════════ --%>
+    <div class="d-flex align-items-center mb-3 flex-wrap gap-2">
+        <span class="hn-logo me-2"
+              style="background:#ff6600;color:#fff;font-weight:bold;padding:2px 6px;font-family:monospace;">Y</span>
+        <h4 class="mb-0 fw-bold me-3">HN Live</h4>
+
+        <span id="liveBadge"
+              class="badge bg-success animate__animated animate__pulse animate__infinite"
+              style="font-size:.65rem;">LIVE</span>
+
+        <span id="statusMsg" class="text-muted small ms-2">Connecting&hellip;</span>
+
+        <div class="ms-auto d-flex align-items-center gap-2 flex-wrap">
+            <%-- Min-comments filter --%>
+            <label class="form-label mb-0 small" for="minComments">Min comments:</label>
+            <input type="number" id="minComments" class="form-control form-control-sm"
+                   style="width:70px;" value="0" min="0" max="9999" />
+
+            <%-- Min-points filter --%>
+            <label class="form-label mb-0 small" for="minPoints">Min points:</label>
+            <input type="number" id="minPoints" class="form-control form-control-sm"
+                   style="width:70px;" value="0" min="0" max="9999" />
+
+            <button id="btnPause" class="btn btn-sm btn-outline-secondary">⏸ Pause</button>
+            <button id="btnClear" class="btn btn-sm btn-outline-danger">🗑 Clear</button>
+        </div>
+    </div>
+
+    <%-- ═══════════════════════════════════════════════════════════════
+         Counter bar
+    ═══════════════════════════════════════════════════════════════════ --%>
+    <div class="d-flex gap-3 mb-3 small text-muted">
+        <span>Items seen: <strong id="countSeen">0</strong></span>
+        <span>Shown: <strong id="countShown">0</strong></span>
+        <span>Filtered out: <strong id="countFiltered">0</strong></span>
+    </div>
+
+    <%-- ═══════════════════════════════════════════════════════════════
+         Live feed container — items prepended here by JS
+    ═══════════════════════════════════════════════════════════════════ --%>
+    <div id="hnFeed"></div>
+
+    <%-- Loading spinner shown while the first batch loads --%>
+    <div id="loadingSpinner" class="text-center py-5">
+        <div class="spinner-border text-warning" role="status">
+            <span class="visually-hidden">Loading…</span>
+        </div>
+        <p class="mt-2 text-muted small">Fetching latest items from HN&hellip;</p>
+    </div>
+
+</main>
+
+<style>
+    /* ── Live feed items ─────────────────────────────────────────────── */
+    .hn-live-item {
+        border-bottom: 1px solid #f0f0f0;
+        padding: .55rem .25rem;
+        animation: hnFadeIn .4s ease-in-out;
+    }
+    @keyframes hnFadeIn {
+        from { opacity: 0; transform: translateY(-6px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    .hn-live-item:hover { background: #fffaf5; }
+    .hn-live-title { font-size: .93rem; font-weight: 500; }
+    .hn-live-title a { color: #000; text-decoration: none; }
+    .hn-live-title a:hover { color: #ff6600; }
+    .hn-live-meta { font-size: .75rem; color: #666; }
+    .hn-live-meta a { color: inherit; text-decoration: underline dotted; }
+    .hn-live-score { color: #ff6600; font-weight: 600; }
+    .hn-type-comment .hn-live-title a { color: #555; font-weight: 400; font-style: italic; }
+    .hn-type-job     { background: #fffff0; }
+</style>
+
+<%-- ═══════════════════════════════════════════════════════════════════
+     Page-specific script — pure client-side live feed
+     Strategy:
+       1. On load, fetch /v0/maxitem.json to get the current high-water mark.
+       2. Back-fill the last BackfillCount items to seed the feed.
+       3. Every PollMs, fetch maxitem again; for any new IDs since last seen,
+          fetch each item concurrently and prepend to the feed.
+       4. The minComments / minPoints inputs gate which items are shown.
+       5. Pause button stops new fetches without losing position.
+═══════════════════════════════════════════════════════════════════════ --%>
+<script>
+(function () {
+    'use strict';
+
+    var HN_BASE    = 'https://hacker-news.firebaseio.com/v0/';
+    var POLL_MS    = 6000;          // poll interval
+    var BACKFILL   = 30;            // items to back-fill on first load
+    var MAX_FEED   = 300;           // max DOM nodes kept in feed before pruning
+
+    var lastMaxId  = 0;
+    var paused     = false;
+    var countSeen  = 0;
+    var countShown = 0;
+    var countFilt  = 0;
+    var pollTimer  = null;
+
+    var feed       = document.getElementById('hnFeed');
+    var spinner    = document.getElementById('loadingSpinner');
+    var statusEl   = document.getElementById('statusMsg');
+    var seenEl     = document.getElementById('countSeen');
+    var shownEl    = document.getElementById('countShown');
+    var filtEl     = document.getElementById('countFiltered');
+    var btnPause   = document.getElementById('btnPause');
+    var btnClear   = document.getElementById('btnClear');
+    var inMinCmt   = document.getElementById('minComments');
+    var inMinPts   = document.getElementById('minPoints');
+
+    // ── Counters ─────────────────────────────────────────────────────
+
+    function updateCounters() {
+        seenEl.textContent  = countSeen;
+        shownEl.textContent = countShown;
+        filtEl.textContent  = countFilt;
+    }
+
+    // ── Fetch helpers ─────────────────────────────────────────────────
+
+    function fetchJson(url) {
+        return fetch(url).then(function (r) {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+        });
+    }
+
+    function fetchItem(id) {
+        return fetchJson(HN_BASE + 'item/' + id + '.json');
+    }
+
+    function fetchMaxItem() {
+        return fetchJson(HN_BASE + 'maxitem.json');
+    }
+
+    // ── Filtering ─────────────────────────────────────────────────────
+
+    function passesFilter(item) {
+        if (!item || item.deleted || item.dead) return false;
+        var minC = parseInt(inMinCmt.value, 10) || 0;
+        var minP = parseInt(inMinPts.value,  10) || 0;
+        var comments = item.descendants || 0;
+        var score    = item.score       || 0;
+        if (minC > 0 && minP > 0) return comments >= minC || score >= minP;
+        if (minC > 0) return comments >= minC;
+        if (minP > 0) return score    >= minP;
+        return true;
+    }
+
+    // ── Rendering ─────────────────────────────────────────────────────
+
+    function itemTypeClass(item) {
+        if (!item.type) return '';
+        return 'hn-type-' + item.type;
+    }
+
+    function renderItem(item, prepend) {
+        countSeen++;
+
+        if (!passesFilter(item)) {
+            countFilt++;
+            updateCounters();
+            return;
+        }
+        countShown++;
+        updateCounters();
+
+        var el       = document.createElement('div');
+        el.className = 'hn-live-item ' + itemTypeClass(item);
+
+        var title, url, meta;
+
+        if (item.type === 'comment') {
+            // Comments: show a snippet of the text and link to parent story
+            var snippet = '';
+            if (item.text) {
+                var tmp = document.createElement('div');
+                tmp.innerHTML = item.text;
+                snippet = (tmp.textContent || tmp.innerText || '').substring(0, 120);
+                if (snippet.length === 120) snippet += '…';
+            }
+            title = '"' + (snippet || '(empty comment)') + '"';
+            url   = 'https://news.ycombinator.com/item?id=' + item.id;
+            meta  = 'comment by <a href="https://news.ycombinator.com/user?id='
+                  + esc(item.by || '[deleted]') + '" target="_blank">'
+                  + esc(item.by || '[deleted]') + '</a>'
+                  + (item.parent ? ' &nbsp;|&nbsp; <a href="https://news.ycombinator.com/item?id='
+                  + item.parent + '" target="_blank">parent</a>' : '')
+                  + ' &nbsp;|&nbsp; ' + timeAgo(item.time);
+        } else {
+            // story / job / poll
+            title = esc(item.title || '(untitled)');
+            url   = item.url || ('https://news.ycombinator.com/item?id=' + item.id);
+            var score = item.score || 0;
+            var desc  = item.descendants || 0;
+            meta  = '<span class="hn-live-score">▲ ' + score + ' pts</span>'
+                  + ' &nbsp;by <a href="https://news.ycombinator.com/user?id='
+                  + esc(item.by || '[deleted]') + '" target="_blank">'
+                  + esc(item.by || '[deleted]') + '</a>'
+                  + ' &nbsp;|&nbsp; '
+                  + '<a href="https://news.ycombinator.com/item?id=' + item.id
+                  + '" target="_blank">' + desc + ' comment' + (desc !== 1 ? 's' : '') + '</a>'
+                  + ' &nbsp;|&nbsp; ' + timeAgo(item.time)
+                  + ' &nbsp;|&nbsp; <span class="badge bg-secondary" style="font-size:.65rem;">'
+                  + esc(item.type || 'story') + '</span>';
+        }
+
+        el.innerHTML =
+            '<div class="hn-live-title"><a href="' + esc(url) + '" target="_blank">'
+            + title + '</a></div>'
+            + '<div class="hn-live-meta">' + meta + '</div>';
+
+        if (prepend && feed.firstChild) {
+            feed.insertBefore(el, feed.firstChild);
+        } else {
+            feed.appendChild(el);
+        }
+
+        // Prune excess nodes to avoid infinite DOM growth
+        while (feed.childNodes.length > MAX_FEED) {
+            feed.removeChild(feed.lastChild);
+        }
+    }
+
+    function esc(s) {
+        return String(s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function timeAgo(unix) {
+        if (!unix) return '';
+        var diff = Math.floor(Date.now() / 1000) - unix;
+        if (diff <  60)  return diff + 's ago';
+        if (diff <  3600) return Math.floor(diff / 60) + 'm ago';
+        if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+        return Math.floor(diff / 86400) + 'd ago';
+    }
+
+    // ── Back-fill ─────────────────────────────────────────────────────
+    // Fetch the most recent BACKFILL items in descending order and append
+    // them to the feed (oldest first = natural reading order).
+
+    function backfill(maxId) {
+        var ids = [];
+        for (var i = 0; i < BACKFILL; i++) {
+            if (maxId - i > 0) ids.push(maxId - i);
+        }
+
+        var promises = ids.map(function (id) { return fetchItem(id); });
+
+        Promise.all(promises).then(function (items) {
+            // Sort oldest-first before appending
+            items.sort(function (a, b) {
+                var at = (a && a.time) || 0;
+                var bt = (b && b.time) || 0;
+                return at - bt;
+            });
+            spinner.style.display = 'none';
+            items.forEach(function (item) {
+                if (item) renderItem(item, false);
+            });
+            setStatus('Watching for new items…');
+            schedulePoll();
+        }).catch(function (err) {
+            setStatus('Error during back-fill: ' + err.message);
+            schedulePoll();
+        });
+    }
+
+    // ── Poll loop ─────────────────────────────────────────────────────
+
+    function poll() {
+        if (paused) return;
+
+        fetchMaxItem().then(function (newMax) {
+            if (newMax <= lastMaxId) {
+                setStatus('Up to date — watching…');
+                schedulePoll();
+                return;
+            }
+
+            // Clamp burst to 50 items to avoid flooding
+            var start = lastMaxId + 1;
+            var end   = Math.min(newMax, lastMaxId + 50);
+            lastMaxId = newMax;
+
+            var ids = [];
+            for (var id = end; id >= start; id--) ids.push(id);
+
+            var promises = ids.map(function (id) { return fetchItem(id); });
+
+            Promise.all(promises).then(function (items) {
+                // Newest first (already descending) — prepend so newest is at top
+                items.forEach(function (item) {
+                    if (item) renderItem(item, true);
+                });
+                setStatus('Last update: ' + new Date().toLocaleTimeString());
+                schedulePoll();
+            }).catch(function () {
+                schedulePoll();
+            });
+        }).catch(function (err) {
+            setStatus('Poll error: ' + err.message);
+            schedulePoll();
+        });
+    }
+
+    function schedulePoll() {
+        if (pollTimer) clearTimeout(pollTimer);
+        pollTimer = setTimeout(poll, POLL_MS);
+    }
+
+    function setStatus(msg) {
+        if (statusEl) statusEl.textContent = msg;
+    }
+
+    // ── UI controls ───────────────────────────────────────────────────
+
+    btnPause.addEventListener('click', function () {
+        paused = !paused;
+        btnPause.textContent = paused ? '▶ Resume' : '⏸ Pause';
+        btnPause.className   = paused
+            ? 'btn btn-sm btn-warning'
+            : 'btn btn-sm btn-outline-secondary';
+        document.getElementById('liveBadge').style.opacity = paused ? '.3' : '1';
+        if (!paused) { setStatus('Resuming…'); poll(); }
+        else          { setStatus('Paused'); }
+    });
+
+    btnClear.addEventListener('click', function () {
+        feed.innerHTML = '';
+        countSeen = countShown = countFilt = 0;
+        updateCounters();
+    });
+
+    // ── Boot ──────────────────────────────────────────────────────────
+
+    setStatus('Fetching latest item ID…');
+
+    fetchMaxItem().then(function (maxId) {
+        lastMaxId = maxId;
+        setStatus('Back-filling last ' + BACKFILL + ' items…');
+        backfill(maxId);
+    }).catch(function (err) {
+        spinner.style.display = 'none';
+        setStatus('Failed to connect: ' + err.message);
+    });
+
+}());
+</script>
+
+</asp:Content>
+
+
+
+================================================================================
+FILE: D:\DEV\personal\MyWebForms\MyWebForms\HnLive.aspx.cs
+SIZE: 1003 B
+MODIFIED: 02/17/2026 18:15:07
+================================================================================
+
+using System;
+using System.Web.UI;
+
+namespace MyWebForms
+{
+    /// <summary>
+    /// HnLive.aspx code-behind.
+    ///
+    /// This page is intentionally thin — all live-feed logic runs entirely
+    /// in the browser via the HN Firebase REST API.  The server's only job
+    /// is to serve the page shell; no postbacks, no ViewState, no async tasks.
+    ///
+    /// Educational note:
+    ///   Web Forms does not require postback-driven interaction.  A page can
+    ///   be a pure host for client-side JavaScript just as easily as an MVC
+    ///   or Razor Pages view.  EnableViewState is disabled at the page level
+    ///   (see the @Page directive) because nothing here round-trips.
+    /// </summary>
+    public partial class HnLive : Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            // Nothing to do server-side — the live feed is driven entirely
+            // by the inline JavaScript in HnLive.aspx.
         }
     }
 }
@@ -3170,8 +3737,8 @@ namespace MyWebForms.Models
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\MyWebForms.csproj
-SIZE: 20.71 KB
-MODIFIED: 02/17/2026 14:55:44
+SIZE: 16.62 KB
+MODIFIED: 02/17/2026 18:16:36
 ================================================================================
 
 <?xml version="1.0" encoding="utf-8"?>
@@ -3211,7 +3778,6 @@ MODIFIED: 02/17/2026 14:55:44
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\</OutputPath>
@@ -3220,165 +3786,46 @@ MODIFIED: 02/17/2026 14:55:44
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\lib\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Runtime, Version=4.1.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.4.3.1\lib\net462\System.Runtime.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.2\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Web.Services" />
-    <Reference Include="System.EnterpriseServices" />
-    <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
-    <Reference Include="System.Web.ApplicationServices" />
-    <Reference Include="Microsoft.Web.Infrastructure, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.ScriptManager.MSAjax">
-      <HintPath>..\packages\Microsoft.AspNet.ScriptManager.MSAjax.5.0.0\lib\net45\Microsoft.ScriptManager.MSAjax.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.ScriptManager.WebForms">
-      <HintPath>..\packages\Microsoft.AspNet.ScriptManager.WebForms.5.0.0\lib\net45\Microsoft.ScriptManager.WebForms.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
-    </Reference>
-    <Reference Include="WebGrease">
-      <Private>True</Private>
-      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
-    </Reference>
-    <Reference Include="Antlr3.Runtime">
-      <Private>True</Private>
-      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Web.Optimization.WebForms">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.WebForms.1.1.3\lib\net45\Microsoft.AspNet.Web.Optimization.WebForms.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.FriendlyUrls">
+    <Reference Include="Microsoft.AspNet.FriendlyUrls, Version=1.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.FriendlyUrls.Core.1.0.2\lib\net45\Microsoft.AspNet.FriendlyUrls.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="About.aspx" />
-    <Content Include="ChartWidget.ascx" />
-    <Content Include="Contact.aspx" />
-    <Content Include="Content\animate.css\animate.min.css" />
-    <Content Include="Content\bootstrap-grid.css" />
-    <Content Include="Content\bootstrap-grid.min.css" />
-    <Content Include="Content\bootstrap-grid.rtl.css" />
-    <Content Include="Content\bootstrap-grid.rtl.min.css" />
-    <Content Include="Content\bootstrap-reboot.css" />
-    <Content Include="Content\bootstrap-reboot.min.css" />
-    <Content Include="Content\bootstrap-reboot.rtl.css" />
-    <Content Include="Content\bootstrap-reboot.rtl.min.css" />
-    <Content Include="Content\bootstrap-utilities.css" />
-    <Content Include="Content\bootstrap-utilities.min.css" />
-    <Content Include="Content\bootstrap-utilities.rtl.css" />
-    <Content Include="Content\bootstrap-utilities.rtl.min.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\bootstrap.rtl.css" />
-    <Content Include="Content\bootstrap.rtl.min.css" />
-    <Content Include="Content\Site.css" />
-    <Content Include="Default.aspx" />
-    <Content Include="favicon.ico" />
-    <Content Include="Global.asax" />
-    <Content Include="HackerNews.aspx" />
-    <Content Include="HnComment.ascx" />
-    <Content Include="HnStoryRow.ascx" />
-    <Content Include="HnUserCard.ascx" />
-    <Content Include="LibraryStatusWidget.ascx" />
-    <Content Include="Scripts\bootstrap.bundle.js" />
-    <Content Include="Scripts\bootstrap.bundle.min.js" />
-    <Content Include="Scripts\bootstrap.esm.js" />
-    <Content Include="Scripts\bootstrap.esm.min.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="libman.json" />
-    <Content Include="HackerNewsRefresh.ashx" />
-    <None Include="Properties\PublishProfiles\site55560-WebDeploy.pubxml" />
-    <None Include="Scripts\jquery-3.7.1.intellisense.js" />
-    <Content Include="Scripts\jquery-3.7.1.js" />
-    <Content Include="Scripts\jquery-3.7.1.min.js" />
-    <Content Include="Scripts\jquery-3.7.1.slim.js" />
-    <Content Include="Scripts\jquery-3.7.1.slim.min.js" />
-    <Content Include="Scripts\lib\chartjs\chart.umd.js" />
-    <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\WebForms\DetailsView.js" />
-    <Content Include="Scripts\WebForms\Focus.js" />
-    <Content Include="Scripts\WebForms\GridView.js" />
-    <Content Include="Scripts\WebForms\Menu.js" />
-    <Content Include="Scripts\WebForms\MenuStandards.js" />
-    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjax.js" />
-    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxApplicationServices.js" />
-    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxComponentModel.js" />
-    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxCore.js" />
-    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxGlobalization.js" />
-    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxHistory.js" />
-    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxNetwork.js" />
-    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxSerialization.js" />
-    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxTimer.js" />
-    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxWebForms.js" />
-    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxWebServices.js" />
-    <Content Include="Scripts\WebForms\SmartNav.js" />
-    <Content Include="Scripts\WebForms\TreeView.js" />
-    <Content Include="Scripts\WebForms\WebForms.js" />
-    <Content Include="Scripts\WebForms\WebParts.js" />
-    <Content Include="Scripts\WebForms\WebUIValidation.js" />
-    <Content Include="Site.Master" />
-    <Content Include="ViewSwitcher.ascx" />
-    <Content Include="Web.config" />
-    <Content Include="Bundle.config" />
+    <Reference Include="Microsoft.AspNet.Web.Optimization.WebForms, Version=1.1.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.WebForms.1.1.3\lib\net45\Microsoft.AspNet.Web.Optimization.WebForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.ScriptManager.MSAjax, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\AspNet.ScriptManager.MSAjax.5.0.0\lib\net45\Microsoft.ScriptManager.MSAjax.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ScriptManager.WebForms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\AspNet.ScriptManager.WebForms.5.0.0\lib\net45\Microsoft.ScriptManager.WebForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -3432,6 +3879,14 @@ MODIFIED: 02/17/2026 14:55:44
     <Compile Include="HnComment.ascx.designer.cs">
       <DependentUpon>HnComment.ascx</DependentUpon>
     </Compile>
+    <!-- NEW: HnLive page — pure client-side streaming feed -->
+    <Compile Include="HnLive.aspx.cs">
+      <DependentUpon>HnLive.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HnLive.aspx.designer.cs">
+      <DependentUpon>HnLive.aspx</DependentUpon>
+    </Compile>
     <Compile Include="HnStoryRow.ascx.cs">
       <DependentUpon>HnStoryRow.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3476,37 +3931,77 @@ MODIFIED: 02/17/2026 14:55:44
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-grid.css" />
+    <Content Include="Content\bootstrap-grid.min.css" />
+    <Content Include="Content\bootstrap-grid.rtl.css" />
+    <Content Include="Content\bootstrap-grid.rtl.min.css" />
+    <Content Include="Content\bootstrap-reboot.css" />
+    <Content Include="Content\bootstrap-reboot.min.css" />
+    <Content Include="Content\bootstrap-reboot.rtl.css" />
+    <Content Include="Content\bootstrap-reboot.rtl.min.css" />
+    <Content Include="Content\bootstrap-utilities.css" />
+    <Content Include="Content\bootstrap-utilities.min.css" />
+    <Content Include="Content\bootstrap-utilities.rtl.css" />
+    <Content Include="Content\bootstrap-utilities.rtl.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\bootstrap.rtl.css" />
+    <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\bootstrap.rtl.min.css.map" />
-    <Content Include="Content\bootstrap.rtl.css.map" />
-    <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-utilities.rtl.min.css.map" />
-    <Content Include="Content\bootstrap-utilities.rtl.css.map" />
-    <Content Include="Content\bootstrap-utilities.min.css.map" />
-    <Content Include="Content\bootstrap-utilities.css.map" />
-    <Content Include="Content\bootstrap-reboot.rtl.min.css.map" />
-    <Content Include="Content\bootstrap-reboot.rtl.css.map" />
-    <Content Include="Content\bootstrap-reboot.min.css.map" />
-    <Content Include="Content\bootstrap-reboot.css.map" />
-    <Content Include="Content\bootstrap-grid.rtl.min.css.map" />
-    <Content Include="Content\bootstrap-grid.rtl.css.map" />
-    <Content Include="Content\bootstrap-grid.min.css.map" />
-    <Content Include="Content\bootstrap-grid.css.map" />
-    <None Include="packages.config" />
-    <Content Include="Scripts\bootstrap.min.js.map" />
-    <Content Include="Scripts\bootstrap.js.map" />
-    <Content Include="Scripts\bootstrap.esm.min.js.map" />
-    <Content Include="Scripts\bootstrap.esm.js.map" />
-    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
-    <Content Include="Scripts\bootstrap.bundle.js.map" />
-    <Content Include="Scripts\jquery-3.7.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.7.1.min.map" />
-    <None Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
+    <Content Include="Content\Site.css" />
+    <Content Include="About.aspx" />
+    <Content Include="ChartWidget.ascx" />
+    <Content Include="Contact.aspx" />
+    <Content Include="Default.aspx" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="HackerNews.aspx" />
+    <Content Include="HackerNewsRefresh.ashx" />
+    <Content Include="HnComment.ascx" />
+    <!-- NEW: HnLive streaming page -->
+    <Content Include="HnLive.aspx" />
+    <Content Include="HnStoryRow.ascx" />
+    <Content Include="HnUserCard.ascx" />
+    <Content Include="LibraryStatusWidget.ascx" />
+    <Content Include="Scripts\bootstrap.bundle.js" />
+    <Content Include="Scripts\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\bootstrap.esm.js" />
+    <Content Include="Scripts\bootstrap.esm.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="libman.json" />
+    <None Include="Scripts\jquery-3.7.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.7.1.js" />
+    <Content Include="Scripts\jquery-3.7.1.min.js" />
+    <Content Include="Scripts\jquery-3.7.1.slim.js" />
+    <Content Include="Scripts\jquery-3.7.1.slim.min.js" />
+    <Content Include="Scripts\lib\chartjs\chart.umd.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\WebForms\DetailsView.js" />
+    <Content Include="Scripts\WebForms\Focus.js" />
+    <Content Include="Scripts\WebForms\GridView.js" />
+    <Content Include="Scripts\WebForms\Menu.js" />
+    <Content Include="Scripts\WebForms\MenuStandards.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjax.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxApplicationServices.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxComponentModel.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxCore.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxGlobalization.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxHistory.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxNetwork.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxSerialization.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxTimer.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxWebForms.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxWebServices.js" />
+    <Content Include="Scripts\WebForms\SmartNav.js" />
+    <Content Include="Scripts\WebForms\TreeView.js" />
+    <Content Include="Scripts\WebForms\WebForms.js" />
+    <Content Include="Scripts\WebForms\WebParts.js" />
+    <Content Include="Scripts\WebForms\WebUIValidation.js" />
+    <Content Include="Site.Master" />
+    <Content Include="ViewSwitcher.ascx" />
+    <Content Include="Web.config" />
+    <Content Include="Bundle.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -3515,8 +4010,9 @@ MODIFIED: 02/17/2026 14:55:44
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
+  <!--
+    To modify your build process, add your task inside one of the targets below
+    and uncomment it. Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
@@ -3551,6 +4047,7 @@ MODIFIED: 02/17/2026 14:55:44
   </Target>
   <Import Project="..\packages\Microsoft.Web.LibraryManager.Build.3.0.71\build\Microsoft.Web.LibraryManager.Build.targets" Condition="Exists('..\packages\Microsoft.Web.LibraryManager.Build.3.0.71\build\Microsoft.Web.LibraryManager.Build.targets')" />
 </Project>
+
 
 
 ================================================================================
@@ -3786,8 +4283,8 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\Services\HackerNewsService.cs
-SIZE: 9.29 KB
-MODIFIED: 02/17/2026 14:04:05
+SIZE: 14.97 KB
+MODIFIED: 02/17/2026 18:15:47
 ================================================================================
 
 using System;
@@ -3799,6 +4296,7 @@ using System.Web;
 using System.Web.Caching;
 using MyWebForms.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace MyWebForms.Services
 {
@@ -3813,6 +4311,21 @@ namespace MyWebForms.Services
     /// ASP.NET object cache) to avoid hammering the API on every postback.
     /// Cache durations are kept short (60 s for lists, 5 min for items)
     /// so the "live" feel is preserved.
+    ///
+    /// New methods
+    /// -----------
+    /// GetActiveItemIdsAsync()
+    ///   Calls /v0/updates.json which returns { "items": [...], "profiles": [...] }.
+    ///   The "items" array contains IDs recently updated on HN — this is what
+    ///   https://news.ycombinator.com/active shows.
+    ///   Cached for 30 s (short, because "active" is very time-sensitive).
+    ///
+    /// GetRisingStoryIdsAsync(minComments, minPoints, candidates)
+    ///   Fetches the first `candidates` new story IDs, loads those items
+    ///   concurrently, then returns only the IDs of stories satisfying:
+    ///       (descendants >= minComments) OR (score >= minPoints)
+    ///   Cached for 60 s.  The caller passes candidates so the page controls
+    ///   the breadth of the search without touching the service.
     /// </summary>
     public class HackerNewsService
     {
@@ -3824,13 +4337,12 @@ namespace MyWebForms.Services
         private static HttpClient CreateHttpClient()
         {
             var client = new HttpClient();
-            client.DefaultRequestHeaders.Add(
-                "User-Agent", "MyWebForms-HN-Demo/1.0");
+            client.DefaultRequestHeaders.Add("User-Agent", "MyWebForms-HN-Demo/1.0");
             client.Timeout = TimeSpan.FromSeconds(10);
             return client;
         }
 
-        // ── Story list endpoints ─────────────────────────────────────────────
+        // ── Story list endpoints ──────────────────────────────────────────────
 
         public virtual Task<List<int>> GetTopStoryIdsAsync()
             => GetIdListAsync("topstories.json", "hn_top");
@@ -3850,7 +4362,133 @@ namespace MyWebForms.Services
         public virtual Task<List<int>> GetJobStoryIdsAsync()
             => GetIdListAsync("jobstories.json", "hn_jobs");
 
-        // ── Item and user fetching ───────────────────────────────────────────
+        /// <summary>
+        /// Returns the list of recently-updated item IDs from /v0/updates.json.
+        ///
+        /// The HN API's updates endpoint returns a JSON object:
+        ///   { "items": [id, id, ...], "profiles": ["user", ...] }
+        ///
+        /// We extract only the "items" array and cache it for 30 seconds
+        /// because "active" is intended to show what's happening right now.
+        ///
+        /// Educational note — JObject vs a typed DTO:
+        ///   We use Newtonsoft's JObject here to parse just the "items" field
+        ///   without declaring a full DTO class.  This is fine for a single
+        ///   field; if we needed the profiles array too we would add a DTO.
+        /// </summary>
+        public virtual async Task<List<int>> GetActiveItemIdsAsync()
+        {
+            const string cacheKey = "hn_active";
+            var cached = HttpRuntime.Cache[cacheKey] as List<int>;
+            if (cached != null) return cached;
+
+            try
+            {
+                var json = await Http.GetStringAsync(BaseUrl + "updates.json")
+                    .ConfigureAwait(false);
+
+                var obj  = JObject.Parse(json);
+                var ids  = obj["items"] != null
+                    ? obj["items"].ToObject<List<int>>()
+                    : new List<int>();
+
+                HttpRuntime.Cache.Insert(cacheKey, ids, null,
+                    DateTime.UtcNow.AddSeconds(30), Cache.NoSlidingExpiration);
+
+                return ids;
+            }
+            catch
+            {
+                return new List<int>();
+            }
+        }
+
+        /// <summary>
+        /// Returns IDs from the "new" list that pass a quality threshold.
+        ///
+        /// Algorithm:
+        ///   1. Fetch up to <paramref name="candidates"/> new story IDs.
+        ///   2. Fetch those items concurrently (each individually cached for 5 min).
+        ///   3. Keep only stories where:
+        ///          descendants >= minComments  OR  score >= minPoints
+        ///      (either threshold being zero means that criterion is ignored)
+        ///   4. Return the filtered IDs in their original order.
+        ///
+        /// The entire filtered ID list is cached for 60 s under a key that
+        /// encodes the thresholds, so different threshold combinations are
+        /// independently cached.
+        ///
+        /// Educational note — why not filter on the server API:
+        ///   The HN Firebase API is a thin data-access layer with no server-side
+        ///   filtering or sorting beyond the pre-built lists (top/new/best etc.).
+        ///   Filtering with quality criteria must be done client-side (i.e., in
+        ///   our service layer) by fetching items and inspecting their fields.
+        /// </summary>
+        public virtual async Task<List<int>> GetRisingStoryIdsAsync(
+            int minComments, int minPoints, int candidates = 200)
+        {
+            // Build a cache key that encodes the thresholds so that changing
+            // the thresholds always produces a fresh result.
+            var cacheKey = string.Format("hn_rising_{0}_{1}_{2}",
+                minComments, minPoints, candidates);
+
+            var cached = HttpRuntime.Cache[cacheKey] as List<int>;
+            if (cached != null) return cached;
+
+            try
+            {
+                // Step 1: get the raw new-story ID list.
+                var allNewIds = await GetNewStoryIdsAsync().ConfigureAwait(false);
+                var slice     = allNewIds.Take(candidates).ToList();
+
+                // Step 2: fetch items concurrently.
+                var tasks   = slice.Select(id => GetItemAsync(id));
+                var results = await Task.WhenAll(tasks).ConfigureAwait(false);
+
+                // Step 3: filter.
+                var filtered = new List<int>();
+                foreach (var item in results)
+                {
+                    if (item == null || item.Deleted || item.Dead) continue;
+
+                    bool passComments = minComments > 0 && item.Descendants >= minComments;
+                    bool passPoints   = minPoints   > 0 && item.Score       >= minPoints;
+
+                    // If both thresholds are zero, admit everything (same as /new).
+                    if (minComments == 0 && minPoints == 0)
+                    {
+                        filtered.Add(item.Id);
+                    }
+                    else if (passComments || passPoints)
+                    {
+                        filtered.Add(item.Id);
+                    }
+                }
+
+                // Preserve original relative order (newest first, as returned
+                // by /newstories.json).
+                var idOrder = new Dictionary<int, int>();
+                for (int i = 0; i < slice.Count; i++) idOrder[slice[i]] = i;
+                filtered.Sort(delegate(int a, int b)
+                {
+                    int ia, ib;
+                    idOrder.TryGetValue(a, out ia);
+                    idOrder.TryGetValue(b, out ib);
+                    return ia.CompareTo(ib);
+                });
+
+                HttpRuntime.Cache.Insert(cacheKey, filtered, null,
+                    DateTime.UtcNow.AddSeconds(60), Cache.NoSlidingExpiration);
+
+                return filtered;
+            }
+            catch
+            {
+                return new List<int>();
+            }
+        }
+
+        // ── Item and user fetching ────────────────────────────────────────────
 
         /// <summary>
         /// Fetches a single item by ID. Results are cached for 5 minutes.
@@ -3859,12 +4497,12 @@ namespace MyWebForms.Services
         public virtual async Task<HackerNewsItem> GetItemAsync(int id)
         {
             var cacheKey = "hn_item_" + id;
-            var cached = HttpRuntime.Cache[cacheKey] as HackerNewsItem;
+            var cached   = HttpRuntime.Cache[cacheKey] as HackerNewsItem;
             if (cached != null) return cached;
 
             try
             {
-                var url = BaseUrl + "item/" + id + ".json";
+                var url  = BaseUrl + "item/" + id + ".json";
                 var json = await Http.GetStringAsync(url).ConfigureAwait(false);
                 var item = JsonConvert.DeserializeObject<HackerNewsItem>(json);
                 if (item != null)
@@ -3889,12 +4527,12 @@ namespace MyWebForms.Services
             if (string.IsNullOrEmpty(username)) return null;
 
             var cacheKey = "hn_user_" + username;
-            var cached = HttpRuntime.Cache[cacheKey] as HackerNewsUser;
+            var cached   = HttpRuntime.Cache[cacheKey] as HackerNewsUser;
             if (cached != null) return cached;
 
             try
             {
-                var url = BaseUrl + "user/" + HttpUtility.UrlEncode(username) + ".json";
+                var url  = BaseUrl + "user/" + HttpUtility.UrlEncode(username) + ".json";
                 var json = await Http.GetStringAsync(url).ConfigureAwait(false);
                 var user = JsonConvert.DeserializeObject<HackerNewsUser>(json);
                 if (user != null)
@@ -3912,6 +4550,8 @@ namespace MyWebForms.Services
 
         /// <summary>
         /// Fetches the current maximum item ID.
+        /// Cached for 30 seconds — used by the live-feed page and by background
+        /// polling to detect new items.
         /// </summary>
         public virtual async Task<int> GetMaxItemIdAsync()
         {
@@ -3938,9 +4578,6 @@ namespace MyWebForms.Services
         /// Fetches a page of story items from a list of IDs.
         /// Items that fail to load (deleted, network error) are silently skipped.
         /// </summary>
-        /// <param name="ids">Full ordered list of story IDs.</param>
-        /// <param name="page">1-based page number.</param>
-        /// <param name="pageSize">Number of items per page.</param>
         public virtual async Task<List<HackerNewsItem>> GetItemPageAsync(
             List<int> ids, int page, int pageSize)
         {
@@ -3952,9 +4589,7 @@ namespace MyWebForms.Services
                 .Take(pageSize)
                 .ToList();
 
-            // Fetch concurrently — Task.WhenAll is safe here because
-            // individual failures are caught inside GetItemAsync.
-            var tasks = slice.Select(id => GetItemAsync(id));
+            var tasks   = slice.Select(id => GetItemAsync(id));
             var results = await Task.WhenAll(tasks).ConfigureAwait(false);
 
             return results
@@ -3964,7 +4599,7 @@ namespace MyWebForms.Services
 
         /// <summary>
         /// Recursively fetches the comment tree for an item up to a given depth.
-        /// Depth 0 = top-level comments only. Each comment's Kids are loaded
+        /// Depth 0 = top-level comments only.  Each comment's Kids are loaded
         /// one level deeper up to maxDepth.
         /// </summary>
         public virtual async Task<List<HackerNewsItem>> GetCommentTreeAsync(
@@ -4018,12 +4653,10 @@ namespace MyWebForms.Services
                     && comment.Kids != null
                     && comment.Kids.Count > 0)
                 {
-                    comment.Kids = comment.Kids.Take(10).ToList(); // limit breadth
+                    comment.Kids = comment.Kids.Take(10).ToList();
                     var children = await FetchCommentsAsync(
                         comment.Kids, currentDepth + 1, maxDepth)
                         .ConfigureAwait(false);
-                    // Attach children as a separate flat list associated via Parent.
-                    // The HnCommentTree control handles nesting visually.
                     comments.AddRange(children);
                 }
             }
@@ -4037,8 +4670,8 @@ namespace MyWebForms.Services
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\Site.Master
-SIZE: 4.06 KB
-MODIFIED: 02/17/2026 15:52:30
+SIZE: 4.55 KB
+MODIFIED: 02/17/2026 18:16:17
 ================================================================================
 
 <%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="MyWebForms.SiteMaster" %>
@@ -4069,7 +4702,7 @@ MODIFIED: 02/17/2026 15:52:30
 
         <%-- ═══════════════════════════════════════════════════════════════════
              ScriptManager — owns all MS Ajax and framework script delivery.
-             
+
              Each Name="..." attribute is resolved via ScriptResourceMapping
              (registered in BundleConfig.RegisterScriptManagerMappings).
              Without those mappings ScriptManager falls back to the embedded
@@ -4099,6 +4732,12 @@ MODIFIED: 02/17/2026 15:52:30
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/About">About</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Contact">Contact</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/HackerNews">Hacker News</a></li>
+                        <%-- HN Live: pure client-side streaming feed — no postbacks --%>
+                        <li class="nav-item">
+                            <a class="nav-link" runat="server" href="~/HnLive">
+                                HN Live <span class="badge bg-success ms-1" style="font-size:.6rem;vertical-align:middle;">●</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -4116,11 +4755,12 @@ MODIFIED: 02/17/2026 15:52:30
     </form>
 
     <%-- Bootstrap and Chart.js are loaded after </form> so they don't
-         interfere with ScriptManager's script registration above. --%>
-    <asp:PlaceHolder runat="server">
-        <%: Scripts.Render("~/Scripts/bootstrap.js") %>
-        <script src='<%= ResolveUrl("~/Scripts/lib/chartjs/chart.umd.js") %>'></script>
-    </asp:PlaceHolder>
+         interfere with ScriptManager's script registration above.
+         Bootstrap's JS bundle (bootstrap.bundle.min.js) includes Popper —
+         no separate Popper import is needed. --%>
+    <script src="<%: ResolveUrl("~/Content/bootstrap/js/bootstrap.bundle.min.js") %>"></script>
+    <script src="<%: ResolveUrl("~/Scripts/lib/chartjs/chart.umd.js") %>"></script>
+
 </body>
 </html>
 
@@ -4345,5 +4985,5 @@ MODIFIED: 02/17/2026 12:40:45
 
 
 ===============================================================================
-END OF EXPORT — 42 files, 149.47 KB total
+END OF EXPORT — 44 files, 177.14 KB total
 ===============================================================================

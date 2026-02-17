@@ -28,15 +28,19 @@ namespace MyWebForms
     ///
     /// Route: registered via RouteConfig so the URL is /hn-refresh
     /// Query params:
-    ///   tab  — one of top|new|best|ask|show|jobs  (default: top)
-    ///   ids  — comma-separated list of item IDs currently shown on the page
-    ///           (used by the handler to decide whether to include scores)
+    ///   tab       — one of top|new|best|ask|show|jobs|active|rising (default: top)
+    ///   ids       — comma-separated list of item IDs currently shown on the page
+    ///   minc      — minimum comments threshold (for "rising" tab, default 5)
+    ///   minp      — minimum points threshold (for "rising" tab, default 5)
     /// </summary>
     public class HackerNewsRefresh : HttpTaskAsyncHandler
     {
         // Only fetch scores for the IDs the client already has on screen.
         // Cap at 30 to keep the response fast.
         private const int MaxScoreFetch = 30;
+
+        // Candidates to scan when building the "rising" list for comparison.
+        private const int RisingCandidates = 200;
 
         public override bool IsReusable { get { return true; } }
 
@@ -45,15 +49,20 @@ namespace MyWebForms
             context.Response.ContentType = "application/json";
             context.Response.Cache.SetCacheability(HttpCacheability.NoCache);
 
-            var tab = context.Request.QueryString["tab"] ?? "top";
-            var rawIds = context.Request.QueryString["ids"] ?? string.Empty;
+            var tab    = context.Request.QueryString["tab"]  ?? "top";
+            var rawIds = context.Request.QueryString["ids"]  ?? string.Empty;
+
+            // Parse rising-tab thresholds passed by the auto-refresh script.
+            int minC, minP;
+            if (!int.TryParse(context.Request.QueryString["minc"], out minC)) minC = 5;
+            if (!int.TryParse(context.Request.QueryString["minp"], out minP)) minP = 5;
 
             var service = new HackerNewsService();
 
             try
             {
                 // 1. Fetch the current list of IDs for this tab.
-                var currentIds = await GetIdsForTabAsync(service, tab)
+                var currentIds = await GetIdsForTabAsync(service, tab, minC, minP)
                     .ConfigureAwait(false);
 
                 // Take the first page worth for comparison.
@@ -71,9 +80,8 @@ namespace MyWebForms
                 scoreIds = scoreIds.Take(MaxScoreFetch).ToList();
 
                 var scores = new Dictionary<int, int>();
-                // Fetch items concurrently — HackerNewsService is stateless.
-                var tasks = scoreIds.Select(id => service.GetItemAsync(id));
-                var items = await Task.WhenAll(tasks).ConfigureAwait(false);
+                var tasks  = scoreIds.Select(id => service.GetItemAsync(id));
+                var items  = await Task.WhenAll(tasks).ConfigureAwait(false);
                 foreach (var item in items)
                 {
                     if (item != null)
@@ -83,15 +91,13 @@ namespace MyWebForms
                 var result = new RefreshResult
                 {
                     ListChanged = listChanged,
-                    Scores = scores
+                    Scores      = scores
                 };
 
                 context.Response.Write(JsonConvert.SerializeObject(result));
             }
             catch (Exception ex)
             {
-                // Return a safe error payload — client will ignore score updates
-                // but won't crash.
                 var error = new { error = ex.Message };
                 context.Response.StatusCode = 500;
                 context.Response.Write(JsonConvert.SerializeObject(error));
@@ -100,16 +106,19 @@ namespace MyWebForms
 
         // ── Helpers ──────────────────────────────────────────────────────────
 
-        private static Task<List<int>> GetIdsForTabAsync(HackerNewsService svc, string tab)
+        private static Task<List<int>> GetIdsForTabAsync(
+            HackerNewsService svc, string tab, int minC, int minP)
         {
             switch (tab)
             {
-                case "new": return svc.GetNewStoryIdsAsync();
-                case "best": return svc.GetBestStoryIdsAsync();
-                case "ask": return svc.GetAskStoryIdsAsync();
-                case "show": return svc.GetShowStoryIdsAsync();
-                case "jobs": return svc.GetJobStoryIdsAsync();
-                default: return svc.GetTopStoryIdsAsync();
+                case "new":    return svc.GetNewStoryIdsAsync();
+                case "best":   return svc.GetBestStoryIdsAsync();
+                case "ask":    return svc.GetAskStoryIdsAsync();
+                case "show":   return svc.GetShowStoryIdsAsync();
+                case "jobs":   return svc.GetJobStoryIdsAsync();
+                case "active": return svc.GetActiveItemIdsAsync();
+                case "rising": return svc.GetRisingStoryIdsAsync(minC, minP, RisingCandidates);
+                default:       return svc.GetTopStoryIdsAsync();
             }
         }
 
@@ -126,7 +135,7 @@ namespace MyWebForms
             return result;
         }
 
-        // ── Response DTO ─────────────────────────────────────────────────────
+        // ── Response DTO ──────────────────────────────────────────────────────
 
         private class RefreshResult
         {

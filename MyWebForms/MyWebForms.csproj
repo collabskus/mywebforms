@@ -256,6 +256,14 @@
     <Compile Include="HnComment.ascx.designer.cs">
       <DependentUpon>HnComment.ascx</DependentUpon>
     </Compile>
+    <!-- NEW: HnLive page — pure client-side streaming feed -->
+    <Compile Include="HnLive.aspx.cs">
+      <DependentUpon>HnLive.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HnLive.aspx.designer.cs">
+      <DependentUpon>HnLive.aspx</DependentUpon>
+    </Compile>
     <Compile Include="HnStoryRow.ascx.cs">
       <DependentUpon>HnStoryRow.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
