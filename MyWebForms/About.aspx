@@ -1,5 +1,6 @@
 ﻿<%@ Page Title="About" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="About.aspx.cs" Inherits="MyWebForms.About" %>
 
+<%@ Register Src="~/LibraryStatusWidget.ascx" TagPrefix="uc" TagName="StatusWidget" %>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <main class="container mt-4">
         <div class="text-center animate__animated animate__fadeInDown">
