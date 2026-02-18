@@ -24,6 +24,15 @@ namespace MyWebForms
         protected global::System.Web.UI.WebControls.Literal litRank;
 
         /// <summary>
+        /// pnlScore control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlScore;
+
+        /// <summary>
         /// spanScore control.
         /// </summary>
         /// <remarks>
@@ -58,6 +67,33 @@ namespace MyWebForms
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink lnkTitle;
+
+        /// <summary>
+        /// pnlCommentSnippet control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlCommentSnippet;
+
+        /// <summary>
+        /// litCommentSnippet control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litCommentSnippet;
+
+        /// <summary>
+        /// pnlDomain control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlDomain;
 
         /// <summary>
         /// litDomain control.

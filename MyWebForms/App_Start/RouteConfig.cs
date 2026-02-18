@@ -8,19 +8,30 @@ namespace MyWebForms
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
-            // ── API / handler routes ──────────────────────────────────────────
+            // ── API / handler routes ──────────────────────────────────────────────
             // Register the HN background-refresh handler BEFORE FriendlyUrls
             // so it is matched first and not mistaken for a page route.
-            //
-            // Educational note — IRouteHandler vs HttpHandler:
-            //   RouteTable entries use IRouteHandler.  For an IHttpHandler we
-            //   wrap it with a RouteHandlerAdapter that calls GetHttpHandler()
-            //   on the registered handler instance.
             routes.Add("HnRefresh", new Route(
                 "hn-refresh",
                 new HandlerRouteHandler<HackerNewsRefresh>()));
 
-            // ── FriendlyUrls ──────────────────────────────────────────────────
+            // ── Explicit page routes (registered before FriendlyUrls) ─────────────
+            // FriendlyUrls resolves HnLive.aspx → /HnLive automatically on IIS
+            // Express (dev), but some shared-hosting environments (e.g. runasp.net)
+            // run under IIS with a different request pipeline configuration and the
+            // extensionless URL may not reach the ASP.NET handler unless an explicit
+            // PageRouteHandler entry is present.
+            //
+            // Educational note — PageRouteHandler:
+            //   System.Web.Routing.PageRouteHandler maps a route pattern to a
+            //   physical .aspx file.  It is the same mechanism FriendlyUrls uses
+            //   internally, but explicit registration guarantees the mapping even
+            //   when the hosting pipeline does not enable extensionless URLs by
+            //   default.
+            routes.MapPageRoute("HnLive", "HnLive", "~/HnLive.aspx");
+            routes.MapPageRoute("HackerNewsPage", "HackerNews", "~/HackerNews.aspx");
+
+            // ── FriendlyUrls (covers everything else) ────────────────────────────
             var settings = new FriendlyUrlSettings();
             settings.AutoRedirectMode = RedirectMode.Permanent;
             routes.EnableFriendlyUrls(settings);

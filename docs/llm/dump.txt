@@ -1,6 +1,6 @@
 ===============================================================================
 ASP.NET PROJECT EXPORT
-Generated: 02/17/2026 18:31:05
+Generated: 02/17/2026 19:36:25
 Project Path: D:\DEV\personal\MyWebForms\MyWebForms
 ===============================================================================
 
@@ -633,8 +633,8 @@ namespace MyWebForms
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\App_Start\RouteConfig.cs
-SIZE: 2.04 KB
-MODIFIED: 02/17/2026 14:33:08
+SIZE: 2.78 KB
+MODIFIED: 02/17/2026 19:34:29
 ================================================================================
 
 using System.Web;
@@ -647,19 +647,30 @@ namespace MyWebForms
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
-            // ── API / handler routes ──────────────────────────────────────────
+            // ── API / handler routes ──────────────────────────────────────────────
             // Register the HN background-refresh handler BEFORE FriendlyUrls
             // so it is matched first and not mistaken for a page route.
-            //
-            // Educational note — IRouteHandler vs HttpHandler:
-            //   RouteTable entries use IRouteHandler.  For an IHttpHandler we
-            //   wrap it with a RouteHandlerAdapter that calls GetHttpHandler()
-            //   on the registered handler instance.
             routes.Add("HnRefresh", new Route(
                 "hn-refresh",
                 new HandlerRouteHandler<HackerNewsRefresh>()));
 
-            // ── FriendlyUrls ──────────────────────────────────────────────────
+            // ── Explicit page routes (registered before FriendlyUrls) ─────────────
+            // FriendlyUrls resolves HnLive.aspx → /HnLive automatically on IIS
+            // Express (dev), but some shared-hosting environments (e.g. runasp.net)
+            // run under IIS with a different request pipeline configuration and the
+            // extensionless URL may not reach the ASP.NET handler unless an explicit
+            // PageRouteHandler entry is present.
+            //
+            // Educational note — PageRouteHandler:
+            //   System.Web.Routing.PageRouteHandler maps a route pattern to a
+            //   physical .aspx file.  It is the same mechanism FriendlyUrls uses
+            //   internally, but explicit registration guarantees the mapping even
+            //   when the hosting pipeline does not enable extensionless URLs by
+            //   default.
+            routes.MapPageRoute("HnLive", "HnLive", "~/HnLive.aspx");
+            routes.MapPageRoute("HackerNewsPage", "HackerNews", "~/HackerNews.aspx");
+
+            // ── FriendlyUrls (covers everything else) ────────────────────────────
             var settings = new FriendlyUrlSettings();
             settings.AutoRedirectMode = RedirectMode.Permanent;
             routes.EnableFriendlyUrls(settings);
@@ -1447,8 +1458,8 @@ namespace MyWebForms
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\HackerNews.aspx
-SIZE: 12.50 KB
-MODIFIED: 02/17/2026 18:15:19
+SIZE: 14.41 KB
+MODIFIED: 02/17/2026 19:36:17
 ================================================================================
 
 <%@ Page Title="Hacker News" Language="C#" MasterPageFile="~/Site.Master"
@@ -1463,30 +1474,28 @@ MODIFIED: 02/17/2026 18:15:19
 
 <main class="container-fluid mt-3" style="max-width:960px;">
 
-    <%-- ═══════════════════════════════════════════════════════════════
+    <%-- ══════════════════════════════════════════════════════════════
          Page header
-    ═══════════════════════════════════════════════════════════════════ --%>
+    ════════════════════════════════════════════════════════════════════ --%>
     <div class="d-flex align-items-center mb-3 flex-wrap gap-2">
         <span class="hn-logo me-2" style="background:#ff6600;color:#fff;font-weight:bold;padding:2px 6px;font-family:monospace;">Y</span>
         <h4 class="mb-0 fw-bold">Hacker News</h4>
 
         <%-- LIVE badge: shown on the "new" / "active" / "rising" tabs.
              The server sets its Visible flag; the JS countdown sits next to it. --%>
-        <asp:HiddenField ID="hfActiveTab" runat="server" />
-        <span class="ms-auto d-flex align-items-center gap-2">
-            <asp:Label ID="lblRefreshCountdown" runat="server" Visible="false"
-                CssClass="text-muted small" />
-            <asp:Label ID="lblLiveBadge" runat="server"
-                CssClass="badge bg-success animate__animated animate__pulse animate__infinite"
-                style="font-size:.65rem;">LIVE</asp:Label>
-        </span>
+        <asp:Panel ID="pnlLiveBadge" runat="server" Visible="false">
+            <span class="badge bg-danger" style="font-size:.65rem;">● LIVE</span>
+        </asp:Panel>
     </div>
 
-    <%-- ═══════════════════════════════════════════════════════════════
-         Tab navigation
-         Tabs: Top | New | Best | Ask | Show | Jobs | Active | Rising
-    ═══════════════════════════════════════════════════════════════════ --%>
-    <ul class="nav nav-tabs mb-3" id="hnTabs">
+    <%-- Hidden field: keeps the active tab name in the DOM so the JS
+         refresh poller can read it without a round-trip. --%>
+    <asp:HiddenField ID="hfActiveTab" runat="server" />
+
+    <%-- ══════════════════════════════════════════════════════════════
+         Tab bar
+    ════════════════════════════════════════════════════════════════════ --%>
+    <ul class="nav nav-underline mb-3 flex-wrap" style="border-bottom:1px solid #dee2e6;">
         <li class="nav-item">
             <asp:LinkButton ID="btnTabTop"    runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="top">Top</asp:LinkButton>
         </li>
@@ -1506,8 +1515,8 @@ MODIFIED: 02/17/2026 18:15:19
             <asp:LinkButton ID="btnTabJobs"   runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="jobs">Jobs</asp:LinkButton>
         </li>
         <li class="nav-item">
-            <%-- Active: mirrors https://news.ycombinator.com/active
-                 Uses the HN /v0/updates.json "items" list — recently changed IDs. --%>
+            <%-- Active: recently-updated items from /v0/updates.json.
+                 May include comment-type items; HnStoryRow handles these specially. --%>
             <asp:LinkButton ID="btnTabActive" runat="server" CssClass="nav-link" OnClick="btnTab_Click" CommandArgument="active">
                 Active <span class="badge bg-secondary ms-1" style="font-size:.6rem;">⚡</span>
             </asp:LinkButton>
@@ -1521,9 +1530,9 @@ MODIFIED: 02/17/2026 18:15:19
         </li>
     </ul>
 
-    <%-- ═══════════════════════════════════════════════════════════════
+    <%-- ══════════════════════════════════════════════════════════════
          Rising tab filter controls — only visible on "rising" tab
-    ═══════════════════════════════════════════════════════════════════ --%>
+    ════════════════════════════════════════════════════════════════════ --%>
     <asp:Panel ID="pnlRisingFilter" runat="server" Visible="false"
         CssClass="card card-body mb-3 py-2 d-flex flex-row align-items-center gap-3 flex-wrap">
         <span class="small fw-semibold text-muted">Filter new stories by:</span>
@@ -1556,43 +1565,39 @@ MODIFIED: 02/17/2026 18:15:19
         </span>
     </asp:Panel>
 
-    <%-- ═══════════════════════════════════════════════════════════════
-         Message panel (errors / empty state)
-    ═══════════════════════════════════════════════════════════════════ --%>
+    <%-- ══════════════════════════════════════════════════════════════
+         Error / info message panel
+    ════════════════════════════════════════════════════════════════════ --%>
     <asp:Panel ID="pnlMessage" runat="server" Visible="false"
         CssClass="alert alert-warning">
         <asp:Literal ID="litMessage" runat="server" />
     </asp:Panel>
 
-    <%-- ═══════════════════════════════════════════════════════════════
-         Story list
-    ═══════════════════════════════════════════════════════════════════ --%>
-    <asp:Panel ID="pnlStoryList" runat="server">
-        <asp:PlaceHolder ID="phStories" runat="server" />
-    </asp:Panel>
+    <%-- ══════════════════════════════════════════════════════════════
+         Story list (dynamically populated)
+    ════════════════════════════════════════════════════════════════════ --%>
+    <asp:PlaceHolder ID="phStories" runat="server" />
 
-    <%-- ═══════════════════════════════════════════════════════════════
+    <%-- ══════════════════════════════════════════════════════════════
          Pager
-    ═══════════════════════════════════════════════════════════════════ --%>
+    ════════════════════════════════════════════════════════════════════ --%>
     <asp:Panel ID="pnlPager" runat="server" Visible="false"
-        CssClass="d-flex justify-content-center align-items-center gap-3 my-3">
-        <asp:Button ID="btnPrev" runat="server"
-            CssClass="btn btn-sm btn-outline-secondary"
-            Text="&laquo; Prev"
-            OnClick="btnPrev_Click" />
-        <span class="text-muted small">
+        CssClass="d-flex align-items-center gap-3 mt-3">
+        <asp:LinkButton ID="btnPrev" runat="server"
+            CssClass="btn btn-sm btn-outline-secondary hn-postback-link"
+            OnClick="btnPrev_Click">&laquo; Prev</asp:LinkButton>
+        <span class="small text-muted">
             Page <asp:Literal ID="litPage" runat="server" /> of
             <asp:Literal ID="litPageCount" runat="server" />
         </span>
-        <asp:Button ID="btnNext" runat="server"
-            CssClass="btn btn-sm btn-outline-secondary"
-            Text="Next &raquo;"
-            OnClick="btnNext_Click" />
+        <asp:LinkButton ID="btnNext" runat="server"
+            CssClass="btn btn-sm btn-outline-secondary hn-postback-link"
+            OnClick="btnNext_Click">Next &raquo;</asp:LinkButton>
     </asp:Panel>
 
-    <%-- ═══════════════════════════════════════════════════════════════
+    <%-- ══════════════════════════════════════════════════════════════
          Story detail panel
-    ═══════════════════════════════════════════════════════════════════ --%>
+    ════════════════════════════════════════════════════════════════════ --%>
     <asp:Panel ID="pnlStoryDetail" runat="server" Visible="false"
         CssClass="mt-4 animate__animated animate__fadeIn">
 
@@ -1632,6 +1637,10 @@ MODIFIED: 02/17/2026 18:15:19
                 <asp:Literal ID="litDetailCommentCount" runat="server" /> comments
             </h6>
 
+            <%-- pnlCommentLoading is shown via JavaScript (see script below)
+                 as soon as the user clicks "N comments", giving immediate feedback
+                 during the server round-trip.  The server sets Visible=false once
+                 the comments are bound and rendered. --%>
             <asp:Panel ID="pnlCommentLoading" runat="server" Visible="false"
                 CssClass="text-center py-3">
                 <div class="spinner-border spinner-border-sm text-warning" role="status"></div>
@@ -1642,9 +1651,9 @@ MODIFIED: 02/17/2026 18:15:19
         </div>
     </asp:Panel>
 
-    <%-- ═══════════════════════════════════════════════════════════════
+    <%-- ══════════════════════════════════════════════════════════════
          User profile panel
-    ═══════════════════════════════════════════════════════════════════ --%>
+    ════════════════════════════════════════════════════════════════════ --%>
     <asp:Panel ID="pnlUserProfile" runat="server" Visible="false"
         CssClass="animate__animated animate__fadeIn">
         <div class="d-flex justify-content-end mb-1">
@@ -1652,6 +1661,13 @@ MODIFIED: 02/17/2026 18:15:19
                 CssClass="btn btn-sm btn-outline-secondary"
                 OnClick="btnCloseUser_Click">&#10005; Close</asp:LinkButton>
         </div>
+
+        <%-- Shown when the HN API returns null for the requested username --%>
+        <asp:Panel ID="pnlUserNotFound" runat="server" Visible="false"
+            CssClass="alert alert-warning mt-2">
+            <asp:Literal ID="litUserNotFound" runat="server" />
+        </asp:Panel>
+
         <uc:UserCard ID="ucUserCard" runat="server" />
     </asp:Panel>
 
@@ -1673,7 +1689,45 @@ MODIFIED: 02/17/2026 18:15:19
     }
     .nav-link.active { color: #ff6600 !important; border-bottom-color: #ff6600 !important; }
     .hn-poll-option   { padding: .4rem 0; border-bottom: 1px solid #eee; }
+    /* Comment snippet shown in place of title for comment-type active items */
+    .hn-comment-snippet {
+        display: block;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 </style>
+
+<%-- Page-specific script: shows pnlCommentLoading as soon as a "comments"
+     link is clicked, providing immediate visual feedback for the slow
+     server-side API call.
+
+     We can't show the server-rendered spinner before the round-trip, but we
+     CAN show a client-side spinner by replacing phComments content in-place
+     until the response arrives and re-renders the panel. --%>
+<script>
+    (function () {
+        document.addEventListener('click', function (e) {
+            var t = e.target;
+            while (t && t !== document) {
+                if (t.classList && t.classList.contains('hn-comments-link')) {
+                    // Show an inline loading message inside the detail area if it
+                    // is already open, so the user knows something is happening.
+                    var loading = document.getElementById('<%= pnlCommentLoading.ClientID %>');
+                var comments = document.getElementById('<%= phComments.ClientID %>');
+                if (loading) {
+                    loading.style.display = 'block';
+                    loading.style.visibility = 'visible';
+                }
+                if (comments) comments.style.opacity = '0.3';
+                break;
+            }
+            t = t.parentNode;
+        }
+    });
+    }());
+</script>
 
 </asp:Content>
 
@@ -1681,8 +1735,8 @@ MODIFIED: 02/17/2026 18:15:19
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\HackerNews.aspx.cs
-SIZE: 31.05 KB
-MODIFIED: 02/17/2026 18:15:29
+SIZE: 28.93 KB
+MODIFIED: 02/17/2026 19:35:27
 ================================================================================
 
 using System;
@@ -1721,20 +1775,20 @@ namespace MyWebForms
     /// if they exist in the control tree BEFORE the event-dispatch phase (which
     /// runs between Load and PreRender).
     ///
-    /// Story rows: cache the current page's story IDs in ViewState ("ShownIds")
-    /// AND their author names in ViewState ("ShownAuthors") — both parallel lists.
-    /// On every postback, RecreateStoryRowsForEventRouting() runs in Page_Load,
-    /// adding invisible stub HnStoryRow controls with the same stable IDs
-    /// (row_{storyId}).  Stubs set StubItemId and StubItemBy so the click
-    /// handlers can fire the correct events even though Item == null.
+    /// Story rows: cache the current page's story IDs in ViewState ("ShownIds"),
+    /// author names ("ShownAuthors"), and parent IDs ("ShownParentIds") — all
+    /// parallel lists.  On every postback, RecreateStoryRowsForEventRouting()
+    /// runs in Page_Load, adding invisible stub HnStoryRow controls with the
+    /// same stable IDs (row_{storyId}).  Stubs set StubItemId, StubItemBy, and
+    /// StubParentId so the click handlers fire the correct events.
     ///
-    /// Comments: the same problem applies to HnComment controls inside the
-    /// detail panel.  If the user clicks an author link in the comment list,
-    /// the postback targets an HnComment control — but those controls are only
-    /// added in PreRenderComplete (too late).  Fix: cache a flat list of
-    /// (CommentId, ParentId) in ViewState ("ShownCommentMeta") and author names
-    /// in ViewState ("ShownCommentAuthors"), then recreate minimal stub HnComment
-    /// controls in Page_Load on every postback when a story is selected.
+    /// Comment-type items (Active tab)
+    /// --------------------------------
+    /// /v0/updates.json returns recently-changed item IDs which may include
+    /// comments.  Comments have no Title, so we track Item.Parent in
+    /// ShownParentIds.  When a user clicks "view thread" on a comment row,
+    /// lnkComments fires StorySelected with the parent story ID — this loads
+    /// the actual story + thread in the detail panel.
     ///
     /// Background refresh
     /// ------------------
@@ -1758,10 +1812,10 @@ namespace MyWebForms
     /// </summary>
     public partial class HackerNews : Page
     {
-        // ── Constants ────────────────────────────────────────────────────────────
+        // ── Constants ──────────────────────────────────────────────────────────
 
-        private const int PageSize         = 20;
-        private const int MaxCommentDepth  = 4;
+        private const int PageSize = 20;
+        private const int MaxCommentDepth = 4;
         private const int AutoRefreshSeconds = 60;
 
         /// <summary>
@@ -1771,7 +1825,7 @@ namespace MyWebForms
         /// </summary>
         private const int RisingCandidates = 200;
 
-        // ── Service ───────────────────────────────────────────────────────────
+        // ── Service ────────────────────────────────────────────────────────────
 
         private HackerNewsService _service;
 
@@ -1784,13 +1838,13 @@ namespace MyWebForms
         // ── Data loaded by async tasks ─────────────────────────────────────────
 
         private List<HackerNewsItem> _storyPage;
-        private int                  _totalIds;
-        private HackerNewsItem       _selectedStory;
+        private int _totalIds;
+        private HackerNewsItem _selectedStory;
         private List<HackerNewsItem> _comments;
         private List<HackerNewsItem> _pollOptions;
-        private HackerNewsUser       _selectedUser;
+        private HackerNewsUser _selectedUser;
 
-        // ── ViewState keys ────────────────────────────────────────────────────
+        // ── ViewState keys ─────────────────────────────────────────────────────
 
         private string ActiveTab
         {
@@ -1838,7 +1892,7 @@ namespace MyWebForms
 
         /// <summary>
         /// IDs of the story items currently shown on the page.
-        /// Parallel to ShownAuthors — same index = same story.
+        /// Parallel to ShownAuthors and ShownParentIds — same index = same item.
         /// </summary>
         private List<int> ShownIds
         {
@@ -1847,7 +1901,7 @@ namespace MyWebForms
         }
 
         /// <summary>
-        /// Author names for each story currently shown on the page.
+        /// Author names for each item currently shown on the page.
         /// Parallel to ShownIds — ShownAuthors[i] is the author of ShownIds[i].
         /// Needed so event-routing stubs can fire AuthorSelected with the correct
         /// username even though the stubs carry no HackerNewsItem.
@@ -1856,6 +1910,19 @@ namespace MyWebForms
         {
             get { return ViewState["ShownAuthors"] as List<string> ?? new List<string>(); }
             set { ViewState["ShownAuthors"] = value; }
+        }
+
+        /// <summary>
+        /// Parent IDs for each item currently shown on the page.
+        /// Non-zero only for comment-type items (Active tab).
+        /// Parallel to ShownIds — ShownParentIds[i] is the parent of ShownIds[i].
+        /// When non-zero, lnkComments fires StorySelected with this parent ID
+        /// so the detail panel loads the owning story rather than the comment.
+        /// </summary>
+        private List<int> ShownParentIds
+        {
+            get { return ViewState["ShownParentIds"] as List<int> ?? new List<int>(); }
+            set { ViewState["ShownParentIds"] = value; }
         }
 
         /// <summary>
@@ -1879,18 +1946,18 @@ namespace MyWebForms
             set { ViewState["ShownCommentAuthors"] = value; }
         }
 
-        // ── Page lifecycle ────────────────────────────────────────────────────
+        // ── Page lifecycle ─────────────────────────────────────────────────────
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                ActiveTab   = "top";
+                ActiveTab = "top";
                 CurrentPage = 1;
 
                 // Sync filter textboxes with ViewState defaults on first load.
                 txtMinComments.Text = MinComments.ToString();
-                txtMinPoints.Text   = MinPoints.ToString();
+                txtMinPoints.Text = MinPoints.ToString();
             }
             else
             {
@@ -1909,29 +1976,31 @@ namespace MyWebForms
 
         /// <summary>
         /// Adds invisible HnStoryRow stubs to phStories using IDs cached in
-        /// ShownIds and author names from ShownAuthors.
+        /// ShownIds, author names from ShownAuthors, and parent IDs from
+        /// ShownParentIds.
         ///
-        /// Stubs set StubItemId and StubItemBy instead of Item, so the click
-        /// handlers on HnStoryRow can fire StorySelected / AuthorSelected
-        /// with the correct values even though Item == null (and the control
-        /// renders nothing — Visible = false).
+        /// Stubs set StubItemId, StubItemBy, and StubParentId instead of Item,
+        /// so the click handlers on HnStoryRow can fire the correct events even
+        /// though Item == null (and the control renders nothing — Visible = false).
         /// </summary>
         private void RecreateStoryRowsForEventRouting()
         {
             phStories.Controls.Clear();
-            var ids     = ShownIds;
+            var ids = ShownIds;
             var authors = ShownAuthors;
+            var parentIds = ShownParentIds;
             int startRank = (CurrentPage - 1) * PageSize + 1;
 
             for (int i = 0; i < ids.Count; i++)
             {
                 var row = (HnStoryRow)LoadControl("~/HnStoryRow.ascx");
-                row.ID          = "row_" + ids[i];
-                row.Item        = null;   // Stub — renders nothing
-                row.Rank        = startRank + i;
-                row.StubItemId  = ids[i];
-                row.StubItemBy  = i < authors.Count ? authors[i] : string.Empty;
-                row.StorySelected  += OnStorySelected;
+                row.ID = "row_" + ids[i];
+                row.Item = null;   // Stub — renders nothing
+                row.Rank = startRank + i;
+                row.StubItemId = ids[i];
+                row.StubItemBy = i < authors.Count ? authors[i] : string.Empty;
+                row.StubParentId = i < parentIds.Count ? parentIds[i] : 0;
+                row.StorySelected += OnStorySelected;
                 row.AuthorSelected += OnAuthorSelected;
                 phStories.Controls.Add(row);
             }
@@ -1947,21 +2016,21 @@ namespace MyWebForms
         private void RecreateCommentStubsForEventRouting()
         {
             phComments.Controls.Clear();
-            var meta    = ShownCommentMeta;
+            var meta = ShownCommentMeta;
             var authors = ShownCommentAuthors;
 
             for (int i = 0; i < meta.Count; i++)
             {
                 int commentId = meta[i][0];
-                int parentId  = meta[i][1];
-                string by     = i < authors.Count ? authors[i] : string.Empty;
+                int parentId = meta[i][1];
+                string by = i < authors.Count ? authors[i] : string.Empty;
 
                 var stub = (HnComment)LoadControl("~/HnComment.ascx");
-                stub.ID   = "cmt_" + commentId;   // must match RenderCommentTree
+                stub.ID = "cmt_" + commentId;   // must match RenderCommentTree
                 stub.Item = new HackerNewsItem
                 {
-                    Id     = commentId,
-                    By     = by,
+                    Id = commentId,
+                    By = by,
                     Parent = parentId
                 };
                 stub.Depth = 0;
@@ -1974,7 +2043,7 @@ namespace MyWebForms
         private async Task LoadDataAsync()
         {
             var ids = await GetIdsForTabAsync(ActiveTab).ConfigureAwait(false);
-            _totalIds  = ids.Count;
+            _totalIds = ids.Count;
             _storyPage = await Service.GetItemPageAsync(ids, CurrentPage, PageSize)
                              .ConfigureAwait(false);
 
@@ -1982,6 +2051,17 @@ namespace MyWebForms
             {
                 _selectedStory = await Service.GetItemAsync(SelectedItemId)
                                      .ConfigureAwait(false);
+
+                // If the selected item is itself a comment (clicked "view thread"
+                // from the Active tab — should not normally happen because
+                // lnkComments_Click resolves to the parent — but guard anyway),
+                // navigate up to the parent story.
+                if (_selectedStory != null && _selectedStory.IsComment
+                    && _selectedStory.Parent.HasValue && _selectedStory.Parent.Value > 0)
+                {
+                    _selectedStory = await Service.GetItemAsync(_selectedStory.Parent.Value)
+                                         .ConfigureAwait(false);
+                }
 
                 if (_selectedStory != null)
                 {
@@ -2017,145 +2097,31 @@ namespace MyWebForms
             // Show the Rising filter controls only on the "rising" tab.
             pnlRisingFilter.Visible = (ActiveTab == "rising");
 
-            // Sync textboxes with current ViewState thresholds (so they reflect
-            // any server-side changes, e.g. after btnApplyFilter_Click).
-            if (ActiveTab == "rising")
-            {
-                txtMinComments.Text = MinComments.ToString();
-                txtMinPoints.Text   = MinPoints.ToString();
-            }
-
             BindStoryList();
             BindDetailPanel();
             BindUserPanel();
             BindPager();
-
-            lblLiveBadge.Visible = true;
-
-            if (SelectedItemId == 0 && string.IsNullOrEmpty(SelectedUsername))
-                InjectAutoRefreshScript();
+            InjectRefreshScript();
         }
 
-        // ── Auto-refresh script ──────────────────────────────────────────────
-
-        private void InjectAutoRefreshScript()
-        {
-            var shownIds = new List<string>();
-            if (_storyPage != null)
-            {
-                foreach (var s in _storyPage)
-                    shownIds.Add(s.Id.ToString());
-            }
-
-            var activeTab          = ActiveTab;
-            var countdownClientId  = lblRefreshCountdown.ClientID;
-            var seconds            = AutoRefreshSeconds;
-            var handlerUrl         = ResolveUrl("~/hn-refresh");
-
-            string currentTabBtnUniqueId;
-            switch (activeTab)
-            {
-                case "new":    currentTabBtnUniqueId = btnTabNew.UniqueID;    break;
-                case "best":   currentTabBtnUniqueId = btnTabBest.UniqueID;   break;
-                case "ask":    currentTabBtnUniqueId = btnTabAsk.UniqueID;    break;
-                case "show":   currentTabBtnUniqueId = btnTabShow.UniqueID;   break;
-                case "jobs":   currentTabBtnUniqueId = btnTabJobs.UniqueID;   break;
-                case "active": currentTabBtnUniqueId = btnTabActive.UniqueID; break;
-                case "rising": currentTabBtnUniqueId = btnTabRising.UniqueID; break;
-                default:       currentTabBtnUniqueId = btnTabTop.UniqueID;    break;
-            }
-
-            var shownIdsJoined = string.Join(",", shownIds.ToArray());
-
-            var sb = new StringBuilder();
-            sb.AppendLine("(function () {");
-            sb.AppendLine("    var remaining = " + seconds + ";");
-            sb.AppendLine("    var timer;");
-            sb.AppendLine("    var countdownEl = document.getElementById('" + countdownClientId + "');");
-            sb.AppendLine("");
-            sb.AppendLine("    function updateCountdown() {");
-            sb.AppendLine("        if (countdownEl) {");
-            sb.AppendLine("            countdownEl.style.display = '';");
-            sb.AppendLine("            countdownEl.textContent = 'Refresh in ' + remaining + 's';");
-            sb.AppendLine("        }");
-            sb.AppendLine("    }");
-            sb.AppendLine("");
-            sb.AppendLine("    function tick() {");
-            sb.AppendLine("        remaining--;");
-            sb.AppendLine("        updateCountdown();");
-            sb.AppendLine("        if (remaining <= 0) {");
-            sb.AppendLine("            clearInterval(timer);");
-            sb.AppendLine("            doRefresh();");
-            sb.AppendLine("        }");
-            sb.AppendLine("    }");
-            sb.AppendLine("");
-            sb.AppendLine("    function doRefresh() {");
-            sb.AppendLine("        var url = '" + handlerUrl + "?tab=" + activeTab + "&ids=" + shownIdsJoined + "';");
-            sb.AppendLine("        var xhr = new XMLHttpRequest();");
-            sb.AppendLine("        xhr.open('GET', url, true);");
-            sb.AppendLine("        xhr.onload = function () {");
-            sb.AppendLine("            if (xhr.status !== 200) { restart(); return; }");
-            sb.AppendLine("            try {");
-            sb.AppendLine("                var data = JSON.parse(xhr.responseText);");
-            sb.AppendLine("                if (data.scores) {");
-            sb.AppendLine("                    Object.keys(data.scores).forEach(function (id) {");
-            sb.AppendLine("                        var el = document.querySelector('[data-hn-score-num=\"' + id + '\"]');");
-            sb.AppendLine("                        if (el) el.textContent = data.scores[id] + ' pts';");
-            sb.AppendLine("                    });");
-            sb.AppendLine("                }");
-            sb.AppendLine("                if (data.listChanged) {");
-            sb.AppendLine("                    __doPostBack('" + currentTabBtnUniqueId + "', '');");
-            sb.AppendLine("                } else {");
-            sb.AppendLine("                    restart();");
-            sb.AppendLine("                }");
-            sb.AppendLine("            } catch (ex) { restart(); }");
-            sb.AppendLine("        };");
-            sb.AppendLine("        xhr.onerror = function () { restart(); };");
-            sb.AppendLine("        xhr.send();");
-            sb.AppendLine("    }");
-            sb.AppendLine("");
-            sb.AppendLine("    function restart() {");
-            sb.AppendLine("        remaining = " + seconds + ";");
-            sb.AppendLine("        updateCountdown();");
-            sb.AppendLine("        timer = setInterval(tick, 1000);");
-            sb.AppendLine("    }");
-            sb.AppendLine("");
-            sb.AppendLine("    updateCountdown();");
-            sb.AppendLine("    timer = setInterval(tick, 1000);");
-            sb.AppendLine("})();");
-
-            ScriptManager.RegisterStartupScript(
-                this,
-                typeof(HackerNews),
-                "HnAutoRefresh",
-                sb.ToString(),
-                addScriptTags: true);
-        }
-
-        // ── Tab click ────────────────────────────────────────────────────────
+        // ── Tab / filter clicks ────────────────────────────────────────────────
 
         protected void btnTab_Click(object sender, EventArgs e)
         {
-            var btn   = (LinkButton)sender;
+            var btn = (LinkButton)sender;
             ActiveTab = btn.CommandArgument;
-            CurrentPage   = 1;
-            SelectedItemId   = 0;
-            SelectedUsername = null;
-        }
-
-        // ── Apply rising filter ──────────────────────────────────────────────
-
-        protected void btnApplyFilter_Click(object sender, EventArgs e)
-        {
-            int minC, minP;
-            if (int.TryParse(txtMinComments.Text, out minC) && minC >= 0) MinComments = minC;
-            if (int.TryParse(txtMinPoints.Text,   out minP) && minP >= 0) MinPoints   = minP;
-
-            // Reset to page 1 so the filtered list starts from the beginning.
             CurrentPage = 1;
         }
 
-        // ── Pager clicks ─────────────────────────────────────────────────────
+        protected void btnApplyFilter_Click(object sender, EventArgs e)
+        {
+            int mc, mp;
+            if (int.TryParse(txtMinComments.Text, out mc) && mc >= 0) MinComments = mc;
+            if (int.TryParse(txtMinPoints.Text, out mp) && mp >= 0) MinPoints = mp;
+            CurrentPage = 1;
+        }
+
+        // ── Pager clicks ───────────────────────────────────────────────────────
 
         protected void btnPrev_Click(object sender, EventArgs e)
         {
@@ -2168,12 +2134,12 @@ namespace MyWebForms
             if (CurrentPage < pageCount) CurrentPage++;
         }
 
-        // ── Detail / user panel close ────────────────────────────────────────
+        // ── Detail / user panel close ──────────────────────────────────────────
 
         protected void btnCloseDetail_Click(object sender, EventArgs e)
         {
             SelectedItemId = 0;
-            ShownCommentMeta    = new List<int[]>();
+            ShownCommentMeta = new List<int[]>();
             ShownCommentAuthors = new List<string>();
         }
 
@@ -2182,7 +2148,40 @@ namespace MyWebForms
             SelectedUsername = null;
         }
 
-        // ── Binding helpers ──────────────────────────────────────────────────
+        // ── Bubble-up event handlers ───────────────────────────────────────────
+
+        private void OnStorySelected(object sender, StorySelectedEventArgs e)
+        {
+            SelectedItemId = e.ItemId;
+            SelectedUsername = null;
+        }
+
+        private void OnAuthorSelected(object sender, AuthorSelectedEventArgs e)
+        {
+            SelectedUsername = e.Username;
+            SelectedItemId = 0;
+        }
+
+        // ── API tab → ID list routing ──────────────────────────────────────────
+
+        private async Task<List<int>> GetIdsForTabAsync(string tab)
+        {
+            switch (tab)
+            {
+                case "new": return await Service.GetNewStoryIdsAsync().ConfigureAwait(false);
+                case "best": return await Service.GetBestStoryIdsAsync().ConfigureAwait(false);
+                case "ask": return await Service.GetAskStoryIdsAsync().ConfigureAwait(false);
+                case "show": return await Service.GetShowStoryIdsAsync().ConfigureAwait(false);
+                case "jobs": return await Service.GetJobStoryIdsAsync().ConfigureAwait(false);
+                case "active": return await Service.GetActiveItemIdsAsync().ConfigureAwait(false);
+                case "rising":
+                    return await Service.GetRisingStoryIdsAsync(
+                                   MinComments, MinPoints, RisingCandidates).ConfigureAwait(false);
+                default: return await Service.GetTopStoryIdsAsync().ConfigureAwait(false);
+            }
+        }
+
+        // ── Binding helpers ────────────────────────────────────────────────────
 
         private void BindStoryList()
         {
@@ -2193,33 +2192,41 @@ namespace MyWebForms
                 litMessage.Text = "No stories found. " +
                     "The API may be temporarily unavailable.";
                 pnlMessage.Visible = true;
-                ShownIds    = new List<int>();
+                ShownIds = new List<int>();
                 ShownAuthors = new List<string>();
+                ShownParentIds = new List<int>();
                 return;
             }
 
             pnlMessage.Visible = false;
 
-            var newShownIds     = new List<int>();
+            var newShownIds = new List<int>();
             var newShownAuthors = new List<string>();
+            var newShownParentIds = new List<int>();
 
             int startRank = (CurrentPage - 1) * PageSize + 1;
             for (int i = 0; i < _storyPage.Count; i++)
             {
-                newShownIds.Add(_storyPage[i].Id);
-                newShownAuthors.Add(_storyPage[i].By ?? string.Empty);
+                var item = _storyPage[i];
+                newShownIds.Add(item.Id);
+                newShownAuthors.Add(item.By ?? string.Empty);
+                // Track parent ID for comment-type items so stubs can resolve
+                // "view thread" clicks to the correct parent story.
+                newShownParentIds.Add(item.IsComment && item.Parent.HasValue
+                    ? item.Parent.Value : 0);
 
                 var row = (HnStoryRow)LoadControl("~/HnStoryRow.ascx");
-                row.ID   = "row_" + _storyPage[i].Id;  // stable ID — must match RecreateStoryRowsForEventRouting
-                row.Item = _storyPage[i];
+                row.ID = "row_" + item.Id;  // stable ID — must match RecreateStoryRowsForEventRouting
+                row.Item = item;
                 row.Rank = startRank + i;
-                row.StorySelected  += OnStorySelected;
+                row.StorySelected += OnStorySelected;
                 row.AuthorSelected += OnAuthorSelected;
                 phStories.Controls.Add(row);
             }
 
-            ShownIds     = newShownIds;
+            ShownIds = newShownIds;
             ShownAuthors = newShownAuthors;
+            ShownParentIds = newShownParentIds;
         }
 
         private void BindDetailPanel()
@@ -2244,7 +2251,7 @@ namespace MyWebForms
 
             if (!string.IsNullOrEmpty(_selectedStory.Text))
             {
-                litDetailText.Text  = _selectedStory.Text;
+                litDetailText.Text = _selectedStory.Text;
                 pnlDetailText.Visible = true;
             }
             else
@@ -2274,7 +2281,7 @@ namespace MyWebForms
 
             litDetailCommentCount.Text = _selectedStory.Descendants.ToString();
             phComments.Controls.Clear();
-            pnlCommentLoading.Visible  = false;
+            pnlCommentLoading.Visible = false;
 
             if (_comments == null || _comments.Count == 0)
             {
@@ -2283,15 +2290,15 @@ namespace MyWebForms
                 noComments.InnerText = "No comments yet.";
                 phComments.Controls.Add(noComments);
 
-                ShownCommentMeta    = new List<int[]>();
+                ShownCommentMeta = new List<int[]>();
                 ShownCommentAuthors = new List<string>();
             }
             else
             {
-                var newMeta    = new List<int[]>();
+                var newMeta = new List<int[]>();
                 var newAuthors = new List<string>();
                 RenderCommentTree(_comments, _selectedStory.Id, 0, newMeta, newAuthors);
-                ShownCommentMeta    = newMeta;
+                ShownCommentMeta = newMeta;
                 ShownCommentAuthors = newAuthors;
             }
         }
@@ -2318,8 +2325,8 @@ namespace MyWebForms
                 if (comment.Parent != parentId) continue;
 
                 var ctrl = (HnComment)LoadControl("~/HnComment.ascx");
-                ctrl.ID   = "cmt_" + comment.Id;   // must match RecreateCommentStubsForEventRouting
-                ctrl.Item  = comment;
+                ctrl.ID = "cmt_" + comment.Id;   // must match RecreateCommentStubsForEventRouting
+                ctrl.Item = comment;
                 ctrl.Depth = depth;
                 ctrl.AuthorSelected += OnAuthorSelected;
                 phComments.Controls.Add(ctrl);
@@ -2334,14 +2341,30 @@ namespace MyWebForms
 
         private void BindUserPanel()
         {
-            if (string.IsNullOrEmpty(SelectedUsername) || _selectedUser == null)
+            if (string.IsNullOrEmpty(SelectedUsername))
             {
                 pnlUserProfile.Visible = false;
                 return;
             }
 
             pnlUserProfile.Visible = true;
-            ucUserCard.User = _selectedUser;
+
+            if (_selectedUser == null)
+            {
+                // User not found or API error — show a friendly message instead
+                // of leaving the panel blank.
+                ucUserCard.User = null;
+                litUserNotFound.Text = string.Format(
+                    "Could not load profile for <strong>{0}</strong>. " +
+                    "The user may not exist or the HN API may be temporarily unavailable.",
+                    System.Web.HttpUtility.HtmlEncode(SelectedUsername));
+                pnlUserNotFound.Visible = true;
+            }
+            else
+            {
+                ucUserCard.User = _selectedUser;
+                pnlUserNotFound.Visible = false;
+            }
         }
 
         private void BindPager()
@@ -2350,11 +2373,11 @@ namespace MyWebForms
                 ? (int)Math.Ceiling((double)_totalIds / PageSize)
                 : 1;
 
-            litPage.Text      = CurrentPage.ToString();
+            litPage.Text = CurrentPage.ToString();
             litPageCount.Text = pageCount.ToString();
-            btnPrev.Enabled   = CurrentPage > 1;
-            btnNext.Enabled   = CurrentPage < pageCount;
-            pnlPager.Visible  = pageCount > 1;
+            btnPrev.Enabled = CurrentPage > 1;
+            btnNext.Enabled = CurrentPage < pageCount;
+            pnlPager.Visible = pageCount > 1;
         }
 
         private void HighlightActiveTab()
@@ -2368,47 +2391,54 @@ namespace MyWebForms
 
             switch (ActiveTab)
             {
-                case "top":    btnTabTop.CssClass    = "nav-link active"; break;
-                case "new":    btnTabNew.CssClass    = "nav-link active"; break;
-                case "best":   btnTabBest.CssClass   = "nav-link active"; break;
-                case "ask":    btnTabAsk.CssClass    = "nav-link active"; break;
-                case "show":   btnTabShow.CssClass   = "nav-link active"; break;
-                case "jobs":   btnTabJobs.CssClass   = "nav-link active"; break;
+                case "top": btnTabTop.CssClass = "nav-link active"; break;
+                case "new": btnTabNew.CssClass = "nav-link active"; break;
+                case "best": btnTabBest.CssClass = "nav-link active"; break;
+                case "ask": btnTabAsk.CssClass = "nav-link active"; break;
+                case "show": btnTabShow.CssClass = "nav-link active"; break;
+                case "jobs": btnTabJobs.CssClass = "nav-link active"; break;
                 case "active": btnTabActive.CssClass = "nav-link active"; break;
                 case "rising": btnTabRising.CssClass = "nav-link active"; break;
             }
         }
 
-        // ── Bubble-up event handlers ──────────────────────────────────────────
-
-        private void OnStorySelected(object sender, StorySelectedEventArgs e)
+        private void InjectRefreshScript()
         {
-            SelectedItemId   = e.ItemId;
-            SelectedUsername = null;
-        }
-
-        private void OnAuthorSelected(object sender, AuthorSelectedEventArgs e)
-        {
-            SelectedUsername = e.Username;
-            SelectedItemId   = 0;
-        }
-
-        // ── API tab → ID list routing ─────────────────────────────────────────
-
-        private async Task<List<int>> GetIdsForTabAsync(string tab)
-        {
-            switch (tab)
-            {
-                case "new":    return await Service.GetNewStoryIdsAsync().ConfigureAwait(false);
-                case "best":   return await Service.GetBestStoryIdsAsync().ConfigureAwait(false);
-                case "ask":    return await Service.GetAskStoryIdsAsync().ConfigureAwait(false);
-                case "show":   return await Service.GetShowStoryIdsAsync().ConfigureAwait(false);
-                case "jobs":   return await Service.GetJobStoryIdsAsync().ConfigureAwait(false);
-                case "active": return await Service.GetActiveItemIdsAsync().ConfigureAwait(false);
-                case "rising": return await Service.GetRisingStoryIdsAsync(
-                                   MinComments, MinPoints, RisingCandidates).ConfigureAwait(false);
-                default:       return await Service.GetTopStoryIdsAsync().ConfigureAwait(false);
+            // Inject the background auto-refresh IIFE.
+            // It polls HackerNewsRefresh.ashx every AutoRefreshSeconds seconds,
+            // updates score spans in-place, and triggers __doPostBack only when
+            // the story list has actually changed.
+            var refreshUrl = ResolveUrl("~/hn-refresh") + "?tab=" + ActiveTab;
+            var sb = new StringBuilder();
+            sb.Append("(function(){");
+            sb.AppendFormat("var TAB='{0}',URL='{1}',INTERVAL={2}000;",
+                ActiveTab, refreshUrl, AutoRefreshSeconds);
+            sb.Append(@"
+function poll(){
+    var xhr=new XMLHttpRequest();
+    xhr.open('GET',URL+'&_='+Date.now(),true);
+    xhr.onload=function(){
+        if(xhr.status!==200)return;
+        try{
+            var d=JSON.parse(xhr.responseText);
+            if(d.scores){
+                Object.keys(d.scores).forEach(function(id){
+                    var el=document.querySelector('[data-hn-score-num=""'+id+'""]');
+                    if(el)el.textContent=d.scores[id]+' pts';
+                });
             }
+            if(d.listChanged){
+                var hf=document.getElementById('" + hfActiveTab.ClientID + @"');
+                if(hf&&hf.value===TAB)__doPostBack('','');
+            }
+        }catch(ex){}
+    };
+    xhr.send();
+}
+setTimeout(function loop(){poll();setTimeout(loop,INTERVAL);},INTERVAL);
+}());");
+            ScriptManager.RegisterStartupScript(this, GetType(),
+                "hnRefresh", sb.ToString(), true);
         }
     }
 }
@@ -3145,8 +3175,8 @@ namespace MyWebForms
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\HnStoryRow.ascx
-SIZE: 2.78 KB
-MODIFIED: 02/17/2026 16:16:26
+SIZE: 4.11 KB
+MODIFIED: 02/17/2026 19:35:02
 ================================================================================
 
 <%@ Control Language="C#" AutoEventWireup="True"
@@ -3156,19 +3186,22 @@ MODIFIED: 02/17/2026 16:16:26
 <%--
     HnStoryRow.ascx
     ---------------
-    Renders a single Hacker News story in the classic orange-site list style.
+    Renders a single Hacker News item in the classic orange-site list style.
+    Handles both story-type and comment-type items (e.g. from the Active tab).
 
-    Score badge markup
-    ------------------
-    The outer badge span (spanScore) contains:
-      ▲ (triangle, plain HTML text) + <span data-hn-score-num="ID">NNN pts</span>
+    Comment-type items (type == "comment"):
+      - Show a snippet of the comment text instead of a title.
+      - The "N comments" link navigates to the *parent* story (not the comment
+        itself, which has no meaningful comment thread of its own to display).
+      - The score badge is hidden (comments have no score in the HN API).
 
-    The JS poller targets  data-hn-score-num  to update ONLY the number text.
-    This preserves the ▲ triangle — previously targeting the whole spanScore
-    with textContent would wipe the triangle.
-
-    data-hn-score-id on the outer span is kept for any other selectors that
-    may need to locate the badge by story ID.
+    Score span strategy
+    -------------------
+    spanScore    (outer) — carries  data-hn-score-id  for general queries.
+    spanScoreNum (inner) — carries  data-hn-score-num  so the background JS
+                           poller can update ONLY the "NNN pts" text via
+                             el.textContent = score + ' pts'
+                           without clobbering the ▲ triangle.
 
     LinkButton vs HyperLink
     -----------------------
@@ -3176,6 +3209,12 @@ MODIFIED: 02/17/2026 16:16:26
     - "N comments" link   → LinkButton — triggers a postback so the parent
       page can load the story detail panel server-side
     - Author name link    → LinkButton — same pattern for the user panel
+
+    hn-postback-link CSS class
+    --------------------------
+    Applied to both LinkButtons so the Site.Master overlay script can detect
+    any click on them and show the global loading spinner immediately, giving
+    the user instant feedback while the server-side async load runs.
 --%>
 
 <div class="hn-story-row d-flex align-items-start py-2 border-bottom border-light">
@@ -3186,36 +3225,49 @@ MODIFIED: 02/17/2026 16:16:26
     </span>
 
     <%--
-        Score badge outer span: carries data-hn-score-id for general lookups.
+        Score badge — hidden for comment-type items (comments have no score).
         The inner spanScoreNum carries data-hn-score-num, which the JS poller
-        updates in-place without touching the ▲ triangle.
+        updates in-place without touching the ▲ triangle that lives in
+        the outer span as raw HTML text.
     --%>
-    <span class="hn-score badge bg-warning text-dark me-3 mt-1"
-          style="min-width:3.5rem; text-align:center;"
-          runat="server" id="spanScore">
-        &#9650;&nbsp;<span runat="server" id="spanScoreNum"><asp:Literal ID="litScore" runat="server" /></span>
-    </span>
+    <asp:Panel ID="pnlScore" runat="server">
+        <span class="hn-score badge bg-warning text-dark me-3 mt-1"
+              style="min-width:3.5rem; text-align:center;"
+              runat="server" id="spanScore">
+            &#9650;&nbsp;<span runat="server" id="spanScoreNum"><asp:Literal ID="litScore" runat="server" /></span>
+        </span>
+    </asp:Panel>
 
     <div class="flex-grow-1">
-        <%-- Story title -- external URL opens in new tab --%>
+        <%-- Story title / comment snippet --%>
         <asp:HyperLink ID="lnkTitle" runat="server"
             CssClass="hn-title fw-semibold text-decoration-none text-dark"
             Target="_blank" />
-        <%-- Domain hint --%>
-        <small class="text-muted ms-1">
-            (<asp:Literal ID="litDomain" runat="server" />)
-        </small>
+        <%-- Comment snippet (shown instead of title for comment-type items) --%>
+        <asp:Panel ID="pnlCommentSnippet" runat="server" Visible="false">
+            <span class="hn-comment-snippet text-muted fst-italic small">
+                <asp:Literal ID="litCommentSnippet" runat="server" />
+            </span>
+        </asp:Panel>
+        <%-- Domain hint (hidden for comment items) --%>
+        <asp:Panel ID="pnlDomain" runat="server">
+            <small class="text-muted ms-1">
+                (<asp:Literal ID="litDomain" runat="server" />)
+            </small>
+        </asp:Panel>
 
         <%-- Metadata line --%>
         <div class="hn-meta small text-muted mt-1">
             <asp:Literal ID="litTimeAgo" runat="server" />
             &nbsp;by&nbsp;
+            <%-- hn-postback-link tells the Site.Master overlay script to show
+                 the loading spinner as soon as this link is clicked. --%>
             <asp:LinkButton ID="lnkAuthor" runat="server"
-                CssClass="text-muted hn-author-link"
+                CssClass="text-muted hn-author-link hn-postback-link"
                 OnClick="lnkAuthor_Click" />
             &nbsp;|&nbsp;
             <asp:LinkButton ID="lnkComments" runat="server"
-                CssClass="text-muted hn-comments-link"
+                CssClass="text-muted hn-comments-link hn-postback-link"
                 OnClick="lnkComments_Click" />
         </div>
     </div>
@@ -3226,11 +3278,12 @@ MODIFIED: 02/17/2026 16:16:26
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\HnStoryRow.ascx.cs
-SIZE: 5.40 KB
-MODIFIED: 02/17/2026 17:48:11
+SIZE: 7.83 KB
+MODIFIED: 02/17/2026 19:35:15
 ================================================================================
 
 using System;
+using System.Text.RegularExpressions;
 using System.Web.UI.HtmlControls;
 using MyWebForms.Models;
 
@@ -3248,6 +3301,18 @@ namespace MyWebForms
     ///                        without clobbering the ▲ triangle that lives in
     ///                        the outer span as raw HTML text.
     ///
+    /// Comment-type items (Active tab)
+    /// --------------------------------
+    /// The Active tab (/v0/updates.json) returns IDs of recently-changed items
+    /// which can be comments, not just stories.  Comments have no Title.
+    /// When Item.Type == "comment":
+    ///   - The score badge is hidden (comments carry no score).
+    ///   - A plain-text snippet of the comment HTML is shown instead of a title.
+    ///   - lnkComments fires StorySelected with Item.Parent (the owning story)
+    ///     so the detail panel loads the actual story + thread rather than
+    ///     trying to render the comment as if it were a story.
+    ///   - The domain badge is hidden (comments have no URL).
+    ///
     /// Events bubble up to the host page via standard EventHandler delegates.
     /// The host page wires StorySelected and AuthorSelected when it creates
     /// these controls so it can update its detail/user panels.
@@ -3264,10 +3329,11 @@ namespace MyWebForms
     /// instances with Item = null.  Those stubs must still be able to fire their
     /// click events — the handler cannot short-circuit on Item == null.
     ///
-    /// To support this, the host page sets StubItemId / StubItemBy directly when
-    /// creating stubs so the handlers can read the correct values without a full
-    /// HackerNewsItem being present.  When Item is not null (normal render path)
-    /// StubItemId / StubItemBy are ignored; Item takes precedence.
+    /// To support this, the host page sets StubItemId / StubItemBy / StubParentId
+    /// directly when creating stubs so the handlers can read the correct values
+    /// without a full HackerNewsItem being present.  When Item is not null
+    /// (normal render path) these Stub* properties are ignored; Item takes
+    /// precedence.
     /// </summary>
     public partial class HnStoryRow : System.Web.UI.UserControl
     {
@@ -3278,15 +3344,23 @@ namespace MyWebForms
 
         /// <summary>
         /// Set by the host page when creating an event-routing stub (Item == null).
-        /// Provides the story ID that the click handlers need to fire the correct event.
+        /// Provides the item ID for lnkComments_Click → StorySelected.
         /// </summary>
         public int StubItemId { get; set; }
 
         /// <summary>
         /// Set by the host page when creating an event-routing stub (Item == null).
-        /// Provides the author username that lnkAuthor_Click needs to fire AuthorSelected.
+        /// Provides the author username for lnkAuthor_Click → AuthorSelected.
         /// </summary>
         public string StubItemBy { get; set; }
+
+        /// <summary>
+        /// Set by the host page when creating an event-routing stub for a
+        /// comment-type item (Item == null, Item.Type == "comment").
+        /// When non-zero, lnkComments fires StorySelected with this parent ID
+        /// rather than StubItemId so the detail panel loads the owning story.
+        /// </summary>
+        public int StubParentId { get; set; }
 
         // ── Bubbled events ────────────────────────────────────────────────────
 
@@ -3307,38 +3381,77 @@ namespace MyWebForms
             Visible = true;
 
             litRank.Text = Rank.ToString() + ".";
-            litScore.Text = Item.Score.ToString() + " pts";
 
-            // Outer span: ID-based lookup (kept for backward compat / CSS hooks).
-            spanScore.Attributes["data-hn-score-id"] = Item.Id.ToString();
+            bool isComment = Item.IsComment;
 
-            // Inner span: targeted by the JS poller so it can update the score
-            // number text WITHOUT replacing the ▲ triangle in the outer span.
-            spanScoreNum.Attributes["data-hn-score-num"] = Item.Id.ToString();
+            // Score badge — comments have no score, hide the panel entirely.
+            pnlScore.Visible = !isComment;
+            if (!isComment)
+            {
+                litScore.Text = Item.Score.ToString() + " pts";
+                spanScore.Attributes["data-hn-score-id"] = Item.Id.ToString();
+                spanScoreNum.Attributes["data-hn-score-num"] = Item.Id.ToString();
+            }
 
-            lnkTitle.Text = System.Web.HttpUtility.HtmlEncode(Item.Title ?? "(untitled)");
-            lnkTitle.NavigateUrl = Item.DisplayUrl;
-            litDomain.Text = System.Web.HttpUtility.HtmlEncode(Item.Domain);
+            if (isComment)
+            {
+                // Comment item: show snippet instead of title.
+                lnkTitle.Visible = false;
+                pnlDomain.Visible = false;
+                pnlCommentSnippet.Visible = true;
+
+                // Strip HTML tags and truncate to ~140 chars for the snippet.
+                var raw = Item.Text ?? string.Empty;
+                var plain = Regex.Replace(raw, "<[^>]+>", " ");
+                plain = System.Web.HttpUtility.HtmlDecode(plain);
+                plain = Regex.Replace(plain, @"\s+", " ").Trim();
+                if (plain.Length > 140) plain = plain.Substring(0, 137) + "…";
+                litCommentSnippet.Text = System.Web.HttpUtility.HtmlEncode(plain);
+
+                // "View thread" link navigates to the parent story.
+                lnkComments.Text = "view thread";
+            }
+            else
+            {
+                // Normal story / job / poll item.
+                lnkTitle.Visible = true;
+                pnlDomain.Visible = true;
+                pnlCommentSnippet.Visible = false;
+
+                lnkTitle.Text = System.Web.HttpUtility.HtmlEncode(Item.Title ?? "(untitled)");
+                lnkTitle.NavigateUrl = Item.DisplayUrl;
+                litDomain.Text = System.Web.HttpUtility.HtmlEncode(Item.Domain);
+                lnkComments.Text = string.Format("{0} comments", Item.Descendants);
+            }
+
             litTimeAgo.Text = Item.TimeAgo;
-
             lnkAuthor.Text = System.Web.HttpUtility.HtmlEncode(Item.By ?? "[deleted]");
-            lnkComments.Text = string.Format("{0} comments", Item.Descendants);
         }
 
         // ── Events ────────────────────────────────────────────────────────────
 
         protected void lnkComments_Click(object sender, EventArgs e)
         {
-            // Use Item when available (normal render path); fall back to
-            // StubItemId when this is an event-routing stub (Item == null).
-            int itemId = Item != null ? Item.Id : StubItemId;
+            int itemId;
+            if (Item != null)
+            {
+                // For a comment item, navigate to the parent story's thread.
+                itemId = (Item.IsComment && Item.Parent.HasValue && Item.Parent.Value > 0)
+                    ? Item.Parent.Value
+                    : Item.Id;
+            }
+            else
+            {
+                // Stub — use StubParentId if set (comment item), else StubItemId.
+                itemId = (StubParentId > 0) ? StubParentId : StubItemId;
+            }
+
             if (itemId == 0) return;
             StorySelected?.Invoke(this, new StorySelectedEventArgs(itemId));
         }
 
         protected void lnkAuthor_Click(object sender, EventArgs e)
         {
-            // Use Item when available; fall back to StubItemBy for stubs.
             string by = Item != null ? Item.By : StubItemBy;
             if (string.IsNullOrEmpty(by)) return;
             AuthorSelected?.Invoke(this, new AuthorSelectedEventArgs(by));
@@ -3738,7 +3851,7 @@ namespace MyWebForms.Models
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\MyWebForms.csproj
 SIZE: 21.03 KB
-MODIFIED: 02/17/2026 18:22:02
+MODIFIED: 02/17/2026 19:35:37
 ================================================================================
 
 <?xml version="1.0" encoding="utf-8"?>
@@ -4748,30 +4861,22 @@ namespace MyWebForms.Services
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\Site.Master
-SIZE: 5.11 KB
-MODIFIED: 02/17/2026 18:30:43
+SIZE: 7.39 KB
+MODIFIED: 02/17/2026 19:34:05
 ================================================================================
 
-<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="MyWebForms.SiteMaster" %>
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="MyWebForms.SiteMaster" %>
+<%@ Register Src="~/ViewSwitcher.ascx" TagPrefix="uc" TagName="ViewSwitcher" %>
 
 <!DOCTYPE html>
-
 <html lang="en">
 <head runat="server">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%: Page.Title %> - My ASP.NET Application</title>
-
-    <%-- Modernizr must be in <head> so feature detection runs before <body> is parsed. --%>
-    <asp:PlaceHolder runat="server">
-        <%: Scripts.Render("~/bundles/modernizr") %>
-    </asp:PlaceHolder>
+    <title><%: Page.Title %> - MyWebForms</title>
 
     <webopt:BundleReference runat="server" Path="~/Content/css" />
-    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <link href="~/Content/animate.css/animate.min.css" rel="stylesheet" />
 
-    <%-- Content pages may inject page-specific <link> or <meta> tags here. --%>
     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
     </asp:ContentPlaceHolder>
 </head>
@@ -4795,29 +4900,37 @@ MODIFIED: 02/17/2026 18:30:43
             </Scripts>
         </asp:ScriptManager>
 
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" runat="server" href="~/">MyWebForms</a>
-                <%-- FIX: data-bs-target must use the ID selector (#navbarCollapse),
-                     not a class selector (.navbar-collapse).  Bootstrap 5's Collapse
-                     plugin calls document.querySelector(target) — a class selector
-                     matches the first element in the DOM with that class, which is
-                     not guaranteed to be *this* navbar's collapse div.  An ID
-                     selector is unambiguous and is what Bootstrap's own docs
-                     recommend.  aria-controls must also match the actual element ID. --%>
+                <%--
+                    FIX 1 — Hamburger menu:
+                    Bootstrap 5's Collapse plugin toggles a "show" class on the
+                    target element to reveal it (display:block).  The previous markup
+                    had  d-sm-inline-flex  on the collapse div, which forces
+                    display:inline-flex at ≥576 px via Bootstrap's utility classes
+                    and is NOT removed by the Collapse plugin — so the menu appeared
+                    stuck open / not responding on narrow screens.
+
+                    The correct pattern (Bootstrap 5 docs):
+                      • The toggler uses   data-bs-target="#navbarCollapse"   (ID selector).
+                      • The collapse div has ONLY  class="collapse navbar-collapse".
+                      • Bootstrap's own CSS shows it as a flex row at ≥ the breakpoint
+                        via the  .navbar-expand-sm .navbar-collapse  rule — no manual
+                        d-sm-* utility needed.
+                    --%>
                 <button type="button" class="navbar-toggler" data-bs-toggle="collapse"
                         data-bs-target="#navbarCollapse"
                         aria-controls="navbarCollapse"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between" id="navbarCollapse">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/">Home</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/About">About</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Contact">Contact</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/HackerNews">Hacker News</a></li>
-                        <%-- HN Live: pure client-side streaming feed — no postbacks --%>
                         <li class="nav-item">
                             <a class="nav-link" runat="server" href="~/HnLive">
                                 HN Live <span class="badge bg-success ms-1" style="font-size:.6rem;vertical-align:middle;">◉</span>
@@ -4827,6 +4940,21 @@ MODIFIED: 02/17/2026 18:30:43
                 </div>
             </div>
         </nav>
+
+        <%-- Global postback loading overlay.
+             Shown by hn-loading.js whenever a server postback is in-flight.
+             Sits at the top of the body so it is always available. --%>
+        <div id="hnPostbackOverlay" style="display:none;position:fixed;inset:0;
+             background:rgba(0,0,0,.25);z-index:9999;
+             display:none;align-items:center;justify-content:center;">
+            <div style="background:#fff;border-radius:8px;padding:1.5rem 2.5rem;
+                        box-shadow:0 4px 24px rgba(0,0,0,.2);text-align:center;">
+                <div class="spinner-border text-warning" role="status">
+                    <span class="visually-hidden">Loading…</span>
+                </div>
+                <p class="mt-2 mb-0 small text-muted">Loading…</p>
+            </div>
+        </div>
 
         <div class="container body-content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
@@ -4845,6 +4973,47 @@ MODIFIED: 02/17/2026 18:30:43
          no separate Popper import is needed. --%>
     <script src="<%: ResolveUrl("~/Content/bootstrap/js/bootstrap.bundle.min.js") %>"></script>
     <script src="<%: ResolveUrl("~/Scripts/lib/chartjs/chart.umd.js") %>"></script>
+
+    <%-- Postback loading overlay — wires up once Bootstrap is loaded --%>
+    <script>
+    (function () {
+        var overlay = document.getElementById('hnPostbackOverlay');
+        if (!overlay) return;
+
+        // Show overlay on any full-page postback trigger (LinkButton, Button, etc.)
+        // that has the data-hn-loading attribute OR is inside a .hn-loading-trigger
+        // container.  We also listen for Sys.WebForms partial-page requests so
+        // the overlay covers UpdatePanel async postbacks too.
+        function showOverlay() {
+            overlay.style.display = 'flex';
+        }
+        function hideOverlay() {
+            overlay.style.display = 'none';
+        }
+
+        // MS Ajax partial-page requests
+        if (typeof Sys !== 'undefined' && Sys.WebForms && Sys.WebForms.PageRequestManager) {
+            var prm = Sys.WebForms.PageRequestManager.getInstance();
+            prm.add_beginRequest(showOverlay);
+            prm.add_endRequest(hideOverlay);
+        }
+
+        // Full-page postbacks triggered by .hn-postback-link buttons
+        document.addEventListener('click', function (e) {
+            var t = e.target;
+            while (t && t !== document) {
+                if (t.classList && t.classList.contains('hn-postback-link')) {
+                    showOverlay();
+                    break;
+                }
+                t = t.parentNode;
+            }
+        });
+
+        // Hide on page show (e.g. browser back-button bfcache restore)
+        window.addEventListener('pageshow', hideOverlay);
+    }());
+    </script>
 
 </body>
 </html>
@@ -5070,5 +5239,5 @@ MODIFIED: 02/17/2026 12:40:45
 
 
 ===============================================================================
-END OF EXPORT — 44 files, 182.11 KB total
+END OF EXPORT — 44 files, 188.68 KB total
 ===============================================================================

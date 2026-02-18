@@ -1,23 +1,15 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="MyWebForms.SiteMaster" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="MyWebForms.SiteMaster" %>
+<%@ Register Src="~/ViewSwitcher.ascx" TagPrefix="uc" TagName="ViewSwitcher" %>
 
 <!DOCTYPE html>
-
 <html lang="en">
 <head runat="server">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%: Page.Title %> - My ASP.NET Application</title>
-
-    <%-- Modernizr must be in <head> so feature detection runs before <body> is parsed. --%>
-    <asp:PlaceHolder runat="server">
-        <%: Scripts.Render("~/bundles/modernizr") %>
-    </asp:PlaceHolder>
+    <title><%: Page.Title %> - MyWebForms</title>
 
     <webopt:BundleReference runat="server" Path="~/Content/css" />
-    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <link href="~/Content/animate.css/animate.min.css" rel="stylesheet" />
 
-    <%-- Content pages may inject page-specific <link> or <meta> tags here. --%>
     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
     </asp:ContentPlaceHolder>
 </head>
@@ -41,29 +33,37 @@
             </Scripts>
         </asp:ScriptManager>
 
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" runat="server" href="~/">MyWebForms</a>
-                <%-- FIX: data-bs-target must use the ID selector (#navbarCollapse),
-                     not a class selector (.navbar-collapse).  Bootstrap 5's Collapse
-                     plugin calls document.querySelector(target) — a class selector
-                     matches the first element in the DOM with that class, which is
-                     not guaranteed to be *this* navbar's collapse div.  An ID
-                     selector is unambiguous and is what Bootstrap's own docs
-                     recommend.  aria-controls must also match the actual element ID. --%>
+                <%--
+                    FIX 1 — Hamburger menu:
+                    Bootstrap 5's Collapse plugin toggles a "show" class on the
+                    target element to reveal it (display:block).  The previous markup
+                    had  d-sm-inline-flex  on the collapse div, which forces
+                    display:inline-flex at ≥576 px via Bootstrap's utility classes
+                    and is NOT removed by the Collapse plugin — so the menu appeared
+                    stuck open / not responding on narrow screens.
+
+                    The correct pattern (Bootstrap 5 docs):
+                      • The toggler uses   data-bs-target="#navbarCollapse"   (ID selector).
+                      • The collapse div has ONLY  class="collapse navbar-collapse".
+                      • Bootstrap's own CSS shows it as a flex row at ≥ the breakpoint
+                        via the  .navbar-expand-sm .navbar-collapse  rule — no manual
+                        d-sm-* utility needed.
+                    --%>
                 <button type="button" class="navbar-toggler" data-bs-toggle="collapse"
                         data-bs-target="#navbarCollapse"
                         aria-controls="navbarCollapse"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between" id="navbarCollapse">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/">Home</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/About">About</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Contact">Contact</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/HackerNews">Hacker News</a></li>
-                        <%-- HN Live: pure client-side streaming feed — no postbacks --%>
                         <li class="nav-item">
                             <a class="nav-link" runat="server" href="~/HnLive">
                                 HN Live <span class="badge bg-success ms-1" style="font-size:.6rem;vertical-align:middle;">◉</span>
@@ -73,6 +73,21 @@
                 </div>
             </div>
         </nav>
+
+        <%-- Global postback loading overlay.
+             Shown by hn-loading.js whenever a server postback is in-flight.
+             Sits at the top of the body so it is always available. --%>
+        <div id="hnPostbackOverlay" style="display:none;position:fixed;inset:0;
+             background:rgba(0,0,0,.25);z-index:9999;
+             display:none;align-items:center;justify-content:center;">
+            <div style="background:#fff;border-radius:8px;padding:1.5rem 2.5rem;
+                        box-shadow:0 4px 24px rgba(0,0,0,.2);text-align:center;">
+                <div class="spinner-border text-warning" role="status">
+                    <span class="visually-hidden">Loading…</span>
+                </div>
+                <p class="mt-2 mb-0 small text-muted">Loading…</p>
+            </div>
+        </div>
 
         <div class="container body-content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
@@ -91,6 +106,47 @@
          no separate Popper import is needed. --%>
     <script src="<%: ResolveUrl("~/Content/bootstrap/js/bootstrap.bundle.min.js") %>"></script>
     <script src="<%: ResolveUrl("~/Scripts/lib/chartjs/chart.umd.js") %>"></script>
+
+    <%-- Postback loading overlay — wires up once Bootstrap is loaded --%>
+    <script>
+    (function () {
+        var overlay = document.getElementById('hnPostbackOverlay');
+        if (!overlay) return;
+
+        // Show overlay on any full-page postback trigger (LinkButton, Button, etc.)
+        // that has the data-hn-loading attribute OR is inside a .hn-loading-trigger
+        // container.  We also listen for Sys.WebForms partial-page requests so
+        // the overlay covers UpdatePanel async postbacks too.
+        function showOverlay() {
+            overlay.style.display = 'flex';
+        }
+        function hideOverlay() {
+            overlay.style.display = 'none';
+        }
+
+        // MS Ajax partial-page requests
+        if (typeof Sys !== 'undefined' && Sys.WebForms && Sys.WebForms.PageRequestManager) {
+            var prm = Sys.WebForms.PageRequestManager.getInstance();
+            prm.add_beginRequest(showOverlay);
+            prm.add_endRequest(hideOverlay);
+        }
+
+        // Full-page postbacks triggered by .hn-postback-link buttons
+        document.addEventListener('click', function (e) {
+            var t = e.target;
+            while (t && t !== document) {
+                if (t.classList && t.classList.contains('hn-postback-link')) {
+                    showOverlay();
+                    break;
+                }
+                t = t.parentNode;
+            }
+        });
+
+        // Hide on page show (e.g. browser back-button bfcache restore)
+        window.addEventListener('pageshow', hideOverlay);
+    }());
+    </script>
 
 </body>
 </html>

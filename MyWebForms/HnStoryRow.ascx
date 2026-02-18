@@ -5,19 +5,22 @@
 <%--
     HnStoryRow.ascx
     ---------------
-    Renders a single Hacker News story in the classic orange-site list style.
+    Renders a single Hacker News item in the classic orange-site list style.
+    Handles both story-type and comment-type items (e.g. from the Active tab).
 
-    Score badge markup
-    ------------------
-    The outer badge span (spanScore) contains:
-      ▲ (triangle, plain HTML text) + <span data-hn-score-num="ID">NNN pts</span>
+    Comment-type items (type == "comment"):
+      - Show a snippet of the comment text instead of a title.
+      - The "N comments" link navigates to the *parent* story (not the comment
+        itself, which has no meaningful comment thread of its own to display).
+      - The score badge is hidden (comments have no score in the HN API).
 
-    The JS poller targets  data-hn-score-num  to update ONLY the number text.
-    This preserves the ▲ triangle — previously targeting the whole spanScore
-    with textContent would wipe the triangle.
-
-    data-hn-score-id on the outer span is kept for any other selectors that
-    may need to locate the badge by story ID.
+    Score span strategy
+    -------------------
+    spanScore    (outer) — carries  data-hn-score-id  for general queries.
+    spanScoreNum (inner) — carries  data-hn-score-num  so the background JS
+                           poller can update ONLY the "NNN pts" text via
+                             el.textContent = score + ' pts'
+                           without clobbering the ▲ triangle.
 
     LinkButton vs HyperLink
     -----------------------
@@ -25,6 +28,12 @@
     - "N comments" link   → LinkButton — triggers a postback so the parent
       page can load the story detail panel server-side
     - Author name link    → LinkButton — same pattern for the user panel
+
+    hn-postback-link CSS class
+    --------------------------
+    Applied to both LinkButtons so the Site.Master overlay script can detect
+    any click on them and show the global loading spinner immediately, giving
+    the user instant feedback while the server-side async load runs.
 --%>
 
 <div class="hn-story-row d-flex align-items-start py-2 border-bottom border-light">
@@ -35,36 +44,49 @@
     </span>
 
     <%--
-        Score badge outer span: carries data-hn-score-id for general lookups.
+        Score badge — hidden for comment-type items (comments have no score).
         The inner spanScoreNum carries data-hn-score-num, which the JS poller
-        updates in-place without touching the ▲ triangle.
+        updates in-place without touching the ▲ triangle that lives in
+        the outer span as raw HTML text.
     --%>
-    <span class="hn-score badge bg-warning text-dark me-3 mt-1"
-          style="min-width:3.5rem; text-align:center;"
-          runat="server" id="spanScore">
-        &#9650;&nbsp;<span runat="server" id="spanScoreNum"><asp:Literal ID="litScore" runat="server" /></span>
-    </span>
+    <asp:Panel ID="pnlScore" runat="server">
+        <span class="hn-score badge bg-warning text-dark me-3 mt-1"
+              style="min-width:3.5rem; text-align:center;"
+              runat="server" id="spanScore">
+            &#9650;&nbsp;<span runat="server" id="spanScoreNum"><asp:Literal ID="litScore" runat="server" /></span>
+        </span>
+    </asp:Panel>
 
     <div class="flex-grow-1">
-        <%-- Story title -- external URL opens in new tab --%>
+        <%-- Story title / comment snippet --%>
         <asp:HyperLink ID="lnkTitle" runat="server"
             CssClass="hn-title fw-semibold text-decoration-none text-dark"
             Target="_blank" />
-        <%-- Domain hint --%>
-        <small class="text-muted ms-1">
-            (<asp:Literal ID="litDomain" runat="server" />)
-        </small>
+        <%-- Comment snippet (shown instead of title for comment-type items) --%>
+        <asp:Panel ID="pnlCommentSnippet" runat="server" Visible="false">
+            <span class="hn-comment-snippet text-muted fst-italic small">
+                <asp:Literal ID="litCommentSnippet" runat="server" />
+            </span>
+        </asp:Panel>
+        <%-- Domain hint (hidden for comment items) --%>
+        <asp:Panel ID="pnlDomain" runat="server">
+            <small class="text-muted ms-1">
+                (<asp:Literal ID="litDomain" runat="server" />)
+            </small>
+        </asp:Panel>
 
         <%-- Metadata line --%>
         <div class="hn-meta small text-muted mt-1">
             <asp:Literal ID="litTimeAgo" runat="server" />
             &nbsp;by&nbsp;
+            <%-- hn-postback-link tells the Site.Master overlay script to show
+                 the loading spinner as soon as this link is clicked. --%>
             <asp:LinkButton ID="lnkAuthor" runat="server"
-                CssClass="text-muted hn-author-link"
+                CssClass="text-muted hn-author-link hn-postback-link"
                 OnClick="lnkAuthor_Click" />
             &nbsp;|&nbsp;
             <asp:LinkButton ID="lnkComments" runat="server"
-                CssClass="text-muted hn-comments-link"
+                CssClass="text-muted hn-comments-link hn-postback-link"
                 OnClick="lnkComments_Click" />
         </div>
     </div>

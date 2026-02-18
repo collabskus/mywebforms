@@ -34,20 +34,20 @@ namespace MyWebForms
     /// if they exist in the control tree BEFORE the event-dispatch phase (which
     /// runs between Load and PreRender).
     ///
-    /// Story rows: cache the current page's story IDs in ViewState ("ShownIds")
-    /// AND their author names in ViewState ("ShownAuthors") — both parallel lists.
-    /// On every postback, RecreateStoryRowsForEventRouting() runs in Page_Load,
-    /// adding invisible stub HnStoryRow controls with the same stable IDs
-    /// (row_{storyId}).  Stubs set StubItemId and StubItemBy so the click
-    /// handlers can fire the correct events even though Item == null.
+    /// Story rows: cache the current page's story IDs in ViewState ("ShownIds"),
+    /// author names ("ShownAuthors"), and parent IDs ("ShownParentIds") — all
+    /// parallel lists.  On every postback, RecreateStoryRowsForEventRouting()
+    /// runs in Page_Load, adding invisible stub HnStoryRow controls with the
+    /// same stable IDs (row_{storyId}).  Stubs set StubItemId, StubItemBy, and
+    /// StubParentId so the click handlers fire the correct events.
     ///
-    /// Comments: the same problem applies to HnComment controls inside the
-    /// detail panel.  If the user clicks an author link in the comment list,
-    /// the postback targets an HnComment control — but those controls are only
-    /// added in PreRenderComplete (too late).  Fix: cache a flat list of
-    /// (CommentId, ParentId) in ViewState ("ShownCommentMeta") and author names
-    /// in ViewState ("ShownCommentAuthors"), then recreate minimal stub HnComment
-    /// controls in Page_Load on every postback when a story is selected.
+    /// Comment-type items (Active tab)
+    /// --------------------------------
+    /// /v0/updates.json returns recently-changed item IDs which may include
+    /// comments.  Comments have no Title, so we track Item.Parent in
+    /// ShownParentIds.  When a user clicks "view thread" on a comment row,
+    /// lnkComments fires StorySelected with the parent story ID — this loads
+    /// the actual story + thread in the detail panel.
     ///
     /// Background refresh
     /// ------------------
@@ -71,10 +71,10 @@ namespace MyWebForms
     /// </summary>
     public partial class HackerNews : Page
     {
-        // ── Constants ────────────────────────────────────────────────────────────
+        // ── Constants ──────────────────────────────────────────────────────────
 
-        private const int PageSize         = 20;
-        private const int MaxCommentDepth  = 4;
+        private const int PageSize = 20;
+        private const int MaxCommentDepth = 4;
         private const int AutoRefreshSeconds = 60;
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace MyWebForms
         /// </summary>
         private const int RisingCandidates = 200;
 
-        // ── Service ───────────────────────────────────────────────────────────
+        // ── Service ────────────────────────────────────────────────────────────
 
         private HackerNewsService _service;
 
@@ -97,13 +97,13 @@ namespace MyWebForms
         // ── Data loaded by async tasks ─────────────────────────────────────────
 
         private List<HackerNewsItem> _storyPage;
-        private int                  _totalIds;
-        private HackerNewsItem       _selectedStory;
+        private int _totalIds;
+        private HackerNewsItem _selectedStory;
         private List<HackerNewsItem> _comments;
         private List<HackerNewsItem> _pollOptions;
-        private HackerNewsUser       _selectedUser;
+        private HackerNewsUser _selectedUser;
 
-        // ── ViewState keys ────────────────────────────────────────────────────
+        // ── ViewState keys ─────────────────────────────────────────────────────
 
         private string ActiveTab
         {
@@ -151,7 +151,7 @@ namespace MyWebForms
 
         /// <summary>
         /// IDs of the story items currently shown on the page.
-        /// Parallel to ShownAuthors — same index = same story.
+        /// Parallel to ShownAuthors and ShownParentIds — same index = same item.
         /// </summary>
         private List<int> ShownIds
         {
@@ -160,7 +160,7 @@ namespace MyWebForms
         }
 
         /// <summary>
-        /// Author names for each story currently shown on the page.
+        /// Author names for each item currently shown on the page.
         /// Parallel to ShownIds — ShownAuthors[i] is the author of ShownIds[i].
         /// Needed so event-routing stubs can fire AuthorSelected with the correct
         /// username even though the stubs carry no HackerNewsItem.
@@ -169,6 +169,19 @@ namespace MyWebForms
         {
             get { return ViewState["ShownAuthors"] as List<string> ?? new List<string>(); }
             set { ViewState["ShownAuthors"] = value; }
+        }
+
+        /// <summary>
+        /// Parent IDs for each item currently shown on the page.
+        /// Non-zero only for comment-type items (Active tab).
+        /// Parallel to ShownIds — ShownParentIds[i] is the parent of ShownIds[i].
+        /// When non-zero, lnkComments fires StorySelected with this parent ID
+        /// so the detail panel loads the owning story rather than the comment.
+        /// </summary>
+        private List<int> ShownParentIds
+        {
+            get { return ViewState["ShownParentIds"] as List<int> ?? new List<int>(); }
+            set { ViewState["ShownParentIds"] = value; }
         }
 
         /// <summary>
@@ -192,18 +205,18 @@ namespace MyWebForms
             set { ViewState["ShownCommentAuthors"] = value; }
         }
 
-        // ── Page lifecycle ────────────────────────────────────────────────────
+        // ── Page lifecycle ─────────────────────────────────────────────────────
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                ActiveTab   = "top";
+                ActiveTab = "top";
                 CurrentPage = 1;
 
                 // Sync filter textboxes with ViewState defaults on first load.
                 txtMinComments.Text = MinComments.ToString();
-                txtMinPoints.Text   = MinPoints.ToString();
+                txtMinPoints.Text = MinPoints.ToString();
             }
             else
             {
@@ -222,29 +235,31 @@ namespace MyWebForms
 
         /// <summary>
         /// Adds invisible HnStoryRow stubs to phStories using IDs cached in
-        /// ShownIds and author names from ShownAuthors.
+        /// ShownIds, author names from ShownAuthors, and parent IDs from
+        /// ShownParentIds.
         ///
-        /// Stubs set StubItemId and StubItemBy instead of Item, so the click
-        /// handlers on HnStoryRow can fire StorySelected / AuthorSelected
-        /// with the correct values even though Item == null (and the control
-        /// renders nothing — Visible = false).
+        /// Stubs set StubItemId, StubItemBy, and StubParentId instead of Item,
+        /// so the click handlers on HnStoryRow can fire the correct events even
+        /// though Item == null (and the control renders nothing — Visible = false).
         /// </summary>
         private void RecreateStoryRowsForEventRouting()
         {
             phStories.Controls.Clear();
-            var ids     = ShownIds;
+            var ids = ShownIds;
             var authors = ShownAuthors;
+            var parentIds = ShownParentIds;
             int startRank = (CurrentPage - 1) * PageSize + 1;
 
             for (int i = 0; i < ids.Count; i++)
             {
                 var row = (HnStoryRow)LoadControl("~/HnStoryRow.ascx");
-                row.ID          = "row_" + ids[i];
-                row.Item        = null;   // Stub — renders nothing
-                row.Rank        = startRank + i;
-                row.StubItemId  = ids[i];
-                row.StubItemBy  = i < authors.Count ? authors[i] : string.Empty;
-                row.StorySelected  += OnStorySelected;
+                row.ID = "row_" + ids[i];
+                row.Item = null;   // Stub — renders nothing
+                row.Rank = startRank + i;
+                row.StubItemId = ids[i];
+                row.StubItemBy = i < authors.Count ? authors[i] : string.Empty;
+                row.StubParentId = i < parentIds.Count ? parentIds[i] : 0;
+                row.StorySelected += OnStorySelected;
                 row.AuthorSelected += OnAuthorSelected;
                 phStories.Controls.Add(row);
             }
@@ -260,21 +275,21 @@ namespace MyWebForms
         private void RecreateCommentStubsForEventRouting()
         {
             phComments.Controls.Clear();
-            var meta    = ShownCommentMeta;
+            var meta = ShownCommentMeta;
             var authors = ShownCommentAuthors;
 
             for (int i = 0; i < meta.Count; i++)
             {
                 int commentId = meta[i][0];
-                int parentId  = meta[i][1];
-                string by     = i < authors.Count ? authors[i] : string.Empty;
+                int parentId = meta[i][1];
+                string by = i < authors.Count ? authors[i] : string.Empty;
 
                 var stub = (HnComment)LoadControl("~/HnComment.ascx");
-                stub.ID   = "cmt_" + commentId;   // must match RenderCommentTree
+                stub.ID = "cmt_" + commentId;   // must match RenderCommentTree
                 stub.Item = new HackerNewsItem
                 {
-                    Id     = commentId,
-                    By     = by,
+                    Id = commentId,
+                    By = by,
                     Parent = parentId
                 };
                 stub.Depth = 0;
@@ -287,7 +302,7 @@ namespace MyWebForms
         private async Task LoadDataAsync()
         {
             var ids = await GetIdsForTabAsync(ActiveTab).ConfigureAwait(false);
-            _totalIds  = ids.Count;
+            _totalIds = ids.Count;
             _storyPage = await Service.GetItemPageAsync(ids, CurrentPage, PageSize)
                              .ConfigureAwait(false);
 
@@ -295,6 +310,17 @@ namespace MyWebForms
             {
                 _selectedStory = await Service.GetItemAsync(SelectedItemId)
                                      .ConfigureAwait(false);
+
+                // If the selected item is itself a comment (clicked "view thread"
+                // from the Active tab — should not normally happen because
+                // lnkComments_Click resolves to the parent — but guard anyway),
+                // navigate up to the parent story.
+                if (_selectedStory != null && _selectedStory.IsComment
+                    && _selectedStory.Parent.HasValue && _selectedStory.Parent.Value > 0)
+                {
+                    _selectedStory = await Service.GetItemAsync(_selectedStory.Parent.Value)
+                                         .ConfigureAwait(false);
+                }
 
                 if (_selectedStory != null)
                 {
@@ -330,145 +356,31 @@ namespace MyWebForms
             // Show the Rising filter controls only on the "rising" tab.
             pnlRisingFilter.Visible = (ActiveTab == "rising");
 
-            // Sync textboxes with current ViewState thresholds (so they reflect
-            // any server-side changes, e.g. after btnApplyFilter_Click).
-            if (ActiveTab == "rising")
-            {
-                txtMinComments.Text = MinComments.ToString();
-                txtMinPoints.Text   = MinPoints.ToString();
-            }
-
             BindStoryList();
             BindDetailPanel();
             BindUserPanel();
             BindPager();
-
-            lblLiveBadge.Visible = true;
-
-            if (SelectedItemId == 0 && string.IsNullOrEmpty(SelectedUsername))
-                InjectAutoRefreshScript();
+            InjectRefreshScript();
         }
 
-        // ── Auto-refresh script ──────────────────────────────────────────────
-
-        private void InjectAutoRefreshScript()
-        {
-            var shownIds = new List<string>();
-            if (_storyPage != null)
-            {
-                foreach (var s in _storyPage)
-                    shownIds.Add(s.Id.ToString());
-            }
-
-            var activeTab          = ActiveTab;
-            var countdownClientId  = lblRefreshCountdown.ClientID;
-            var seconds            = AutoRefreshSeconds;
-            var handlerUrl         = ResolveUrl("~/hn-refresh");
-
-            string currentTabBtnUniqueId;
-            switch (activeTab)
-            {
-                case "new":    currentTabBtnUniqueId = btnTabNew.UniqueID;    break;
-                case "best":   currentTabBtnUniqueId = btnTabBest.UniqueID;   break;
-                case "ask":    currentTabBtnUniqueId = btnTabAsk.UniqueID;    break;
-                case "show":   currentTabBtnUniqueId = btnTabShow.UniqueID;   break;
-                case "jobs":   currentTabBtnUniqueId = btnTabJobs.UniqueID;   break;
-                case "active": currentTabBtnUniqueId = btnTabActive.UniqueID; break;
-                case "rising": currentTabBtnUniqueId = btnTabRising.UniqueID; break;
-                default:       currentTabBtnUniqueId = btnTabTop.UniqueID;    break;
-            }
-
-            var shownIdsJoined = string.Join(",", shownIds.ToArray());
-
-            var sb = new StringBuilder();
-            sb.AppendLine("(function () {");
-            sb.AppendLine("    var remaining = " + seconds + ";");
-            sb.AppendLine("    var timer;");
-            sb.AppendLine("    var countdownEl = document.getElementById('" + countdownClientId + "');");
-            sb.AppendLine("");
-            sb.AppendLine("    function updateCountdown() {");
-            sb.AppendLine("        if (countdownEl) {");
-            sb.AppendLine("            countdownEl.style.display = '';");
-            sb.AppendLine("            countdownEl.textContent = 'Refresh in ' + remaining + 's';");
-            sb.AppendLine("        }");
-            sb.AppendLine("    }");
-            sb.AppendLine("");
-            sb.AppendLine("    function tick() {");
-            sb.AppendLine("        remaining--;");
-            sb.AppendLine("        updateCountdown();");
-            sb.AppendLine("        if (remaining <= 0) {");
-            sb.AppendLine("            clearInterval(timer);");
-            sb.AppendLine("            doRefresh();");
-            sb.AppendLine("        }");
-            sb.AppendLine("    }");
-            sb.AppendLine("");
-            sb.AppendLine("    function doRefresh() {");
-            sb.AppendLine("        var url = '" + handlerUrl + "?tab=" + activeTab + "&ids=" + shownIdsJoined + "';");
-            sb.AppendLine("        var xhr = new XMLHttpRequest();");
-            sb.AppendLine("        xhr.open('GET', url, true);");
-            sb.AppendLine("        xhr.onload = function () {");
-            sb.AppendLine("            if (xhr.status !== 200) { restart(); return; }");
-            sb.AppendLine("            try {");
-            sb.AppendLine("                var data = JSON.parse(xhr.responseText);");
-            sb.AppendLine("                if (data.scores) {");
-            sb.AppendLine("                    Object.keys(data.scores).forEach(function (id) {");
-            sb.AppendLine("                        var el = document.querySelector('[data-hn-score-num=\"' + id + '\"]');");
-            sb.AppendLine("                        if (el) el.textContent = data.scores[id] + ' pts';");
-            sb.AppendLine("                    });");
-            sb.AppendLine("                }");
-            sb.AppendLine("                if (data.listChanged) {");
-            sb.AppendLine("                    __doPostBack('" + currentTabBtnUniqueId + "', '');");
-            sb.AppendLine("                } else {");
-            sb.AppendLine("                    restart();");
-            sb.AppendLine("                }");
-            sb.AppendLine("            } catch (ex) { restart(); }");
-            sb.AppendLine("        };");
-            sb.AppendLine("        xhr.onerror = function () { restart(); };");
-            sb.AppendLine("        xhr.send();");
-            sb.AppendLine("    }");
-            sb.AppendLine("");
-            sb.AppendLine("    function restart() {");
-            sb.AppendLine("        remaining = " + seconds + ";");
-            sb.AppendLine("        updateCountdown();");
-            sb.AppendLine("        timer = setInterval(tick, 1000);");
-            sb.AppendLine("    }");
-            sb.AppendLine("");
-            sb.AppendLine("    updateCountdown();");
-            sb.AppendLine("    timer = setInterval(tick, 1000);");
-            sb.AppendLine("})();");
-
-            ScriptManager.RegisterStartupScript(
-                this,
-                typeof(HackerNews),
-                "HnAutoRefresh",
-                sb.ToString(),
-                addScriptTags: true);
-        }
-
-        // ── Tab click ────────────────────────────────────────────────────────
+        // ── Tab / filter clicks ────────────────────────────────────────────────
 
         protected void btnTab_Click(object sender, EventArgs e)
         {
-            var btn   = (LinkButton)sender;
+            var btn = (LinkButton)sender;
             ActiveTab = btn.CommandArgument;
-            CurrentPage   = 1;
-            SelectedItemId   = 0;
-            SelectedUsername = null;
-        }
-
-        // ── Apply rising filter ──────────────────────────────────────────────
-
-        protected void btnApplyFilter_Click(object sender, EventArgs e)
-        {
-            int minC, minP;
-            if (int.TryParse(txtMinComments.Text, out minC) && minC >= 0) MinComments = minC;
-            if (int.TryParse(txtMinPoints.Text,   out minP) && minP >= 0) MinPoints   = minP;
-
-            // Reset to page 1 so the filtered list starts from the beginning.
             CurrentPage = 1;
         }
 
-        // ── Pager clicks ─────────────────────────────────────────────────────
+        protected void btnApplyFilter_Click(object sender, EventArgs e)
+        {
+            int mc, mp;
+            if (int.TryParse(txtMinComments.Text, out mc) && mc >= 0) MinComments = mc;
+            if (int.TryParse(txtMinPoints.Text, out mp) && mp >= 0) MinPoints = mp;
+            CurrentPage = 1;
+        }
+
+        // ── Pager clicks ───────────────────────────────────────────────────────
 
         protected void btnPrev_Click(object sender, EventArgs e)
         {
@@ -481,12 +393,12 @@ namespace MyWebForms
             if (CurrentPage < pageCount) CurrentPage++;
         }
 
-        // ── Detail / user panel close ────────────────────────────────────────
+        // ── Detail / user panel close ──────────────────────────────────────────
 
         protected void btnCloseDetail_Click(object sender, EventArgs e)
         {
             SelectedItemId = 0;
-            ShownCommentMeta    = new List<int[]>();
+            ShownCommentMeta = new List<int[]>();
             ShownCommentAuthors = new List<string>();
         }
 
@@ -495,7 +407,40 @@ namespace MyWebForms
             SelectedUsername = null;
         }
 
-        // ── Binding helpers ──────────────────────────────────────────────────
+        // ── Bubble-up event handlers ───────────────────────────────────────────
+
+        private void OnStorySelected(object sender, StorySelectedEventArgs e)
+        {
+            SelectedItemId = e.ItemId;
+            SelectedUsername = null;
+        }
+
+        private void OnAuthorSelected(object sender, AuthorSelectedEventArgs e)
+        {
+            SelectedUsername = e.Username;
+            SelectedItemId = 0;
+        }
+
+        // ── API tab → ID list routing ──────────────────────────────────────────
+
+        private async Task<List<int>> GetIdsForTabAsync(string tab)
+        {
+            switch (tab)
+            {
+                case "new": return await Service.GetNewStoryIdsAsync().ConfigureAwait(false);
+                case "best": return await Service.GetBestStoryIdsAsync().ConfigureAwait(false);
+                case "ask": return await Service.GetAskStoryIdsAsync().ConfigureAwait(false);
+                case "show": return await Service.GetShowStoryIdsAsync().ConfigureAwait(false);
+                case "jobs": return await Service.GetJobStoryIdsAsync().ConfigureAwait(false);
+                case "active": return await Service.GetActiveItemIdsAsync().ConfigureAwait(false);
+                case "rising":
+                    return await Service.GetRisingStoryIdsAsync(
+                                   MinComments, MinPoints, RisingCandidates).ConfigureAwait(false);
+                default: return await Service.GetTopStoryIdsAsync().ConfigureAwait(false);
+            }
+        }
+
+        // ── Binding helpers ────────────────────────────────────────────────────
 
         private void BindStoryList()
         {
@@ -506,33 +451,41 @@ namespace MyWebForms
                 litMessage.Text = "No stories found. " +
                     "The API may be temporarily unavailable.";
                 pnlMessage.Visible = true;
-                ShownIds    = new List<int>();
+                ShownIds = new List<int>();
                 ShownAuthors = new List<string>();
+                ShownParentIds = new List<int>();
                 return;
             }
 
             pnlMessage.Visible = false;
 
-            var newShownIds     = new List<int>();
+            var newShownIds = new List<int>();
             var newShownAuthors = new List<string>();
+            var newShownParentIds = new List<int>();
 
             int startRank = (CurrentPage - 1) * PageSize + 1;
             for (int i = 0; i < _storyPage.Count; i++)
             {
-                newShownIds.Add(_storyPage[i].Id);
-                newShownAuthors.Add(_storyPage[i].By ?? string.Empty);
+                var item = _storyPage[i];
+                newShownIds.Add(item.Id);
+                newShownAuthors.Add(item.By ?? string.Empty);
+                // Track parent ID for comment-type items so stubs can resolve
+                // "view thread" clicks to the correct parent story.
+                newShownParentIds.Add(item.IsComment && item.Parent.HasValue
+                    ? item.Parent.Value : 0);
 
                 var row = (HnStoryRow)LoadControl("~/HnStoryRow.ascx");
-                row.ID   = "row_" + _storyPage[i].Id;  // stable ID — must match RecreateStoryRowsForEventRouting
-                row.Item = _storyPage[i];
+                row.ID = "row_" + item.Id;  // stable ID — must match RecreateStoryRowsForEventRouting
+                row.Item = item;
                 row.Rank = startRank + i;
-                row.StorySelected  += OnStorySelected;
+                row.StorySelected += OnStorySelected;
                 row.AuthorSelected += OnAuthorSelected;
                 phStories.Controls.Add(row);
             }
 
-            ShownIds     = newShownIds;
+            ShownIds = newShownIds;
             ShownAuthors = newShownAuthors;
+            ShownParentIds = newShownParentIds;
         }
 
         private void BindDetailPanel()
@@ -557,7 +510,7 @@ namespace MyWebForms
 
             if (!string.IsNullOrEmpty(_selectedStory.Text))
             {
-                litDetailText.Text  = _selectedStory.Text;
+                litDetailText.Text = _selectedStory.Text;
                 pnlDetailText.Visible = true;
             }
             else
@@ -587,7 +540,7 @@ namespace MyWebForms
 
             litDetailCommentCount.Text = _selectedStory.Descendants.ToString();
             phComments.Controls.Clear();
-            pnlCommentLoading.Visible  = false;
+            pnlCommentLoading.Visible = false;
 
             if (_comments == null || _comments.Count == 0)
             {
@@ -596,15 +549,15 @@ namespace MyWebForms
                 noComments.InnerText = "No comments yet.";
                 phComments.Controls.Add(noComments);
 
-                ShownCommentMeta    = new List<int[]>();
+                ShownCommentMeta = new List<int[]>();
                 ShownCommentAuthors = new List<string>();
             }
             else
             {
-                var newMeta    = new List<int[]>();
+                var newMeta = new List<int[]>();
                 var newAuthors = new List<string>();
                 RenderCommentTree(_comments, _selectedStory.Id, 0, newMeta, newAuthors);
-                ShownCommentMeta    = newMeta;
+                ShownCommentMeta = newMeta;
                 ShownCommentAuthors = newAuthors;
             }
         }
@@ -631,8 +584,8 @@ namespace MyWebForms
                 if (comment.Parent != parentId) continue;
 
                 var ctrl = (HnComment)LoadControl("~/HnComment.ascx");
-                ctrl.ID   = "cmt_" + comment.Id;   // must match RecreateCommentStubsForEventRouting
-                ctrl.Item  = comment;
+                ctrl.ID = "cmt_" + comment.Id;   // must match RecreateCommentStubsForEventRouting
+                ctrl.Item = comment;
                 ctrl.Depth = depth;
                 ctrl.AuthorSelected += OnAuthorSelected;
                 phComments.Controls.Add(ctrl);
@@ -647,14 +600,30 @@ namespace MyWebForms
 
         private void BindUserPanel()
         {
-            if (string.IsNullOrEmpty(SelectedUsername) || _selectedUser == null)
+            if (string.IsNullOrEmpty(SelectedUsername))
             {
                 pnlUserProfile.Visible = false;
                 return;
             }
 
             pnlUserProfile.Visible = true;
-            ucUserCard.User = _selectedUser;
+
+            if (_selectedUser == null)
+            {
+                // User not found or API error — show a friendly message instead
+                // of leaving the panel blank.
+                ucUserCard.User = null;
+                litUserNotFound.Text = string.Format(
+                    "Could not load profile for <strong>{0}</strong>. " +
+                    "The user may not exist or the HN API may be temporarily unavailable.",
+                    System.Web.HttpUtility.HtmlEncode(SelectedUsername));
+                pnlUserNotFound.Visible = true;
+            }
+            else
+            {
+                ucUserCard.User = _selectedUser;
+                pnlUserNotFound.Visible = false;
+            }
         }
 
         private void BindPager()
@@ -663,11 +632,11 @@ namespace MyWebForms
                 ? (int)Math.Ceiling((double)_totalIds / PageSize)
                 : 1;
 
-            litPage.Text      = CurrentPage.ToString();
+            litPage.Text = CurrentPage.ToString();
             litPageCount.Text = pageCount.ToString();
-            btnPrev.Enabled   = CurrentPage > 1;
-            btnNext.Enabled   = CurrentPage < pageCount;
-            pnlPager.Visible  = pageCount > 1;
+            btnPrev.Enabled = CurrentPage > 1;
+            btnNext.Enabled = CurrentPage < pageCount;
+            pnlPager.Visible = pageCount > 1;
         }
 
         private void HighlightActiveTab()
@@ -681,47 +650,54 @@ namespace MyWebForms
 
             switch (ActiveTab)
             {
-                case "top":    btnTabTop.CssClass    = "nav-link active"; break;
-                case "new":    btnTabNew.CssClass    = "nav-link active"; break;
-                case "best":   btnTabBest.CssClass   = "nav-link active"; break;
-                case "ask":    btnTabAsk.CssClass    = "nav-link active"; break;
-                case "show":   btnTabShow.CssClass   = "nav-link active"; break;
-                case "jobs":   btnTabJobs.CssClass   = "nav-link active"; break;
+                case "top": btnTabTop.CssClass = "nav-link active"; break;
+                case "new": btnTabNew.CssClass = "nav-link active"; break;
+                case "best": btnTabBest.CssClass = "nav-link active"; break;
+                case "ask": btnTabAsk.CssClass = "nav-link active"; break;
+                case "show": btnTabShow.CssClass = "nav-link active"; break;
+                case "jobs": btnTabJobs.CssClass = "nav-link active"; break;
                 case "active": btnTabActive.CssClass = "nav-link active"; break;
                 case "rising": btnTabRising.CssClass = "nav-link active"; break;
             }
         }
 
-        // ── Bubble-up event handlers ──────────────────────────────────────────
-
-        private void OnStorySelected(object sender, StorySelectedEventArgs e)
+        private void InjectRefreshScript()
         {
-            SelectedItemId   = e.ItemId;
-            SelectedUsername = null;
-        }
-
-        private void OnAuthorSelected(object sender, AuthorSelectedEventArgs e)
-        {
-            SelectedUsername = e.Username;
-            SelectedItemId   = 0;
-        }
-
-        // ── API tab → ID list routing ─────────────────────────────────────────
-
-        private async Task<List<int>> GetIdsForTabAsync(string tab)
-        {
-            switch (tab)
-            {
-                case "new":    return await Service.GetNewStoryIdsAsync().ConfigureAwait(false);
-                case "best":   return await Service.GetBestStoryIdsAsync().ConfigureAwait(false);
-                case "ask":    return await Service.GetAskStoryIdsAsync().ConfigureAwait(false);
-                case "show":   return await Service.GetShowStoryIdsAsync().ConfigureAwait(false);
-                case "jobs":   return await Service.GetJobStoryIdsAsync().ConfigureAwait(false);
-                case "active": return await Service.GetActiveItemIdsAsync().ConfigureAwait(false);
-                case "rising": return await Service.GetRisingStoryIdsAsync(
-                                   MinComments, MinPoints, RisingCandidates).ConfigureAwait(false);
-                default:       return await Service.GetTopStoryIdsAsync().ConfigureAwait(false);
+            // Inject the background auto-refresh IIFE.
+            // It polls HackerNewsRefresh.ashx every AutoRefreshSeconds seconds,
+            // updates score spans in-place, and triggers __doPostBack only when
+            // the story list has actually changed.
+            var refreshUrl = ResolveUrl("~/hn-refresh") + "?tab=" + ActiveTab;
+            var sb = new StringBuilder();
+            sb.Append("(function(){");
+            sb.AppendFormat("var TAB='{0}',URL='{1}',INTERVAL={2}000;",
+                ActiveTab, refreshUrl, AutoRefreshSeconds);
+            sb.Append(@"
+function poll(){
+    var xhr=new XMLHttpRequest();
+    xhr.open('GET',URL+'&_='+Date.now(),true);
+    xhr.onload=function(){
+        if(xhr.status!==200)return;
+        try{
+            var d=JSON.parse(xhr.responseText);
+            if(d.scores){
+                Object.keys(d.scores).forEach(function(id){
+                    var el=document.querySelector('[data-hn-score-num=""'+id+'""]');
+                    if(el)el.textContent=d.scores[id]+' pts';
+                });
             }
+            if(d.listChanged){
+                var hf=document.getElementById('" + hfActiveTab.ClientID + @"');
+                if(hf&&hf.value===TAB)__doPostBack('','');
+            }
+        }catch(ex){}
+    };
+    xhr.send();
+}
+setTimeout(function loop(){poll();setTimeout(loop,INTERVAL);},INTERVAL);
+}());");
+            ScriptManager.RegisterStartupScript(this, GetType(),
+                "hnRefresh", sb.ToString(), true);
         }
     }
 }
