@@ -104,7 +104,7 @@
          interfere with ScriptManager's script registration above.
          Bootstrap's JS bundle (bootstrap.bundle.min.js) includes Popper —
          no separate Popper import is needed. --%>
-    <script src="<%: ResolveUrl("~/Content/bootstrap/js/bootstrap.bundle.min.js") %>"></script>
+    <script src="<%: ResolveUrl("~/Scripts/bootstrap.bundle.min.js") %>"></script>
     <script src="<%: ResolveUrl("~/Scripts/lib/chartjs/chart.umd.js") %>"></script>
 
     <%-- Postback loading overlay — wires up once Bootstrap is loaded --%>
