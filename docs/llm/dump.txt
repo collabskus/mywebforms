@@ -1,6 +1,6 @@
 ===============================================================================
 ASP.NET PROJECT EXPORT
-Generated: 02/17/2026 19:36:25
+Generated: 02/20/2026 12:59:44
 Project Path: D:\DEV\personal\MyWebForms\MyWebForms
 ===============================================================================
 
@@ -4861,8 +4861,8 @@ namespace MyWebForms.Services
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\Site.Master
-SIZE: 7.39 KB
-MODIFIED: 02/17/2026 19:34:05
+SIZE: 7.38 KB
+MODIFIED: 02/19/2026 08:53:43
 ================================================================================
 
 <%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="MyWebForms.SiteMaster" %>
@@ -4971,7 +4971,7 @@ MODIFIED: 02/17/2026 19:34:05
          interfere with ScriptManager's script registration above.
          Bootstrap's JS bundle (bootstrap.bundle.min.js) includes Popper —
          no separate Popper import is needed. --%>
-    <script src="<%: ResolveUrl("~/Content/bootstrap/js/bootstrap.bundle.min.js") %>"></script>
+    <script src="<%: ResolveUrl("~/Scripts/bootstrap.bundle.min.js") %>"></script>
     <script src="<%: ResolveUrl("~/Scripts/lib/chartjs/chart.umd.js") %>"></script>
 
     <%-- Postback loading overlay — wires up once Bootstrap is loaded --%>
@@ -5201,43 +5201,22 @@ MODIFIED: 02/17/2026 12:40:45
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\Web.Release.config
-SIZE: 1.33 KB
-MODIFIED: 02/17/2026 12:40:45
+SIZE: 287 B
+MODIFIED: 02/20/2026 11:01:45
 ================================================================================
 
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- For more information on using web.config transformation visit https://go.microsoft.com/fwlink/?LinkId=125889 -->
-
 <configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
-  <!--
-    In the example below, the "SetAttributes" transform will change the value of 
-    "connectionString" to use "ReleaseSQLServer" only when the "Match" locator 
-    finds an attribute "name" that has a value of "MyDB".
-    
-    <connectionStrings>
-      <add name="MyDB" 
-        connectionString="Data Source=ReleaseSQLServer;Initial Catalog=MyReleaseDB;Integrated Security=True" 
-        xdt:Transform="SetAttributes" xdt:Locator="Match(name)"/>
-    </connectionStrings>
-  -->
-  <system.web>
-    <compilation xdt:Transform="RemoveAttributes(debug)" />
-    <!--
-      In the example below, the "Replace" transform will replace the entire 
-      <customErrors> section of your web.config file.
-      Note that because there is only one customErrors section under the 
-      <system.web> node, there is no need to use the "xdt:Locator" attribute.
-      
-      <customErrors defaultRedirect="GenericError.htm"
-        mode="RemoteOnly" xdt:Transform="Replace">
-        <error statusCode="500" redirect="InternalError.htm"/>
-      </customErrors>
-    -->
-  </system.web>
+	<system.web>
+		<compilation xdt:Transform="RemoveAttributes(debug)" />
+
+		<customErrors mode="Off" xdt:Transform="Insert" />
+
+	</system.web>
 </configuration>
 
 
 ===============================================================================
-END OF EXPORT — 44 files, 188.68 KB total
+END OF EXPORT — 44 files, 187.62 KB total
 ===============================================================================
