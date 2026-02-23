@@ -1,6 +1,6 @@
 ===============================================================================
 ASP.NET PROJECT EXPORT
-Generated: 02/23/2026 10:33:13
+Generated: 02/23/2026 10:35:47
 Project Path: D:\DEV\personal\MyWebForms\MyWebForms
 ===============================================================================
 
@@ -5203,15 +5203,15 @@ namespace MyWebForms
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\Web.config
-SIZE: 4.41 KB
-MODIFIED: 02/23/2026 10:27:49
+SIZE: 4.84 KB
+MODIFIED: 02/23/2026 10:35:37
 ================================================================================
 
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   For more information on how to configure your ASP.NET application, please visit
   https://go.microsoft.com/fwlink/?LinkId=169433
-  -->
+-->
 <configuration>
 	<system.web>
 		<compilation debug="true" targetFramework="4.8.1" />
@@ -5253,11 +5253,7 @@ MODIFIED: 02/23/2026 10:27:49
         system default (often Windows-1252 on Western-locale servers).  When
         the .aspx file contains multi-byte UTF-8 characters (emoji, em-dashes,
         special symbols) but the response header says the charset is something
-        else, the browser misinterprets the bytes — producing "mojibake" like
-        â€" instead of — or ðŸ—' instead of 🗑️.
-
-        Setting both requestEncoding and responseEncoding to utf-8 here ensures
-        consistent encoding for all pages without needing per-page overrides.
+        else, the browser misinterprets the bytes — producing "mojibake".
     -->
 		<globalization requestEncoding="utf-8" responseEncoding="utf-8" />
 
@@ -5270,6 +5266,19 @@ MODIFIED: 02/23/2026 10:27:49
 			</controls>
 		</pages>
 	</system.web>
+
+	<!--
+    CRITICAL: The <runtime> section contains assembly binding redirects.
+    Without these, the CLR cannot resolve version mismatches between the
+    assemblies referenced by NuGet packages and the actual DLLs in /bin.
+
+    The Microsoft.Web.Infrastructure redirect is especially important:
+    System.Web.Optimization (the bundling library) references v1.0.0.0,
+    but the NuGet package installs v2.0.0.0.  The binding redirect tells
+    the CLR "when anyone asks for any version up to 2.0.0.0, give them
+    the 2.0.0.0 DLL from /bin".  Without this redirect, the app crashes
+    at startup with a FileLoadException / assembly mismatch error.
+  -->
 	<runtime>
 		<assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
 			<dependentAssembly>
@@ -5290,6 +5299,7 @@ MODIFIED: 02/23/2026 10:27:49
 			</dependentAssembly>
 		</assemblyBinding>
 	</runtime>
+
 	<system.codedom>
 		<compilers>
 			<compiler language="c#;cs;csharp" extension=".cs" warningLevel="4" compilerOptions="/langversion:default /nowarn:1659;1699;1701;612;618" type="Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider, Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
@@ -5357,5 +5367,5 @@ MODIFIED: 02/20/2026 11:01:45
 
 
 ===============================================================================
-END OF EXPORT — 44 files, 194.87 KB total
+END OF EXPORT — 44 files, 195.29 KB total
 ===============================================================================
