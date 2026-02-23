@@ -159,6 +159,7 @@
     <Content Include="Global.asax" />
     <Content Include="HackerNews.aspx" />
     <Content Include="HnComment.ascx" />
+    <Content Include="HnLive.aspx" />
     <Content Include="HnStoryRow.ascx" />
     <Content Include="HnUserCard.ascx" />
     <Content Include="LibraryStatusWidget.ascx" />

@@ -598,6 +598,13 @@ namespace MyWebForms
             }
         }
 
+        // ────────────────────────────────────────────────────────────────────────────
+        // PATCH for HackerNews.aspx.cs
+        // Replace the existing BindUserPanel() method with this version.
+        // The only change is adding ucUserCard.BindData() after setting .User,
+        // and calling it with null to ensure proper hide/show behavior.
+        // ────────────────────────────────────────────────────────────────────────────
+
         private void BindUserPanel()
         {
             if (string.IsNullOrEmpty(SelectedUsername))
@@ -613,6 +620,7 @@ namespace MyWebForms
                 // User not found or API error — show a friendly message instead
                 // of leaving the panel blank.
                 ucUserCard.User = null;
+                ucUserCard.BindData();   // ← NEW: explicitly bind (hides the card)
                 litUserNotFound.Text = string.Format(
                     "Could not load profile for <strong>{0}</strong>. " +
                     "The user may not exist or the HN API may be temporarily unavailable.",
@@ -622,6 +630,7 @@ namespace MyWebForms
             else
             {
                 ucUserCard.User = _selectedUser;
+                ucUserCard.BindData();   // ← NEW: explicitly bind (populates the card)
                 pnlUserNotFound.Visible = false;
             }
         }
