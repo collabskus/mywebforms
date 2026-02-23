@@ -1,6 +1,6 @@
 ===============================================================================
 ASP.NET PROJECT EXPORT
-Generated: 02/23/2026 09:58:09
+Generated: 02/23/2026 10:33:13
 Project Path: D:\DEV\personal\MyWebForms\MyWebForms
 ===============================================================================
 
@@ -214,6 +214,7 @@ D:\DEV\PERSONAL\MYWEBFORMS\MYWEBFORMS
 ª       ª       ª   HackerNews.aspx
 ª       ª       ª   HackerNewsRefresh.ashx
 ª       ª       ª   HnComment.ascx
+ª       ª       ª   HnLive.aspx
 ª       ª       ª   HnStoryRow.ascx
 ª       ª       ª   HnUserCard.ascx
 ª       ª       ª   libman.json
@@ -1735,8 +1736,8 @@ MODIFIED: 02/17/2026 19:36:17
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\HackerNews.aspx.cs
-SIZE: 28.93 KB
-MODIFIED: 02/17/2026 19:35:27
+SIZE: 29.84 KB
+MODIFIED: 02/23/2026 10:28:34
 ================================================================================
 
 using System;
@@ -2339,6 +2340,13 @@ namespace MyWebForms
             }
         }
 
+        // ────────────────────────────────────────────────────────────────────────────
+        // PATCH for HackerNews.aspx.cs
+        // Replace the existing BindUserPanel() method with this version.
+        // The only change is adding ucUserCard.BindData() after setting .User,
+        // and calling it with null to ensure proper hide/show behavior.
+        // ────────────────────────────────────────────────────────────────────────────
+
         private void BindUserPanel()
         {
             if (string.IsNullOrEmpty(SelectedUsername))
@@ -2354,6 +2362,7 @@ namespace MyWebForms
                 // User not found or API error — show a friendly message instead
                 // of leaving the panel blank.
                 ucUserCard.User = null;
+                ucUserCard.BindData();   // ← NEW: explicitly bind (hides the card)
                 litUserNotFound.Text = string.Format(
                     "Could not load profile for <strong>{0}</strong>. " +
                     "The user may not exist or the HN API may be temporarily unavailable.",
@@ -2363,6 +2372,7 @@ namespace MyWebForms
             else
             {
                 ucUserCard.User = _selectedUser;
+                ucUserCard.BindData();   // ← NEW: explicitly bind (populates the card)
                 pnlUserNotFound.Visible = false;
             }
         }
@@ -2764,13 +2774,13 @@ namespace MyWebForms
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\HnLive.aspx
-SIZE: 16.25 KB
-MODIFIED: 02/17/2026 18:14:44
+SIZE: 18.25 KB
+MODIFIED: 02/23/2026 10:29:39
 ================================================================================
 
 <%@ Page Title="HN Live" Language="C#" MasterPageFile="~/Site.Master"
     AutoEventWireup="true" CodeBehind="HnLive.aspx.cs"
-    Inherits="MyWebForms.HnLive" %>
+    Inherits="MyWebForms.HnLive" EnableViewState="false" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -2790,40 +2800,60 @@ MODIFIED: 02/17/2026 18:14:44
 
         <span id="statusMsg" class="text-muted small ms-2">Connecting&hellip;</span>
 
-        <div class="ms-auto d-flex align-items-center gap-2 flex-wrap">
-            <%-- Min-comments filter --%>
-            <label class="form-label mb-0 small" for="minComments">Min comments:</label>
-            <input type="number" id="minComments" class="form-control form-control-sm"
-                   style="width:70px;" value="0" min="0" max="9999" />
-
-            <%-- Min-points filter --%>
-            <label class="form-label mb-0 small" for="minPoints">Min points:</label>
-            <input type="number" id="minPoints" class="form-control form-control-sm"
-                   style="width:70px;" value="0" min="0" max="9999" />
-
-            <button id="btnPause" class="btn btn-sm btn-outline-secondary">⏸ Pause</button>
-            <button id="btnClear" class="btn btn-sm btn-outline-danger">🗑 Clear</button>
-        </div>
+        <span class="ms-auto d-flex align-items-center gap-2 flex-wrap">
+            <%-- Counters --%>
+            <span class="badge bg-secondary" title="Total items seen">
+                Seen: <span id="countSeen">0</span>
+            </span>
+            <span class="badge bg-success" title="Items shown (passed filter)">
+                Shown: <span id="countShown">0</span>
+            </span>
+            <span class="badge bg-warning text-dark" title="Items filtered out">
+                Filtered: <span id="countFiltered">0</span>
+            </span>
+        </span>
     </div>
 
     <%-- ═══════════════════════════════════════════════════════════════
-         Counter bar
+         Filters & controls
     ═══════════════════════════════════════════════════════════════════ --%>
-    <div class="d-flex gap-3 mb-3 small text-muted">
-        <span>Items seen: <strong id="countSeen">0</strong></span>
-        <span>Shown: <strong id="countShown">0</strong></span>
-        <span>Filtered out: <strong id="countFiltered">0</strong></span>
+    <div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
+        <label class="form-label mb-0 small text-muted">Min comments</label>
+        <input id="minComments" type="number" class="form-control form-control-sm"
+               style="width:5rem;" value="0" min="0" />
+
+        <label class="form-label mb-0 small text-muted">Min points</label>
+        <input id="minPoints" type="number" class="form-control form-control-sm"
+               style="width:5rem;" value="0" min="0" />
+
+        <%-- Pause / Clear buttons.
+             Educational note:
+               These are plain HTML buttons, not <asp:Button> server controls,
+               because they drive purely client-side behaviour (no postback).
+               Using raw HTML avoids unnecessary ViewState overhead and keeps
+               the control flow entirely in JavaScript.
+
+             Encoding note:
+               Button labels use JS unicode escapes instead of raw emoji
+               characters to avoid encoding issues on servers that may not
+               serve the response as UTF-8 consistently. --%>
+        <button id="btnPause" type="button"
+                class="btn btn-sm btn-outline-secondary">
+            &#x23F8; Pause</button>
+        <button id="btnClear" type="button"
+                class="btn btn-sm btn-outline-danger">
+            &#x1F5D1; Clear</button>
     </div>
 
     <%-- ═══════════════════════════════════════════════════════════════
-         Live feed container — items prepended here by JS
+         Feed container — items are prepended here by JavaScript
     ═══════════════════════════════════════════════════════════════════ --%>
     <div id="hnFeed"></div>
 
     <%-- Loading spinner shown while the first batch loads --%>
     <div id="loadingSpinner" class="text-center py-5">
         <div class="spinner-border text-warning" role="status">
-            <span class="visually-hidden">Loading…</span>
+            <span class="visually-hidden">Loading&hellip;</span>
         </div>
         <p class="mt-2 text-muted small">Fetching latest items from HN&hellip;</p>
     </div>
@@ -2854,6 +2884,7 @@ MODIFIED: 02/17/2026 18:14:44
 
 <%-- ═══════════════════════════════════════════════════════════════════
      Page-specific script — pure client-side live feed
+
      Strategy:
        1. On load, fetch /v0/maxitem.json to get the current high-water mark.
        2. Back-fill the last BackfillCount items to seed the feed.
@@ -2861,276 +2892,289 @@ MODIFIED: 02/17/2026 18:14:44
           fetch each item concurrently and prepend to the feed.
        4. The minComments / minPoints inputs gate which items are shown.
        5. Pause button stops new fetches without losing position.
+
+     Encoding note:
+       All button labels are set via JS using unicode escape sequences
+       (\u23F8 = ⏸, \u25B6 = ▶, \u1F5D1 = 🗑) rather than raw multi-byte
+       emoji characters embedded in the .aspx source file.  This avoids
+       mojibake when the server's response encoding doesn't match the file's
+       byte encoding (a common issue on shared hosting).
 ═══════════════════════════════════════════════════════════════════════ --%>
 <script>
-(function () {
-    'use strict';
+    (function () {
+        'use strict';
 
-    var HN_BASE    = 'https://hacker-news.firebaseio.com/v0/';
-    var POLL_MS    = 6000;          // poll interval
-    var BACKFILL   = 30;            // items to back-fill on first load
-    var MAX_FEED   = 300;           // max DOM nodes kept in feed before pruning
+        var HN_BASE = 'https://hacker-news.firebaseio.com/v0/';
+        var POLL_MS = 6000;          // poll interval
+        var BACKFILL = 30;            // items to back-fill on first load
+        var MAX_FEED = 300;           // max DOM nodes kept in feed before pruning
 
-    var lastMaxId  = 0;
-    var paused     = false;
-    var countSeen  = 0;
-    var countShown = 0;
-    var countFilt  = 0;
-    var pollTimer  = null;
+        // Unicode constants for button labels — avoids raw emoji in the source
+        // file which can break when the server doesn't serve UTF-8 consistently.
+        var PAUSE_LABEL = '\u23F8 Pause';     // ⏸ Pause
+        var RESUME_LABEL = '\u25B6 Resume';    // ▶ Resume
+        var UP_TO_DATE = 'Up to date \u2014 watching\u2026';  // — …
 
-    var feed       = document.getElementById('hnFeed');
-    var spinner    = document.getElementById('loadingSpinner');
-    var statusEl   = document.getElementById('statusMsg');
-    var seenEl     = document.getElementById('countSeen');
-    var shownEl    = document.getElementById('countShown');
-    var filtEl     = document.getElementById('countFiltered');
-    var btnPause   = document.getElementById('btnPause');
-    var btnClear   = document.getElementById('btnClear');
-    var inMinCmt   = document.getElementById('minComments');
-    var inMinPts   = document.getElementById('minPoints');
+        var lastMaxId = 0;
+        var paused = false;
+        var countSeen = 0;
+        var countShown = 0;
+        var countFilt = 0;
+        var pollTimer = null;
 
-    // ── Counters ─────────────────────────────────────────────────────
+        var feed = document.getElementById('hnFeed');
+        var spinner = document.getElementById('loadingSpinner');
+        var statusEl = document.getElementById('statusMsg');
+        var seenEl = document.getElementById('countSeen');
+        var shownEl = document.getElementById('countShown');
+        var filtEl = document.getElementById('countFiltered');
+        var btnPause = document.getElementById('btnPause');
+        var btnClear = document.getElementById('btnClear');
+        var inMinCmt = document.getElementById('minComments');
+        var inMinPts = document.getElementById('minPoints');
 
-    function updateCounters() {
-        seenEl.textContent  = countSeen;
-        shownEl.textContent = countShown;
-        filtEl.textContent  = countFilt;
-    }
+        // ── Counters ─────────────────────────────────────────────────────
 
-    // ── Fetch helpers ─────────────────────────────────────────────────
-
-    function fetchJson(url) {
-        return fetch(url).then(function (r) {
-            if (!r.ok) throw new Error('HTTP ' + r.status);
-            return r.json();
-        });
-    }
-
-    function fetchItem(id) {
-        return fetchJson(HN_BASE + 'item/' + id + '.json');
-    }
-
-    function fetchMaxItem() {
-        return fetchJson(HN_BASE + 'maxitem.json');
-    }
-
-    // ── Filtering ─────────────────────────────────────────────────────
-
-    function passesFilter(item) {
-        if (!item || item.deleted || item.dead) return false;
-        var minC = parseInt(inMinCmt.value, 10) || 0;
-        var minP = parseInt(inMinPts.value,  10) || 0;
-        var comments = item.descendants || 0;
-        var score    = item.score       || 0;
-        if (minC > 0 && minP > 0) return comments >= minC || score >= minP;
-        if (minC > 0) return comments >= minC;
-        if (minP > 0) return score    >= minP;
-        return true;
-    }
-
-    // ── Rendering ─────────────────────────────────────────────────────
-
-    function itemTypeClass(item) {
-        if (!item.type) return '';
-        return 'hn-type-' + item.type;
-    }
-
-    function renderItem(item, prepend) {
-        countSeen++;
-
-        if (!passesFilter(item)) {
-            countFilt++;
-            updateCounters();
-            return;
+        function updateCounters() {
+            seenEl.textContent = countSeen;
+            shownEl.textContent = countShown;
+            filtEl.textContent = countFilt;
         }
-        countShown++;
-        updateCounters();
 
-        var el       = document.createElement('div');
-        el.className = 'hn-live-item ' + itemTypeClass(item);
+        // ── Fetch helpers ─────────────────────────────────────────────────
 
-        var title, url, meta;
+        function fetchJson(url) {
+            return fetch(url).then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            });
+        }
 
-        if (item.type === 'comment') {
-            // Comments: show a snippet of the text and link to parent story
-            var snippet = '';
-            if (item.text) {
-                var tmp = document.createElement('div');
-                tmp.innerHTML = item.text;
-                snippet = (tmp.textContent || tmp.innerText || '').substring(0, 120);
-                if (snippet.length === 120) snippet += '…';
-            }
-            title = '"' + (snippet || '(empty comment)') + '"';
-            url   = 'https://news.ycombinator.com/item?id=' + item.id;
-            meta  = 'comment by <a href="https://news.ycombinator.com/user?id='
-                  + esc(item.by || '[deleted]') + '" target="_blank">'
-                  + esc(item.by || '[deleted]') + '</a>'
-                  + (item.parent ? ' &nbsp;|&nbsp; <a href="https://news.ycombinator.com/item?id='
-                  + item.parent + '" target="_blank">parent</a>' : '')
-                  + ' &nbsp;|&nbsp; ' + timeAgo(item.time);
-        } else {
-            // story / job / poll
-            title = esc(item.title || '(untitled)');
-            url   = item.url || ('https://news.ycombinator.com/item?id=' + item.id);
+        function fetchItem(id) {
+            return fetchJson(HN_BASE + 'item/' + id + '.json');
+        }
+
+        function fetchMaxItem() {
+            return fetchJson(HN_BASE + 'maxitem.json');
+        }
+
+        // ── Filtering ─────────────────────────────────────────────────────
+
+        function passesFilter(item) {
+            if (!item || item.deleted || item.dead) return false;
+            var minC = parseInt(inMinCmt.value, 10) || 0;
+            var minP = parseInt(inMinPts.value, 10) || 0;
+            var comments = item.descendants || 0;
             var score = item.score || 0;
-            var desc  = item.descendants || 0;
-            meta  = '<span class="hn-live-score">▲ ' + score + ' pts</span>'
-                  + ' &nbsp;by <a href="https://news.ycombinator.com/user?id='
-                  + esc(item.by || '[deleted]') + '" target="_blank">'
-                  + esc(item.by || '[deleted]') + '</a>'
-                  + ' &nbsp;|&nbsp; '
-                  + '<a href="https://news.ycombinator.com/item?id=' + item.id
-                  + '" target="_blank">' + desc + ' comment' + (desc !== 1 ? 's' : '') + '</a>'
-                  + ' &nbsp;|&nbsp; ' + timeAgo(item.time)
-                  + ' &nbsp;|&nbsp; <span class="badge bg-secondary" style="font-size:.65rem;">'
-                  + esc(item.type || 'story') + '</span>';
+            if (minC > 0 && minP > 0) return comments >= minC || score >= minP;
+            if (minC > 0) return comments >= minC;
+            if (minP > 0) return score >= minP;
+            return true;
         }
 
-        el.innerHTML =
-            '<div class="hn-live-title"><a href="' + esc(url) + '" target="_blank">'
-            + title + '</a></div>'
-            + '<div class="hn-live-meta">' + meta + '</div>';
+        // ── Rendering ─────────────────────────────────────────────────────
 
-        if (prepend && feed.firstChild) {
-            feed.insertBefore(el, feed.firstChild);
-        } else {
-            feed.appendChild(el);
+        function itemTypeClass(item) {
+            if (!item.type) return '';
+            return 'hn-type-' + item.type;
         }
 
-        // Prune excess nodes to avoid infinite DOM growth
-        while (feed.childNodes.length > MAX_FEED) {
-            feed.removeChild(feed.lastChild);
-        }
-    }
+        function renderItem(item, prepend) {
+            countSeen++;
 
-    function esc(s) {
-        return String(s)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;');
-    }
-
-    function timeAgo(unix) {
-        if (!unix) return '';
-        var diff = Math.floor(Date.now() / 1000) - unix;
-        if (diff <  60)  return diff + 's ago';
-        if (diff <  3600) return Math.floor(diff / 60) + 'm ago';
-        if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
-        return Math.floor(diff / 86400) + 'd ago';
-    }
-
-    // ── Back-fill ─────────────────────────────────────────────────────
-    // Fetch the most recent BACKFILL items in descending order and append
-    // them to the feed (oldest first = natural reading order).
-
-    function backfill(maxId) {
-        var ids = [];
-        for (var i = 0; i < BACKFILL; i++) {
-            if (maxId - i > 0) ids.push(maxId - i);
-        }
-
-        var promises = ids.map(function (id) { return fetchItem(id); });
-
-        Promise.all(promises).then(function (items) {
-            // Sort oldest-first before appending
-            items.sort(function (a, b) {
-                var at = (a && a.time) || 0;
-                var bt = (b && b.time) || 0;
-                return at - bt;
-            });
-            spinner.style.display = 'none';
-            items.forEach(function (item) {
-                if (item) renderItem(item, false);
-            });
-            setStatus('Watching for new items…');
-            schedulePoll();
-        }).catch(function (err) {
-            setStatus('Error during back-fill: ' + err.message);
-            schedulePoll();
-        });
-    }
-
-    // ── Poll loop ─────────────────────────────────────────────────────
-
-    function poll() {
-        if (paused) return;
-
-        fetchMaxItem().then(function (newMax) {
-            if (newMax <= lastMaxId) {
-                setStatus('Up to date — watching…');
-                schedulePoll();
+            if (!passesFilter(item)) {
+                countFilt++;
+                updateCounters();
                 return;
             }
+            countShown++;
+            updateCounters();
 
-            // Clamp burst to 50 items to avoid flooding
-            var start = lastMaxId + 1;
-            var end   = Math.min(newMax, lastMaxId + 50);
-            lastMaxId = newMax;
+            var el = document.createElement('div');
+            el.className = 'hn-live-item ' + itemTypeClass(item);
 
+            var title, url, meta;
+
+            if (item.type === 'comment') {
+                // Comments: show a snippet of the text and link to parent story
+                var snippet = '';
+                if (item.text) {
+                    var tmp = document.createElement('div');
+                    tmp.innerHTML = item.text;
+                    snippet = (tmp.textContent || tmp.innerText || '').substring(0, 120);
+                    if (snippet.length === 120) snippet += '\u2026';
+                }
+                title = '\u201C' + (snippet || '(empty comment)') + '\u201D';
+                url = 'https://news.ycombinator.com/item?id=' + item.id;
+                meta = 'comment by <a href="https://news.ycombinator.com/user?id='
+                    + esc(item.by || '[deleted]') + '" target="_blank">'
+                    + esc(item.by || '[deleted]') + '</a>'
+                    + (item.parent ? ' &nbsp;|&nbsp; <a href="https://news.ycombinator.com/item?id='
+                        + item.parent + '" target="_blank">parent</a>' : '')
+                    + ' &nbsp;|&nbsp; ' + timeAgo(item.time);
+            } else {
+                // story / job / poll
+                title = esc(item.title || '(untitled)');
+                url = item.url || ('https://news.ycombinator.com/item?id=' + item.id);
+                var score = item.score || 0;
+                var desc = item.descendants || 0;
+                meta = '<span class="hn-live-score">\u25B2 ' + score + ' pts</span>'
+                    + ' &nbsp;by <a href="https://news.ycombinator.com/user?id='
+                    + esc(item.by || '[deleted]') + '" target="_blank">'
+                    + esc(item.by || '[deleted]') + '</a>'
+                    + ' &nbsp;|&nbsp; '
+                    + '<a href="https://news.ycombinator.com/item?id=' + item.id
+                    + '" target="_blank">' + desc + ' comment' + (desc !== 1 ? 's' : '') + '</a>'
+                    + ' &nbsp;|&nbsp; ' + timeAgo(item.time)
+                    + ' &nbsp;|&nbsp; <span class="badge bg-secondary" style="font-size:.65rem;">'
+                    + esc(item.type || 'story') + '</span>';
+            }
+
+            el.innerHTML =
+                '<div class="hn-live-title"><a href="' + esc(url) + '" target="_blank">'
+                + title + '</a></div>'
+                + '<div class="hn-live-meta">' + meta + '</div>';
+
+            if (prepend && feed.firstChild) {
+                feed.insertBefore(el, feed.firstChild);
+            } else {
+                feed.appendChild(el);
+            }
+
+            // Prune excess nodes to avoid infinite DOM growth
+            while (feed.childNodes.length > MAX_FEED) {
+                feed.removeChild(feed.lastChild);
+            }
+        }
+
+        function esc(s) {
+            return String(s)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function timeAgo(unix) {
+            if (!unix) return '';
+            var diff = Math.floor(Date.now() / 1000) - unix;
+            if (diff < 60) return diff + 's ago';
+            if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+            if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+            return Math.floor(diff / 86400) + 'd ago';
+        }
+
+        // ── Back-fill ─────────────────────────────────────────────────────
+        // Fetch the most recent BACKFILL items in descending order and append
+        // them to the feed (oldest first = natural reading order).
+
+        function backfill(maxId) {
             var ids = [];
-            for (var id = end; id >= start; id--) ids.push(id);
+            for (var i = 0; i < BACKFILL; i++) {
+                if (maxId - i > 0) ids.push(maxId - i);
+            }
 
             var promises = ids.map(function (id) { return fetchItem(id); });
 
             Promise.all(promises).then(function (items) {
-                // Newest first (already descending) — prepend so newest is at top
-                items.forEach(function (item) {
-                    if (item) renderItem(item, true);
+                // Sort oldest-first before appending
+                items.sort(function (a, b) {
+                    var at = (a && a.time) || 0;
+                    var bt = (b && b.time) || 0;
+                    return at - bt;
                 });
-                setStatus('Last update: ' + new Date().toLocaleTimeString());
+                spinner.style.display = 'none';
+                items.forEach(function (item) {
+                    if (item) renderItem(item, false);
+                });
+                setStatus('Watching for new items\u2026');
                 schedulePoll();
-            }).catch(function () {
+            }).catch(function (err) {
+                setStatus('Error during back-fill: ' + err.message);
                 schedulePoll();
             });
-        }).catch(function (err) {
-            setStatus('Poll error: ' + err.message);
-            schedulePoll();
+        }
+
+        // ── Poll loop ─────────────────────────────────────────────────────
+
+        function poll() {
+            if (paused) return;
+
+            fetchMaxItem().then(function (newMax) {
+                if (newMax <= lastMaxId) {
+                    setStatus(UP_TO_DATE);
+                    schedulePoll();
+                    return;
+                }
+
+                // Clamp burst to 50 items to avoid flooding
+                var start = lastMaxId + 1;
+                var end = Math.min(newMax, lastMaxId + 50);
+                lastMaxId = newMax;
+
+                var ids = [];
+                for (var id = end; id >= start; id--) ids.push(id);
+
+                var promises = ids.map(function (id) { return fetchItem(id); });
+
+                Promise.all(promises).then(function (items) {
+                    // Newest first (already descending) — prepend so newest is at top
+                    items.forEach(function (item) {
+                        if (item) renderItem(item, true);
+                    });
+                    setStatus('Last update: ' + new Date().toLocaleTimeString());
+                    schedulePoll();
+                }).catch(function () {
+                    schedulePoll();
+                });
+            }).catch(function (err) {
+                setStatus('Poll error: ' + err.message);
+                schedulePoll();
+            });
+        }
+
+        function schedulePoll() {
+            if (pollTimer) clearTimeout(pollTimer);
+            pollTimer = setTimeout(poll, POLL_MS);
+        }
+
+        function setStatus(msg) {
+            if (statusEl) statusEl.textContent = msg;
+        }
+
+        // ── UI controls ───────────────────────────────────────────────────
+
+        btnPause.addEventListener('click', function () {
+            paused = !paused;
+            btnPause.textContent = paused ? RESUME_LABEL : PAUSE_LABEL;
+            btnPause.className = paused
+                ? 'btn btn-sm btn-warning'
+                : 'btn btn-sm btn-outline-secondary';
+            document.getElementById('liveBadge').style.opacity = paused ? '.3' : '1';
+            if (!paused) { setStatus('Resuming\u2026'); poll(); }
+            else { setStatus('Paused'); }
         });
-    }
 
-    function schedulePoll() {
-        if (pollTimer) clearTimeout(pollTimer);
-        pollTimer = setTimeout(poll, POLL_MS);
-    }
+        btnClear.addEventListener('click', function () {
+            feed.innerHTML = '';
+            countSeen = countShown = countFilt = 0;
+            updateCounters();
+        });
 
-    function setStatus(msg) {
-        if (statusEl) statusEl.textContent = msg;
-    }
+        // ── Boot ──────────────────────────────────────────────────────────
 
-    // ── UI controls ───────────────────────────────────────────────────
+        setStatus('Fetching latest item ID\u2026');
 
-    btnPause.addEventListener('click', function () {
-        paused = !paused;
-        btnPause.textContent = paused ? '▶ Resume' : '⏸ Pause';
-        btnPause.className   = paused
-            ? 'btn btn-sm btn-warning'
-            : 'btn btn-sm btn-outline-secondary';
-        document.getElementById('liveBadge').style.opacity = paused ? '.3' : '1';
-        if (!paused) { setStatus('Resuming…'); poll(); }
-        else          { setStatus('Paused'); }
-    });
+        fetchMaxItem().then(function (maxId) {
+            lastMaxId = maxId;
+            setStatus('Back-filling last ' + BACKFILL + ' items\u2026');
+            backfill(maxId);
+        }).catch(function (err) {
+            spinner.style.display = 'none';
+            setStatus('Failed to connect: ' + err.message);
+        });
 
-    btnClear.addEventListener('click', function () {
-        feed.innerHTML = '';
-        countSeen = countShown = countFilt = 0;
-        updateCounters();
-    });
-
-    // ── Boot ──────────────────────────────────────────────────────────
-
-    setStatus('Fetching latest item ID…');
-
-    fetchMaxItem().then(function (maxId) {
-        lastMaxId = maxId;
-        setStatus('Back-filling last ' + BACKFILL + ' items…');
-        backfill(maxId);
-    }).catch(function (err) {
-        spinner.style.display = 'none';
-        setStatus('Failed to connect: ' + err.message);
-    });
-
-}());
+    }());
 </script>
 
 </asp:Content>
@@ -3520,8 +3564,8 @@ MODIFIED: 02/17/2026 14:13:27
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\HnUserCard.ascx.cs
-SIZE: 1.76 KB
-MODIFIED: 02/17/2026 14:13:33
+SIZE: 4.08 KB
+MODIFIED: 02/23/2026 10:28:04
 ================================================================================
 
 using System;
@@ -3529,6 +3573,32 @@ using MyWebForms.Models;
 
 namespace MyWebForms
 {
+    /// <summary>
+    /// Code-behind for HnUserCard.ascx.
+    /// Displays a Hacker News user profile card.
+    ///
+    /// Lifecycle fix — why BindData() exists
+    /// ---------------------------------------
+    /// The host page (HackerNews.aspx) sets the User property in its
+    /// OnPreRenderComplete override, which fires AFTER all child controls
+    /// have already run their Page_Load and PreRender phases.  If we put
+    /// the binding logic in Page_Load (as before), User is always null at
+    /// that point and the control hides itself.
+    ///
+    /// The solution is to expose a public BindData() method that the host
+    /// page calls explicitly after setting the User property.  This is a
+    /// common Web Forms pattern for "late-bound" user controls where the
+    /// data isn't available until after the normal lifecycle phases.
+    ///
+    /// Educational note:
+    ///   In the Web Forms page lifecycle, events fire in this order:
+    ///     Page.Load → ChildControl.Load → ... → Page.PreRender →
+    ///     ChildControl.PreRender → Page.PreRenderComplete
+    ///   So a parent page's PreRenderComplete is the LAST lifecycle hook
+    ///   before SaveViewState/Render.  Any property set there is invisible
+    ///   to the child control's Load and PreRender.  The explicit-bind
+    ///   pattern avoids this timing problem entirely.
+    /// </summary>
     public partial class HnUserCard : System.Web.UI.UserControl
     {
         // ── Inputs ───────────────────────────────────────────────────────────
@@ -3551,11 +3621,32 @@ namespace MyWebForms
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Intentionally empty.
+            //
+            // Binding is deferred to the explicit BindData() call made by the
+            // host page in OnPreRenderComplete.  At Page_Load time the User
+            // property has not yet been set by the host page, so any binding
+            // here would always see User == null and hide the control.
+        }
+
+        // ── Public binding method ────────────────────────────────────────────
+
+        /// <summary>
+        /// Populates the control's UI from the current User property.
+        /// Must be called by the host page AFTER setting User — typically
+        /// from OnPreRenderComplete or equivalent late-lifecycle hook.
+        ///
+        /// If User is null, the control hides itself.
+        /// </summary>
+        public void BindData()
+        {
             if (User == null)
             {
                 Visible = false;
                 return;
             }
+
+            Visible = true;
 
             litUsername.Text = System.Web.HttpUtility.HtmlEncode(User.Id);
             litKarma.Text = User.Karma.ToString("N0");
@@ -3570,6 +3661,7 @@ namespace MyWebForms
             }
             else
             {
+                pnlAbout.Visible = true;
                 // About can contain HTML tags — render verbatim (source is HN API).
                 litAbout.Text = User.About;
             }
@@ -3850,8 +3942,8 @@ namespace MyWebForms.Models
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\MyWebForms.csproj
-SIZE: 21.03 KB
-MODIFIED: 02/17/2026 19:35:37
+SIZE: 21.07 KB
+MODIFIED: 02/23/2026 10:30:13
 ================================================================================
 
 <?xml version="1.0" encoding="utf-8"?>
@@ -4015,6 +4107,7 @@ MODIFIED: 02/17/2026 19:35:37
     <Content Include="Global.asax" />
     <Content Include="HackerNews.aspx" />
     <Content Include="HnComment.ascx" />
+    <Content Include="HnLive.aspx" />
     <Content Include="HnStoryRow.ascx" />
     <Content Include="HnUserCard.ascx" />
     <Content Include="LibraryStatusWidget.ascx" />
@@ -5110,8 +5203,8 @@ namespace MyWebForms
 
 ================================================================================
 FILE: D:\DEV\personal\MyWebForms\MyWebForms\Web.config
-SIZE: 2.44 KB
-MODIFIED: 02/17/2026 14:35:56
+SIZE: 4.41 KB
+MODIFIED: 02/23/2026 10:27:49
 ================================================================================
 
 <?xml version="1.0" encoding="utf-8"?>
@@ -5120,45 +5213,91 @@ MODIFIED: 02/17/2026 14:35:56
   https://go.microsoft.com/fwlink/?LinkId=169433
   -->
 <configuration>
-  <system.web>
-    <compilation debug="true" targetFramework="4.8.1" />
-    <httpRuntime targetFramework="4.8.1" />
-    <pages>
-      <namespaces>
-        <add namespace="System.Web.Optimization" />
-      </namespaces>
-      <controls>
-        <add assembly="Microsoft.AspNet.Web.Optimization.WebForms" namespace="Microsoft.AspNet.Web.Optimization.WebForms" tagPrefix="webopt" />
-      </controls>
-    </pages>
-  </system.web>
-  <runtime>
-    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
-      <dependentAssembly>
-        <assemblyIdentity name="Antlr3.Runtime" publicKeyToken="eb42632606e9261f" />
-        <bindingRedirect oldVersion="0.0.0.0-3.5.0.2" newVersion="3.5.0.2" />
-      </dependentAssembly>
-      <dependentAssembly>
-        <assemblyIdentity name="Microsoft.Web.Infrastructure" publicKeyToken="31bf3856ad364e35" />
-        <bindingRedirect oldVersion="0.0.0.0-2.0.0.0" newVersion="2.0.0.0" />
-      </dependentAssembly>
-      <dependentAssembly>
-        <assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" />
-        <bindingRedirect oldVersion="0.0.0.0-13.0.0.0" newVersion="13.0.0.0" />
-      </dependentAssembly>
-      <dependentAssembly>
-        <assemblyIdentity name="WebGrease" publicKeyToken="31bf3856ad364e35" />
-        <bindingRedirect oldVersion="0.0.0.0-1.6.5135.21930" newVersion="1.6.5135.21930" />
-      </dependentAssembly>
-    </assemblyBinding>
-  </runtime>
-  <system.codedom>
-    <compilers>
-      <compiler language="c#;cs;csharp" extension=".cs" warningLevel="4" compilerOptions="/langversion:default /nowarn:1659;1699;1701;612;618" type="Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider, Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-      <compiler language="vb;vbs;visualbasic;vbscript" extension=".vb" warningLevel="4" compilerOptions="/langversion:default /nowarn:41008,40000,40008 /define:_MYTYPE=\&quot;Web\&quot; /optionInfer+" type="Microsoft.CodeDom.Providers.DotNetCompilerPlatform.VBCodeProvider, Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    </compilers>
-  </system.codedom>
+	<system.web>
+		<compilation debug="true" targetFramework="4.8.1" />
+		<httpRuntime targetFramework="4.8.1" />
+
+		<!--
+      machineKey — explicit keys for ViewState MAC validation.
+
+      Educational note:
+        By default ASP.NET auto-generates the machine key per application instance.
+        This works fine on a single server with a single worker process, but breaks
+        in web-farm / shared-hosting / multi-instance scenarios (like runasp.net)
+        where different instances generate different keys.  When a form posts back
+        to a different instance than the one that rendered it, the __VIEWSTATE MAC
+        check fails with "Validation of viewstate MAC failed".
+
+        Fix: supply a fixed validationKey and decryptionKey so all instances agree.
+        Generate your own keys via PowerShell:
+
+          $vk = -join ((1..64) | ForEach-Object { '{0:X2}' -f (Get-Random -Max 256) })
+          $dk = -join ((1..48) | ForEach-Object { '{0:X2}' -f (Get-Random -Max 256) })
+          Write-Host "validationKey=$vk"
+          Write-Host "decryptionKey=$dk"
+
+        IMPORTANT: These are placeholder keys suitable for a learning sandbox.
+        For any real application, generate unique keys and keep them secret.
+    -->
+		<machineKey
+		  validationKey="A7D2B3F8C1E4D6A9B0F2E5C8D1A4B7F0E3C6D9A2B5F8C1D4A7E0B3F6C9D2A5E8B1F4C7D0A3E6B9F2C5D8A1B4F7C0D3"
+		  decryptionKey="E1A4B7F0C3D6A9E2B5F8C1D4A7E0B3F6C9D2A5E8B1F4C7D0"
+		  validation="HMACSHA256"
+		  decryption="AES" />
+
+		<!--
+      globalization — ensure all responses are served as UTF-8.
+
+      Educational note:
+        Without an explicit responseEncoding, ASP.NET may fall back to the
+        system default (often Windows-1252 on Western-locale servers).  When
+        the .aspx file contains multi-byte UTF-8 characters (emoji, em-dashes,
+        special symbols) but the response header says the charset is something
+        else, the browser misinterprets the bytes — producing "mojibake" like
+        â€" instead of — or ðŸ—' instead of 🗑️.
+
+        Setting both requestEncoding and responseEncoding to utf-8 here ensures
+        consistent encoding for all pages without needing per-page overrides.
+    -->
+		<globalization requestEncoding="utf-8" responseEncoding="utf-8" />
+
+		<pages>
+			<namespaces>
+				<add namespace="System.Web.Optimization" />
+			</namespaces>
+			<controls>
+				<add assembly="Microsoft.AspNet.Web.Optimization.WebForms" namespace="Microsoft.AspNet.Web.Optimization.WebForms" tagPrefix="webopt" />
+			</controls>
+		</pages>
+	</system.web>
+	<runtime>
+		<assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+			<dependentAssembly>
+				<assemblyIdentity name="Antlr3.Runtime" publicKeyToken="eb42632606e9261f" />
+				<bindingRedirect oldVersion="0.0.0.0-3.5.0.2" newVersion="3.5.0.2" />
+			</dependentAssembly>
+			<dependentAssembly>
+				<assemblyIdentity name="Microsoft.Web.Infrastructure" publicKeyToken="31bf3856ad364e35" />
+				<bindingRedirect oldVersion="0.0.0.0-2.0.0.0" newVersion="2.0.0.0" />
+			</dependentAssembly>
+			<dependentAssembly>
+				<assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" />
+				<bindingRedirect oldVersion="0.0.0.0-13.0.0.0" newVersion="13.0.0.0" />
+			</dependentAssembly>
+			<dependentAssembly>
+				<assemblyIdentity name="WebGrease" publicKeyToken="31bf3856ad364e35" />
+				<bindingRedirect oldVersion="0.0.0.0-1.6.5135.21930" newVersion="1.6.5135.21930" />
+			</dependentAssembly>
+		</assemblyBinding>
+	</runtime>
+	<system.codedom>
+		<compilers>
+			<compiler language="c#;cs;csharp" extension=".cs" warningLevel="4" compilerOptions="/langversion:default /nowarn:1659;1699;1701;612;618" type="Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider, Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+			<compiler language="vb;vbs;visualbasic;vbscript" extension=".vb" warningLevel="4" compilerOptions="/langversion:default /nowarn:41008,40000,40008 /define:_MYTYPE=\&quot;Web\&quot; /optionInfer+" type="Microsoft.CodeDom.Providers.DotNetCompilerPlatform.VBCodeProvider, Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+		</compilers>
+	</system.codedom>
 </configuration>
+
 
 
 ================================================================================
@@ -5218,5 +5357,5 @@ MODIFIED: 02/20/2026 11:01:45
 
 
 ===============================================================================
-END OF EXPORT — 44 files, 187.62 KB total
+END OF EXPORT — 44 files, 194.87 KB total
 ===============================================================================
